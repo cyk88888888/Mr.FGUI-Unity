@@ -11,17 +11,31 @@ public class LoadingLayer : MonoBehaviour
     void Awake()
     {
         //UIPackage.AddPackage("UI/Loading");
+        Debug.Log("Awake£¡£¡£¡");
     }
     // Start is called before the first frame update
     void Start()
     {
-        _mainView = this.GetComponent<UIPanel>().ui;
-        Debug.Log(_mainView.width);
+        //_mainView = this.GetComponent<UIPanel>().ui;
+        Debug.Log("Start£¡£¡£¡");
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    void OnDisable()
+    {
+        Debug.Log("OnDisable£¡£¡£¡");
+        enabled = false;
+    }
+
+    void OnEnable()
+    {
+        Debug.Log("OnEnable£¡£¡£¡");
+        enabled = true;
     }
 }
