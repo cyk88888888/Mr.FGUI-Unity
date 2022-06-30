@@ -1,18 +1,13 @@
+using FairyGUI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UILayer : MonoBehaviour
+public class UILayer : UIComp
 {
-    // Start is called before the first frame update
-    void Start()
+  
+    public static UILayer show()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GComponent compSkin = ModuleMgr.inst.getGCompSkin(this.name);
     }
 }
