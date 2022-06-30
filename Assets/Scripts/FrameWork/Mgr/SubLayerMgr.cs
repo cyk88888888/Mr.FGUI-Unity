@@ -42,28 +42,28 @@ public class SubLayerMgr
         Type registerLayer = _classMap[layerName];
         bool needDestory = registerLayer == null && !toPush;//未注册  && 非入栈模式
 
-        this.checkDestoryLastLayer(needDestory);
+        checkDestoryLastLayer(needDestory);
 
-        if (this.curLayer)
+        if (curLayer != null)
         {
             if (toPush) _popArr.Add(curLayer);
             if (toPush || !needDestory)
             {
-                this.curLayer.removeSelf();
+                curLayer.removeSelf();
             }
         }
 
         if (registerLayer != null && registerLayer is UILayer)
         {
-            this.curLayer = registerLayer;
-            this.curLayer.addSelf();
+            curLayer = registerLayer;
+            curLayer.addSelf();
             return;
         }
 
-        this.curLayer = script.show(data);
+        curLayer = script.show(data);
         if (_classMap[layerName] != null)
         {
-            this._classMap[layerName] = curLayer;
+            _classMap[layerName] = curLayer;
         }
     }
 
@@ -72,7 +72,7 @@ public class SubLayerMgr
     {
         if (destory && this.curLayer && !this.curLayer.hasDestory)
         {
-            this.curLayer.close();
+            curLayer.close();
         }
     }
 
@@ -94,13 +94,12 @@ public class SubLayerMgr
     public void releaseAllLayer()
     {
         checkDestoryLastLayer(true);
-        for (let i = 0; i < self._popArr.length; i++)
+        foreach (var item in _popArr)
         {
-            let layer = this._popArr[i];
-            if (!layer.hasDestory) layer.close();
+            if (!item.hasDestory) item.close();
         }
 
-        for (let key in this._classMap)
+        foreach (var item in _classMap)
         {
             let layer = this._classMap[key];
             if (layer.node && !layer.hasDestory)
