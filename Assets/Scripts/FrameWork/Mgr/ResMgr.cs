@@ -15,4 +15,9 @@ public class ResMgr
             return _inst;
         }
     }
+
+    public void load()
+    {
+
+    }
 }
