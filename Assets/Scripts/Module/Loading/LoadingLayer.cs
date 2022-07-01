@@ -7,6 +7,8 @@ using FairyGUI;
 /// </summary>
 public class LoadingLayer : UILayer
 {
-   
-  
+    protected override void onEnter()
+    {
+        Debug.Log("ÎÒµÄLoadingLayer");
+    }
 }

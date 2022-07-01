@@ -25,18 +25,18 @@ public class UIScene : MonoBehaviour
         ctor_a();
     }
 
-    protected void ctor_b() { }
-    protected void ctor() { }
-    protected void ctor_a() { }
+    protected virtual void ctor_b() { }
+    protected virtual void ctor() { }
+    protected virtual void ctor_a() { }
 
-    protected void onEnter_b() { }
-    protected void onEnter() { }
-    protected void onFirstEnter() { }
-    protected void onEnter_a() { }
+    protected virtual void onEnter_b() { }
+    protected virtual void onEnter() { }
+    protected virtual void onFirstEnter() { }
+    protected virtual void onEnter_a() { }
 
-    protected void onExit_b() { }
-    protected void onExit() { }
-    protected void onExit_a() { }
+    protected virtual void onExit_b() { }
+    protected virtual void onExit() { }
+    protected virtual void onExit_a() { }
 
     private void Start()
     {
@@ -44,7 +44,7 @@ public class UIScene : MonoBehaviour
 
         if (mainClassLayer != null)
         {
-            //subLayerMgr.register(mainClassLayer);
+            subLayerMgr.register(mainClassLayer);
             push(mainClassLayer);
         }
     }
@@ -67,7 +67,7 @@ public class UIScene : MonoBehaviour
         GComponent newNode = new GComponent();
         newNode.gameObjectName = name;
         SceneMgr.inst.curScene.AddChild(newNode);
-        //BaseUT.setFitSize(newNode);
+        BaseUT.Inst.SetFitSize(newNode);
         return newNode;
     }
 
@@ -109,7 +109,7 @@ public class UIScene : MonoBehaviour
     /**重置到主界面（会清掉当前堆栈中的所有界面） */
     public void resetToMain()
     {
-        //releaseAllLayer();
+        releaseAllLayer();
         push(mainClassLayer, null);
     }
 
@@ -179,7 +179,7 @@ public class UIScene : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void onDestroy()
+    public void OnDestroy()
     {
         Debug.Log("onDestroy: " + gameObject.name);
     }

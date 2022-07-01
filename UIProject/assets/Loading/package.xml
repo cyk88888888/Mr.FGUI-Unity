@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <packageDescription id="0g7v8b63">
   <resources>
-    <component id="iwgl0" name="Loading.xml" path="/" exported="true"/>
+    <component id="iwgl0" name="LoadingLayer.xml" path="/" exported="true"/>
     <movieclip id="orwc1" name="pet.jta" path="/"/>
     <component id="orwc2" name="ProgressBarLoading.xml" path="/"/>
     <image id="orwc3" name="huawen1_png.png" path="/img/"/>

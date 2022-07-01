@@ -28,40 +28,54 @@ public class SceneMgr
     /**当前场景**/
     public GComponent curScene;
     public string curSceneName;
-    /**打开场景（替换模式） */
-    public void run(string sceneName, object data = null)
+    /// <summary>
+    /// 打开场景（替换模式）
+    /// </summary>
+    /// <param name="sceneName"></param>
+    /// <param name="data"></param>
+    public void Run(string sceneName, object data = null)
     {
-        showScene(sceneName, data);
+        ShowScene(sceneName, data);
     }
 
-    /**打开场景（入栈模式） */
-    public void push(string sceneName, object data = null)
+    /// <summary>
+    /// 打开场景（入栈模式）
+    /// </summary>
+    /// <param name="sceneName"></param>
+    /// <param name="data"></param>
+    public void Push(string sceneName, object data = null)
     {
-        showScene(sceneName, data, true);
+        ShowScene(sceneName, data, true);
     }
 
-    private void showScene(string sceneName, object data = null, bool toPush = false)
+    private void ShowScene(string sceneName, object data = null, bool toPush = false)
     {
         if (curScene != null && curSceneScript.className == sceneName) return;//相同场景
-        ModuleCfgInfo moduleInfo = ModuleMgr.inst.getModuleInfo(sceneName);
+        ModuleCfgInfo moduleInfo = ModuleMgr.inst.GetModuleInfo(sceneName);
         if (moduleInfo == null)
         {
             Debug.LogError("未注册模块：" + sceneName);
             return;
         }
         curSceneName = sceneName;
-        //if (moduleInfo.preResList && moduleInfo.preResList.length > 0)
-        //{
-        //    ResMgr.inst.load(moduleInfo.preResList, this.onUILoaded.bind(this, moduleInfo, data, toPush));
-        //}
-        //else
-        //{
-            onUILoaded(moduleInfo, data, toPush);
-        //}
+        if (moduleInfo.preResList != null && moduleInfo.preResList.Length > 0)
+        {
+            //todo....
+            foreach (var item in moduleInfo.preResList)
+            {
+                UIPackage.AddPackage(item);
+            }
+            OnUILoaded(moduleInfo, data, toPush);
+            //ResMgr.inst.load(moduleInfo.preResList, this.OnUILoaded.bind(this, moduleInfo, data, toPush));
+        }
+        else
+        {
+            OnUILoaded(moduleInfo, data, toPush);
+        }
 
     }
 
-    private void onUILoaded(ModuleCfgInfo moduleInfo, object data, bool toPush)
+    private void OnUILoaded(ModuleCfgInfo moduleInfo, object data, bool toPush)
     {
         if (toPush && curScene != null)
         {
@@ -73,6 +87,8 @@ public class SceneMgr
             checkDestoryLastScene(!toPush);
         }
         GComponent newNode = curScene = new GComponent();
+        newNode.gameObjectName = moduleInfo.name;
+        BaseUT.Inst.SetFitSize(newNode);
         UIScene script = (UIScene)newNode.displayObject.gameObject.AddComponent(moduleInfo.targetClass);
         script.setData(data);
         script.addToGRoot();
@@ -84,7 +100,7 @@ public class SceneMgr
         if (curScene != null)
         {
             if (destory) curSceneScript.destory();
-            ModuleCfgInfo lastModuleInfo = ModuleMgr.inst.getModuleInfo(curScene.gameObjectName);
+            ModuleCfgInfo lastModuleInfo = ModuleMgr.inst.GetModuleInfo(curScene.gameObjectName);
             if (destory && !lastModuleInfo.cacheEnabled)
             {//销毁上个场景
                 //ResMgr.inst.releaseResModule(this.curScene.className);//释放场景资源
@@ -103,7 +119,7 @@ public class SceneMgr
         checkDestoryLastScene(true);
 
         curScene = _popArr[_popArr.Count];
-        _popArr.RemoveAt(_popArr.Count);
+        _popArr.RemoveAt(_popArr.Count - 1);
         curSceneName = curScene.gameObjectName;
         curSceneScript.addToGRoot();
     }

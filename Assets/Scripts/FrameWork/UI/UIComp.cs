@@ -9,20 +9,11 @@ using UnityEngine;
 /// </summary>
 public class UIComp : MonoBehaviour
 {
-    /// <summary>
-    /// 包名
-    /// </summary>
-    public static string pkgName = "";
-    /// <summary>
-    /// 组件名
-    /// </summary>
-    public static string compName = "";
-    /// <summary>
     /// 皮肤
     /// </summary>
     protected GComponent view;
     private GComponent _oldParent;
-    public object data;
+    public object data = null;
     private bool isFirstEnter = true;
     public bool hasDestory = false;
     public UIComp()
@@ -32,23 +23,25 @@ public class UIComp : MonoBehaviour
         ctor_a();
     }
 
-    protected void ctor_b() { }
-    protected void ctor() { }
-    protected void ctor_a() { }
+    protected virtual void ctor_b() { }
+    protected virtual void ctor() { }
+    protected virtual void ctor_a() { }
 
-    protected void onEnter_b() { }
-    protected void onEnter() { }
-    protected void onFirstEnter() { }
-    protected void onEnter_a() { }
+    protected virtual void onEnter_b() { }
+    protected virtual void onEnter() { }
+    protected virtual void onFirstEnter() { }
+    protected virtual void onEnter_a() { }
 
-    protected void onExit_b() { }
-    protected void onExit() { }
-    protected void onExit_a() { }
-
+    protected virtual void dchg() { }
+    protected virtual void onExit_b() { }
+    protected virtual void onExit() { }
+    protected virtual void onExit_a() { }
+   
     private void Awake()
     {
         Debug.Log("Awake: " + gameObject.name);
     }
+
     private void OnEnable()
     {
         __doEnter();
@@ -61,9 +54,19 @@ public class UIComp : MonoBehaviour
 
     private void OnDestroy()
     {
-        Debug.LogError("onDestroy: " + gameObject.name);
+        Debug.Log("onDestroy: " + gameObject.name);
+    }
+    public void setView(GComponent _view)
+    {
+        view = _view;
     }
 
+    public void setData(object _data)
+    {
+        if (_data == data) return;
+        data = _data;
+        dchg();
+    }
     /// <summary>
     /// 设置view的父级
     /// </summary>
@@ -72,6 +75,7 @@ public class UIComp : MonoBehaviour
     {
         if (view == null) return;
         _oldParent = parent;
+        //view.onAddedToStage.Add()
         parent.AddChild(view);
     }
 
@@ -83,7 +87,14 @@ public class UIComp : MonoBehaviour
 
     private void initView()
     {
-
+        onEnter_b();
+        onEnter();
+        if (isFirstEnter)
+        {
+            isFirstEnter = false;
+            onFirstEnter();
+        }
+        onEnter_a();
     }
 
     public string className
@@ -95,7 +106,7 @@ public class UIComp : MonoBehaviour
     public void close()
     {
         //onCloseAnimation(() => {
-        //    self.destory();
+            destory();
         //});
     }
 

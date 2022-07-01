@@ -6,11 +6,13 @@ using UnityEngine;
 public class SubLayerMgr
 {
     private Dictionary<string, Type> _classMap;
+    private Dictionary<string, UILayer> _scriptMap;
     public UILayer curLayer;
     private List<UILayer> _popArr;
     public SubLayerMgr()
     {
         _classMap = new Dictionary<string, Type>();
+        _scriptMap = new Dictionary<string, UILayer>();
         _popArr = new List<UILayer>();
     }
 
@@ -18,7 +20,7 @@ public class SubLayerMgr
     * 注册子页面
     * @param layerClass 
     */
-    public void register(string layerName, object opt)
+    public void register(string layerName, object opt = null)
     {
         _classMap[layerName] = Type.GetType(layerName);
     }
@@ -53,24 +55,25 @@ public class SubLayerMgr
             }
         }
 
-        if (registerLayer != null && registerLayer is UILayer)
+        if (_scriptMap.TryGetValue(layerName, out UILayer script))
         {
-            curLayer = registerLayer;
+            curLayer = _scriptMap[layerName];
             curLayer.addSelf();
             return;
         }
 
-        curLayer = script.show(data);
+        curLayer = (UILayer)BaseUT.Inst.GetUIComp(layerName, data);
+        curLayer.setParent(curLayer.getParent());
         if (_classMap[layerName] != null)
         {
-            _classMap[layerName] = curLayer;
+            _scriptMap[layerName] = curLayer;
         }
     }
 
     /**判断销毁上个界面并释放资源 */
     private void checkDestoryLastLayer(bool destory = false)
     {
-        if (destory && this.curLayer && !this.curLayer.hasDestory)
+        if (destory && curLayer && !curLayer.hasDestory)
         {
             curLayer.close();
         }
@@ -86,7 +89,7 @@ public class SubLayerMgr
         }
         checkDestoryLastLayer(true);
         curLayer = _popArr[_popArr.Count];
-        _popArr.RemoveAt(_popArr.Count);
+        _popArr.RemoveAt(_popArr.Count - 1);
         curLayer.addSelf();
     }
 
@@ -99,12 +102,11 @@ public class SubLayerMgr
             if (!item.hasDestory) item.close();
         }
 
-        foreach (var item in _classMap)
+        foreach (var item in _scriptMap)
         {
-            let layer = this._classMap[key];
-            if (layer.node && !layer.hasDestory)
+            if (!item.Value.hasDestory)
             {
-                layer.close();
+                item.Value.close();
             }
         }
 

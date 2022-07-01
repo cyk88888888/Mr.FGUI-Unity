@@ -11,22 +11,16 @@ public class Main : MonoBehaviour
 {
     private void Awake()
     {
-        ModuleMgr.inst.initModule();
-        UIPackage.AddPackage("UI/Loading");
+        ModuleMgr.inst.Init();
     }
-    private GComponent view;
     // Start is called before the first frame update
     void Start()
     {
-        view = UIPackage.CreateObject("Loading", "Loading").asCom;
-        LoadingLayer aa =  (LoadingLayer)view.displayObject.gameObject.AddComponent(Type.GetType("LoadingLayer"));
-        GRoot.inst.AddChild(view);
-       
+        SceneMgr.inst.Run("LoadingScene");
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 }
