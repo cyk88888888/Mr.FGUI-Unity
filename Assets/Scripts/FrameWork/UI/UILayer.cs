@@ -1,9 +1,4 @@
 using FairyGUI;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
 
 public class UILayer : UIComp
 {
@@ -14,22 +9,24 @@ public class UILayer : UIComp
     /// <param name="compName"> 组件名(其实就是脚本名称)</param>
     /// <param name="data">数据</param>
     /// <returns></returns>
-    public static UILayer Show(string pkgName, string compName, object data = null)
+    public static UILayer Show(string layerName, object data = null)
     {
-        UILayer script = (UILayer)BaseUT.Inst.GetUIComp(pkgName, compName);
-        script.AddToLayer();
-        return script;
+        UILayer layer = BaseUT.Inst.CreateClassByName<UILayer>(layerName);
+        layer.gameObjectName = layerName + "_script";
+        layer.AddToLayer();
+        if (data != null) layer.SetData(data);
+        return layer;
     }
 
-    public virtual GComponent getParent()
+    public virtual GComponent GetParent()
     {
-        return SceneMgr.inst.curSceneScript.layer;
+        return SceneMgr.inst.curScene.layer;
     }
     /// <summary>
     /// 添加到层级
     /// </summary>
     protected void AddToLayer()
     {
-        setParent(getParent());
+        SetParent(GetParent());
     }
 }

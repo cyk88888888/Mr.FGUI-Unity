@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UIMenu : UILayer
 {
-    public override GComponent getParent()
+    public override GComponent GetParent()
     {
-        return SceneMgr.inst.curSceneScript.menuLayer;
+        return SceneMgr.inst.curScene.menuLayer;
     }
 }

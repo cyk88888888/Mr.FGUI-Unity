@@ -2,6 +2,7 @@ using FairyGUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 /// <summary>
 /// 基础工具类
@@ -20,34 +21,23 @@ public class BaseUT
         }
     }
 
-    /// <summary>
-    /// 获取组件皮肤
-    /// </summary>
-    /// <param name="pkgName">包名</param> 
-    /// <param name="compName">组件名</param> 
-    /// <returns></returns>
-    public GComponent GetGCompSkin(string pkgName, string compName)
-    {
-        return UIPackage.CreateObject(pkgName, compName).asCom;
-    }
-
-    public UIComp GetUIComp(string layerName, object data = null)
-    {
-        ModuleMgr.inst.pkgDic.TryGetValue(layerName, out PkgInfo pkgInfo);
-        if (pkgInfo == null)
-        {
-            Debug.LogError("请先注册Layer包路径：" + layerName);
-            return null;
-        }
-        GComponent compSkin = GetGCompSkin(pkgInfo.pkgName, pkgInfo.compName);
-        UIComp script = (UIComp)compSkin.displayObject.gameObject.AddComponent(Type.GetType(layerName));
-        script.setView(compSkin);
-        script.setData(data);
-        return script;
-    }
-
     public void SetFitSize(GComponent comp)
     {
         comp.MakeFullScreen();
     }
+
+    /// <summary>
+    /// 根据类名实例化对象
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="className">类名（可包含命名空间，例如G.ClassName）</param>
+    /// <param name="param"> 构造函数参数</param>
+    /// <returns></returns>
+    public T CreateClassByName<T>(string className, object[] param = null)
+    {
+        Type t = Type.GetType(className);
+        T instance = (T)Activator.CreateInstance(t, param);
+        return instance;
+    }
+
 }

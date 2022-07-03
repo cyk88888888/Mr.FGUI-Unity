@@ -2,12 +2,13 @@ using FairyGUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 /// <summary>
 /// ui场景基类
 /// author：cyk
 /// </summary>
-public class UIScene : MonoBehaviour
+public class UIScene : GComponent
 {
     protected SubLayerMgr subLayerMgr;
     public GComponent layer;
@@ -20,41 +21,43 @@ public class UIScene : MonoBehaviour
     public UIScene()
     {
         subLayerMgr = new SubLayerMgr();
-        ctor_b();
-        ctor();
-        ctor_a();
+        Ctor_b();
+        Ctor();
+        Ctor_a();
+        onAddedToStage.Add(Init);
     }
 
-    protected virtual void ctor_b() { }
-    protected virtual void ctor() { }
-    protected virtual void ctor_a() { }
+    protected virtual void Ctor_b() { }
+    protected virtual void Ctor() { }
+    protected virtual void Ctor_a() { }
 
-    protected virtual void onEnter_b() { }
-    protected virtual void onEnter() { }
-    protected virtual void onFirstEnter() { }
-    protected virtual void onEnter_a() { }
+    protected virtual void OnEnter_b() { }
+    protected virtual void OnEnter() { }
+    protected virtual void OnFirstEnter() { }
+    protected virtual void OnEnter_a() { }
 
-    protected virtual void onExit_b() { }
-    protected virtual void onExit() { }
-    protected virtual void onExit_a() { }
+    protected virtual void OnExit_b() { }
+    protected virtual void OnExit() { }
+    protected virtual void OnExit_a() { }
 
-    private void Start()
+    private void Init()
     {
-        initLayer();
-
+        onAddedToStage.Remove(Init);
+        InitLayer();
         if (mainClassLayer != null)
         {
-            subLayerMgr.register(mainClassLayer);
-            push(mainClassLayer);
+            subLayerMgr.Register(mainClassLayer);
+            Push(mainClassLayer);
         }
     }
 
-    private void initLayer()
+    private void InitLayer()
     {
-        layer = addGCom2GRoot("UILayer");
-        menuLayer = addGCom2GRoot("UIMenuLayer");
-        dlg = addGCom2GRoot("UIDlg");
-        msg = addGCom2GRoot("UIMsg");
+        layer = AddGCom2GRoot("UILayer");
+        menuLayer = AddGCom2GRoot("UIMenuLayer");
+        dlg = AddGCom2GRoot("UIDlg");
+        msg = AddGCom2GRoot("UIMsg");
+        __doEnter();
     }
 
     /**
@@ -62,9 +65,9 @@ public class UIScene : MonoBehaviour
     * @param name 名称
     * @returns 
     */
-    private GComponent addGCom2GRoot(string name)
+    private GComponent AddGCom2GRoot(string name)
     {
-        GComponent newNode = new GComponent();
+        GComponent newNode = new();
         newNode.gameObjectName = name;
         SceneMgr.inst.curScene.AddChild(newNode);
         BaseUT.Inst.SetFitSize(newNode);
@@ -73,87 +76,81 @@ public class UIScene : MonoBehaviour
 
     private void __doEnter()
     {
-        Debug.Log("进入" + gameObject.name);
-        onEnter_b();
-        onEnter();
+        Debug.Log("进入" + ClassName);
+        OnEnter_b();
+        OnEnter();
         if (_isFirstEnter)
         {
             _isFirstEnter = false;
-            onFirstEnter();
+            OnFirstEnter();
         }
-        onEnter_a();
+        OnEnter_a();
     }
 
-    public void setData(object data)
+    public void SetData(object data)
     {
         _moduleParam = data;
     }
 
-    void OnEnable()
-    {
-        __doEnter();
-    }
-
-    void OnDisable()
-    {
-        _dispose();
-    }
-
-    public string className
+    public string ClassName
     {
         get
         {
-            return gameObject.name;
+            return gameObjectName;
         }
     }
     /**重置到主界面（会清掉当前堆栈中的所有界面） */
-    public void resetToMain()
+    public void ResetToMain()
     {
-        releaseAllLayer();
-        push(mainClassLayer, null);
+        ReleaseAllLayer();
+        Push(mainClassLayer, null);
     }
 
     /**显示指定界面（替换模式） */
-    public void run(string layerName, object data = null)
+    public void Run(string layerName, object data = null)
     {
-        subLayerMgr.run(layerName, data);
+        subLayerMgr.Run(layerName, data);
     }
 
     /**显示指定界面（入栈模式） */
-    public void push(string layerName, object data = null)
+    public void Push(string layerName, object data = null)
     {
-        subLayerMgr.push(layerName, data);
+        subLayerMgr.Push(layerName, data);
     }
 
     /**layer出栈 */
-    public void pop()
+    public void Pop()
     {
-        subLayerMgr.pop();
+        subLayerMgr.Pop();
     }
 
     /// <summary>
-    /// 将场景添加到GRoot根节点
+    /// 将场景添加到GRoot根节点（用于界面回退管理，开发者请勿调用）**/
     /// </summary>
-    public void addToGRoot()
+    public void AddSelfToOldParent()
     {
+        __doEnter();
         GRoot.inst.AddChild(SceneMgr.inst.curScene);
     }
-
-    public void removeFromParent()
+    /// <summary>
+    /// 从父级移除（用于界面回退管理，开发者请勿调用）**/
+    /// </summary>
+    public void RemoveSelf()
     {
+        _dispose();
         SceneMgr.inst.curScene.RemoveFromParent();
     }
 
     /**清除所有layer */
-    public void releaseAllLayer()
+    public void ReleaseAllLayer()
     {
-        this.subLayerMgr.releaseAllLayer();
+        subLayerMgr.ReleaseAllLayer();
     }
 
-    public void disposeSubLayerMgr()
+    public void DisposeSubLayerMgr()
     {
-        this.subLayerMgr.dispose();
-        this.subLayerMgr = null;
+        subLayerMgr.Dispose();
+        subLayerMgr = null;
     }
 
     public void _dispose()
@@ -165,22 +162,20 @@ public class UIScene : MonoBehaviour
             //}
             //_emmitMap = null;
         //}
-        Debug.Log("退出" + gameObject.name);
-        onExit_b();
-        onExit();
-        onExit_a();
+        Debug.Log("退出" + ClassName);
+        OnExit_b();
+        OnExit();
+        OnExit_a();
     }
 
-    public void destory()
+    public void Destory()
     {
         _dispose();
-        subLayerMgr.dispose();
+        subLayerMgr.Dispose();
         subLayerMgr = null;
-        Destroy(gameObject);
+        Debug.Log("onDestroy: " + ClassName);
+        Dispose();
     }
 
-    public void OnDestroy()
-    {
-        Debug.Log("onDestroy: " + gameObject.name);
-    }
+   
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class SubLayerMgr
@@ -20,50 +21,52 @@ public class SubLayerMgr
     * 注册子页面
     * @param layerClass 
     */
-    public void register(string layerName, object opt = null)
+    public void Register(string layerName, object opt = null)
     {
         _classMap[layerName] = Type.GetType(layerName);
     }
 
     /**显示指定界面（替换模式） */
-    public void run(string layerName, object data = null)
+    public void Run(string layerName, object data = null)
     {
         _show(layerName, data);
     }
 
     /**显示指定界面（入栈模式） */
-    public void push(string layerName, object data = null)
+    public void Push(string layerName, object data = null)
     {
         _show(layerName, data, true);
     }
 
     private void _show(string layerName, object data, bool toPush = false)
     {
-        if (curLayer && curLayer.className == layerName) return;//打开同个界面
+        if (curLayer != null && curLayer.className == layerName) return;//打开同个界面
 
         Type registerLayer = _classMap[layerName];
         bool needDestory = registerLayer == null && !toPush;//未注册  && 非入栈模式
 
-        checkDestoryLastLayer(needDestory);
+        CheckDestoryLastLayer(needDestory);
 
         if (curLayer != null)
         {
             if (toPush) _popArr.Add(curLayer);
             if (toPush || !needDestory)
             {
-                curLayer.removeSelf();
+                curLayer.RemoveSelf();
             }
         }
 
-        if (_scriptMap.TryGetValue(layerName, out UILayer script))
+        if (_scriptMap.TryGetValue(layerName, out UILayer layer))
         {
-            curLayer = _scriptMap[layerName];
-            curLayer.addSelf();
+            curLayer = layer;
+            curLayer.AddSelfToOldParent();
             return;
         }
 
-        curLayer = (UILayer)BaseUT.Inst.GetUIComp(layerName, data);
-        curLayer.setParent(curLayer.getParent());
+        curLayer = BaseUT.Inst.CreateClassByName<UILayer>(layerName);
+        curLayer.gameObjectName = layerName + "_script";
+        curLayer.GetParent().AddChild(curLayer);
+        if (data != null) curLayer.SetData(data);
         if (_classMap[layerName] != null)
         {
             _scriptMap[layerName] = curLayer;
@@ -71,32 +74,32 @@ public class SubLayerMgr
     }
 
     /**判断销毁上个界面并释放资源 */
-    private void checkDestoryLastLayer(bool destory = false)
+    private void CheckDestoryLastLayer(bool destory = false)
     {
-        if (destory && curLayer && !curLayer.hasDestory)
+        if (destory && curLayer != null && !curLayer.hasDestory)
         {
             curLayer.close();
         }
     }
 
     /** layer出栈*/
-    public void pop()
+    public void Pop()
     {
         if (_popArr.Count <= 0)
         {
             Debug.LogError("已经pop到底了！！！！！！！");
             return;
         }
-        checkDestoryLastLayer(true);
+        CheckDestoryLastLayer(true);
         curLayer = _popArr[_popArr.Count];
         _popArr.RemoveAt(_popArr.Count - 1);
-        curLayer.addSelf();
+        curLayer.AddSelfToOldParent();
     }
 
     /**清除所有注册的layer */
-    public void releaseAllLayer()
+    public void ReleaseAllLayer()
     {
-        checkDestoryLastLayer(true);
+        CheckDestoryLastLayer(true);
         foreach (var item in _popArr)
         {
             if (!item.hasDestory) item.close();
@@ -113,9 +116,9 @@ public class SubLayerMgr
         _popArr = new List<UILayer>();
     }
 
-    public void dispose()
+    public void Dispose()
     {
-        releaseAllLayer();
+        ReleaseAllLayer();
         _classMap = null;
         _popArr = null;
     }

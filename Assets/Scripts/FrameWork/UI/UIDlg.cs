@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UIDlg : UILayer
 {
-    public override GComponent getParent()
+    public override GComponent GetParent()
     {
-        return SceneMgr.inst.curSceneScript.dlg;
+        return SceneMgr.inst.curScene.dlg;
     }
 }

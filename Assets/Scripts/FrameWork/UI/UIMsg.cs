@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class UIMsg : UILayer
 {
-    public override GComponent getParent()
+    public override GComponent GetParent()
     {
-        return SceneMgr.inst.curSceneScript.msg;
+        return SceneMgr.inst.curScene.msg;
     }
 }
