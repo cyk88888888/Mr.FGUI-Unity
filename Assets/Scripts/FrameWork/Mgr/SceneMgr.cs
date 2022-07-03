@@ -18,15 +18,15 @@ public class SceneMgr
             if (_inst == null)
             {
                 _inst = new SceneMgr();
-                _inst._popArr = new List<GComponent>();
+                _inst._popArr = new List<UIScene>();
 
             }
             return _inst;
         }
     }
-    private List<GComponent> _popArr;
+    private List<UIScene> _popArr;
     /**当前场景**/
-    public GComponent curScene;
+    public UIScene curScene;
     public string curSceneName;
     /// <summary>
     /// 打开场景（替换模式）
@@ -50,7 +50,7 @@ public class SceneMgr
 
     private void ShowScene(string sceneName, object data = null, bool toPush = false)
     {
-        if (curScene != null && curSceneScript.className == sceneName) return;//相同场景
+        if (curScene != null && curScene.ClassName == sceneName) return;//相同场景
         ModuleCfgInfo moduleInfo = ModuleMgr.inst.GetModuleInfo(sceneName);
         if (moduleInfo == null)
         {
@@ -80,18 +80,18 @@ public class SceneMgr
         if (toPush && curScene != null)
         {
             _popArr.Add(curScene);
-            curSceneScript.removeFromParent();
+            curScene.RemoveSelf();
         }
         else
         {
             checkDestoryLastScene(!toPush);
         }
-        GComponent newNode = curScene = new GComponent();
-        newNode.gameObjectName = moduleInfo.name;
-        BaseUT.Inst.SetFitSize(newNode);
-        UIScene script = (UIScene)newNode.displayObject.gameObject.AddComponent(moduleInfo.targetClass);
-        script.setData(data);
-        script.addToGRoot();
+
+        curScene = BaseUT.Inst.CreateClassByName<UIScene>(moduleInfo.name);
+        curScene.gameObjectName = moduleInfo.name;
+        BaseUT.Inst.SetFitSize(curScene);
+        GRoot.inst.AddChild(curScene);
+        if (data != null) curScene.SetData(data);
     }
 
     /**判断销毁上个场景并释放资源 */
@@ -99,11 +99,14 @@ public class SceneMgr
     {
         if (curScene != null)
         {
-            if (destory) curSceneScript.destory();
             ModuleCfgInfo lastModuleInfo = ModuleMgr.inst.GetModuleInfo(curScene.gameObjectName);
-            if (destory && !lastModuleInfo.cacheEnabled)
+            if (destory)
             {//销毁上个场景
-                //ResMgr.inst.releaseResModule(this.curScene.className);//释放场景资源
+                curScene.Destory();
+                if (!lastModuleInfo.cacheEnabled)
+                {
+                    //ResMgr.inst.releaseResModule(this.curScene.className);//释放场景资源
+                }
             }
         }
     }
@@ -121,17 +124,7 @@ public class SceneMgr
         curScene = _popArr[_popArr.Count];
         _popArr.RemoveAt(_popArr.Count - 1);
         curSceneName = curScene.gameObjectName;
-        curSceneScript.addToGRoot();
-    }
-    /// <summary>
-    /// 当前场景的脚本
-    /// </summary>
-    public UIScene curSceneScript
-    {
-        get
-        {
-            return (UIScene)curScene.displayObject.gameObject.GetComponent(curSceneName);
-        }
+        curScene.AddSelfToOldParent();
     }
 
 }

@@ -14,9 +14,10 @@ public class ModuleMgr
         {
             if (_inst == null)
             {
-                _inst = new ModuleMgr();
-                _inst.moduleDic = new Dictionary<string, ModuleCfgInfo>();
-                _inst.pkgDic = new Dictionary<string, PkgInfo>();
+                _inst = new ModuleMgr
+                {
+                    moduleDic = new Dictionary<string, ModuleCfgInfo>()
+                };
             }
             return _inst;
         }
@@ -25,23 +26,16 @@ public class ModuleMgr
     public void Init()
     {
         InitModule();
-        InitPkg();
     }
 
     public Dictionary<string, ModuleCfgInfo> moduleDic;
-    public Dictionary<string, PkgInfo> pkgDic;
     /// <summary>
     /// 初始化所有模块
     /// </summary>
     private void InitModule()
     {
         moduleDic["LoadingScene"] = new ModuleCfgInfo("LoadingScene", false, new string[1] { "UI/Loading" });
-    }
-
-
-    private void InitPkg()
-    {
-        pkgDic["LoadingLayer"] = new PkgInfo("Loading", "LoadingLayer");
+        moduleDic["HomeScene"] = new ModuleCfgInfo("HomeScene", false, new string[1] { "UI/Home" });
     }
 
     /// <summary>
@@ -51,8 +45,7 @@ public class ModuleMgr
     /// <returns></returns>
     public ModuleCfgInfo GetModuleInfo(string moduleName)
     {
-        ModuleCfgInfo info;
-        if (!moduleDic.TryGetValue(moduleName, out info))
+        if (!moduleDic.TryGetValue(moduleName, out ModuleCfgInfo info))
         {
             Debug.LogError("未注册模块：" + moduleName);
         }

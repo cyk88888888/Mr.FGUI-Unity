@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="kxn7l2bo">
+  <resources>
+    <component id="ock10" name="HomeLayer.xml" path="/" exported="true"/>
+    <image id="ock18" name="bg_loading2.png" path="/img/"/>
+  </resources>
+  <publish name=""/>
+</packageDescription>

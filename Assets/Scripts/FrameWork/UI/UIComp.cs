@@ -7,117 +7,138 @@ using UnityEngine;
 /// 组件基类
 /// author：cyk
 /// </summary>
-public class UIComp : MonoBehaviour
+public class UIComp : GComponent
 {
     /// 皮肤
     /// </summary>
     protected GComponent view;
     private GComponent _oldParent;
-    public object data = null;
+    public object __data = null;
     private bool isFirstEnter = true;
     public bool hasDestory = false;
     public UIComp()
     {
-        ctor_b();
-        ctor();
-        ctor_a();
+        Ctor_b();
+        Ctor();
+        Ctor_a();
+        onAddedToStage.Add(Init);
     }
 
-    protected virtual void ctor_b() { }
-    protected virtual void ctor() { }
-    protected virtual void ctor_a() { }
+    protected virtual void Ctor_b() { }
+    protected virtual void Ctor() { }
+    protected virtual void Ctor_a() { }
 
-    protected virtual void onEnter_b() { }
-    protected virtual void onEnter() { }
-    protected virtual void onFirstEnter() { }
-    protected virtual void onEnter_a() { }
+    protected virtual void OnEnter_b() { }
+    protected virtual void OnEnter() { }
+    protected virtual void OnFirstEnter() { }
+    protected virtual void OnEnter_a() { }
 
-    protected virtual void dchg() { }
-    protected virtual void onExit_b() { }
-    protected virtual void onExit() { }
-    protected virtual void onExit_a() { }
-   
-    private void Awake()
+    protected virtual void Dchg() { }
+
+    protected virtual void OnExit_b() { }
+    protected virtual void OnExit() { }
+    protected virtual void OnExit_a() { }
+
+    /// <summary>
+    /// 包名
+    /// </summary>
+    protected virtual string PkgName
     {
-        Debug.Log("Awake: " + gameObject.name);
+        get { return ""; }
+    }
+    /// <summary>
+    /// 组件名
+    /// </summary>
+    protected virtual string CompName
+    {
+        get { return ""; }
     }
 
-    private void OnEnable()
+    /// <summary>
+    /// 初始化UI
+    /// </summary>
+    private void Init()
     {
-        __doEnter();
+        onAddedToStage.Remove(Init);
+        _oldParent = parent;
+        GComponent compSkin = UIPackage.CreateObject(PkgName, CompName).asCom;
+        SetSize(compSkin.width, compSkin.height);
+        AddChild(compSkin);
+        SetView(compSkin);
     }
-
-    private void OnDisable()
-    {
-        _dispose();
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("onDestroy: " + gameObject.name);
-    }
-    public void setView(GComponent _view)
+    public void SetView(GComponent _view)
     {
         view = _view;
+        __doEnter();
+    }
+    private void __doEnter()
+    {
+        Debug.Log("进入" + className);
+        OnEnter_b();
+        OnEnter();
+        if (isFirstEnter)
+        {
+            isFirstEnter = false;
+            OnFirstEnter();
+        }
+        OnEnter_a();
+        InitProperty();
     }
 
-    public void setData(object _data)
+    protected void InitProperty()
+    {
+        GObject[] children = view.GetChildren();
+        Debug.Log("children: " + children.Length);
+        for (int i = 0; i < children.Length; i++)
+        {
+
+        }
+    }
+
+    public void SetData(object _data)
     {
         if (_data == data) return;
-        data = _data;
-        dchg();
+        __data = _data;
+        Dchg();
     }
+
+
+    public string className
+    {
+        get
+        {
+            return gameObjectName.Split("_")[0];
+        }
+    }
+
     /// <summary>
     /// 设置view的父级
     /// </summary>
     /// <param name="parent"></param>
-    public void setParent(GComponent parent)
+    public void SetParent(GComponent parent)
     {
         if (view == null) return;
         _oldParent = parent;
-        //view.onAddedToStage.Add()
         parent.AddChild(view);
     }
 
-    private void __doEnter()
-    {
-        Debug.Log("进入" + gameObject.name);
-        initView();
-    }
-
-    private void initView()
-    {
-        onEnter_b();
-        onEnter();
-        if (isFirstEnter)
-        {
-            isFirstEnter = false;
-            onFirstEnter();
-        }
-        onEnter_a();
-    }
-
-    public string className
-    {
-        get {
-            return name;
-        }
-    }
     public void close()
     {
         //onCloseAnimation(() => {
-            destory();
+        Destory();
         //});
     }
-
-    public void addSelf()
+    /** 添加到旧父级（用于界面回退管理，开发者请勿调用）**/
+    public void AddSelfToOldParent()
     {
-        setParent(_oldParent);
+        __doEnter();
+        SetParent(_oldParent);
     }
-
-    public void removeSelf()
+    /** 从父级移除（用于界面回退管理，开发者请勿调用）**/
+    public void RemoveSelf()
     {
-        view.RemoveFromParent();
+        _dispose();
+        RemoveFromParent();
     }
 
     private void _dispose()
@@ -125,16 +146,18 @@ public class UIComp : MonoBehaviour
         //self.clearAllTimeoutOrInterval();
         //self.rmAllTweens();
 
-        Debug.Log("退出" + gameObject.name);
-        onExit_b();
-        onExit();
-        onExit_a();
+        Debug.Log("退出" + className);
+        OnExit_b();
+        OnExit();
+        OnExit_a();
     }
 
-    public void destory()
+    /** 销毁*/
+    public void Destory()
     {
         if (hasDestory) return;
-        view.Dispose();
+        Debug.Log("onDestroy: " + className);
+        Dispose();
         hasDestory = true;
     }
 }

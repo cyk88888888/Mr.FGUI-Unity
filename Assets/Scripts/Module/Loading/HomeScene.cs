@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using FairyGUI;
 /// <summary>
-/// 游戏登入加载场景
+/// 游戏主场景
 /// </summary>
-public class LoadingScene : UIScene
+public class HomeScene : UIScene
 {
-    protected override void ctor()
+    protected override void Ctor()
     {
-        mainClassLayer = "LoadingLayer";
+        mainClassLayer = "HomeLayer";
         List<string> classList = new();
         foreach (var item in classList)
         {
-            subLayerMgr.register(item);
+            subLayerMgr.Register(item);
         }
     }
 }
