@@ -1,5 +1,6 @@
 /// <summary>
 /// 资源路径静态类
+/// author：cyk
 /// </summary>
 public class ResUrl
 {
