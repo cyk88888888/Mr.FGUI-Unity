@@ -16,7 +16,7 @@ public class BagDlg : UIDlg
     {
         get { return "BagDlg"; }
     }
-    GList _list;
+    private GList _list;
     protected override void OnEnter()
     {
         _list = view.GetChild("list_bag").asList;
