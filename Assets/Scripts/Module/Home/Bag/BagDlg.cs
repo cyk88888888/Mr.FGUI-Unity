@@ -33,7 +33,7 @@ public class BagDlg : UIDlg
     private void RenderListItem(int index, GObject obj)
     {
         GButton button = (GButton)obj;
-        button.icon = "i" + Random.Range(0, 10);
+        button.icon = ResUrl.GetItemIcon(Random.Range(0, 10));
         button.title = "" + Random.Range(0, 100);
     }
 

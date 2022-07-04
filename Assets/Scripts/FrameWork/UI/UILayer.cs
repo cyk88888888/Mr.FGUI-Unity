@@ -18,6 +18,7 @@ public class UILayer : UIComp
         layer.GetParent().AddChild(layer);
         BaseUT.Inst.SetFitSize(layer.view);
         if (data != null) layer.SetData(data);
+        layer.OnAddToLayer();
         return layer;
     }
 
@@ -25,4 +26,7 @@ public class UILayer : UIComp
     {
         return SceneMgr.inst.curScene.layer;
     }
+
+    protected virtual void OnAddToLayer() { }
+
 }
