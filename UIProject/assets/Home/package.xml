@@ -3,6 +3,40 @@
   <resources>
     <component id="ock10" name="HomeLayer.xml" path="/" exported="true"/>
     <image id="ock18" name="bg_loading2.png" path="/img/"/>
+    <image id="h98z9" name="1.png" path="/img/"/>
+    <image id="h98za" name="r3.png" path="/img/"/>
+    <movieclip id="h98zb" name="quan.jta" path="/img/"/>
+    <image id="h98zc" name="k26.png" path="/img/"/>
+    <image id="h98zd" name="k1.png" path="/img/"/>
+    <image id="h98ze" name="item_33.png" path="/img/"/>
+    <image id="h98zf" name="img_xiantiao.png" path="/img/" scale="9grid" scale9grid="1,28,2,56"/>
+    <image id="h98zg" name="img_dingkaung.png" path="/img/"/>
+    <image id="h98zh" name="ico_zhuangbei.png" path="/img/"/>
+    <image id="h98zi" name="ico_tianfu.png" path="/img/"/>
+    <image id="h98zj" name="ico_shijie.png" path="/img/"/>
+    <image id="h98zk" name="ico_shezhi.png" path="/img/"/>
+    <image id="h98zl" name="ico_shandian.png" path="/img/"/>
+    <image id="h98zm" name="c3_png.png" path="/img/"/>
+    <image id="h98zn" name="c1_png.png" path="/img/" scale="9grid" scale9grid="23,5,46,10"/>
+    <image id="h98zo" name="btnimage.png" path="/img/"/>
+    <image id="h98zp" name="abount.png" path="/img/"/>
+    <image id="h98zq" name="8.png" path="/img/"/>
+    <image id="h98zr" name="7.png" path="/img/"/>
+    <image id="h98zs" name="5.png" path="/img/"/>
+    <image id="h98zt" name="4.png" path="/img/"/>
+    <image id="h98zu" name="3.png" path="/img/"/>
+    <image id="h98zv" name="2.png" path="/img/"/>
+    <image id="h98zw" name="2(1).png" path="/img/"/>
+    <image id="h98zx" name="s9g_4.png" path="/img/" scale="9grid" scale9grid="15,15,30,30"/>
+    <image id="h98zy" name="z_suotou.png" path="/img/"/>
+    <component id="h98zz" name="BottomTabLayer.xml" path="/" exported="true"/>
+    <component id="h98z10" name="TabBottomIR.xml" path="/components/"/>
+    <component id="h98z11" name="TabBottomIR1.xml" path="/components/"/>
+    <component id="h98z13" name="TopInfoLayer.xml" path="/" exported="true"/>
+    <component id="h98z14" name="EquipLayer.xml" path="/" exported="true"/>
+    <component id="h98z15" name="ShopLayer.xml" path="/" exported="true"/>
+    <component id="h98z16" name="Skilllayer.xml" path="/" exported="true"/>
+    <component id="h98z17" name="SettingLayer.xml" path="/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

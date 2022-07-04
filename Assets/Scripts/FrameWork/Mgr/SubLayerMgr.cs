@@ -40,7 +40,7 @@ public class SubLayerMgr
 
     private void _show(string layerName, object data, bool toPush = false)
     {
-        if (curLayer != null && curLayer.className == layerName) return;//打开同个界面
+        if (curLayer != null && curLayer.ClassName == layerName) return;//打开同个界面
 
         Type registerLayer = _classMap[layerName];
         bool needDestory = registerLayer == null && !toPush;//未注册  && 非入栈模式
@@ -63,10 +63,7 @@ public class SubLayerMgr
             return;
         }
 
-        curLayer = BaseUT.Inst.CreateClassByName<UILayer>(layerName);
-        curLayer.gameObjectName = layerName + "_script";
-        curLayer.GetParent().AddChild(curLayer);
-        if (data != null) curLayer.SetData(data);
+        curLayer = UILayer.Show(layerName, data);
         if (_classMap[layerName] != null)
         {
             _scriptMap[layerName] = curLayer;
@@ -78,7 +75,7 @@ public class SubLayerMgr
     {
         if (destory && curLayer != null && !curLayer.hasDestory)
         {
-            curLayer.close();
+            curLayer.Close();
         }
     }
 
@@ -102,14 +99,14 @@ public class SubLayerMgr
         CheckDestoryLastLayer(true);
         foreach (var item in _popArr)
         {
-            if (!item.hasDestory) item.close();
+            if (!item.hasDestory) item.Close();
         }
 
         foreach (var item in _scriptMap)
         {
             if (!item.Value.hasDestory)
             {
-                item.Value.close();
+                item.Value.Close();
             }
         }
 

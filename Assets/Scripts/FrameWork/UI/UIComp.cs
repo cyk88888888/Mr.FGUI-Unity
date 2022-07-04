@@ -1,4 +1,5 @@
 using FairyGUI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class UIComp : GComponent
     public object __data = null;
     private bool isFirstEnter = true;
     public bool hasDestory = false;
+    private List<UIComp> childComp;
     public UIComp()
     {
         Ctor_b();
@@ -61,8 +63,12 @@ public class UIComp : GComponent
     {
         onAddedToStage.Remove(Init);
         _oldParent = parent;
+        if (PkgName == "" || CompName == "")
+        {
+            Debug.LogError("请先在对应界面重写PkgName和CompName字段！！！");
+            return;
+        }
         GComponent compSkin = UIPackage.CreateObject(PkgName, CompName).asCom;
-        SetSize(compSkin.width, compSkin.height);
         AddChild(compSkin);
         SetView(compSkin);
     }
@@ -73,7 +79,7 @@ public class UIComp : GComponent
     }
     private void __doEnter()
     {
-        Debug.Log("进入" + className);
+        Debug.Log("进入" + ClassName);
         OnEnter_b();
         OnEnter();
         if (isFirstEnter)
@@ -88,10 +94,22 @@ public class UIComp : GComponent
     protected void InitProperty()
     {
         GObject[] children = view.GetChildren();
-        Debug.Log("children: " + children.Length);
+        if (childComp == null) childComp = new();
         for (int i = 0; i < children.Length; i++)
         {
-
+            GObject item = children[i];
+            if (item is GComponent)
+            {
+                string gameObjectName = item.gameObjectName;
+                Type type = Type.GetType(gameObjectName);
+                if (type != null)
+                {
+                    UIComp comp = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
+                    comp.gameObjectName = gameObjectName;
+                    comp.SetView((GComponent)item);
+                    childComp.Add(comp);
+                }
+            }
         }
     }
 
@@ -103,7 +121,7 @@ public class UIComp : GComponent
     }
 
 
-    public string className
+    public string ClassName
     {
         get
         {
@@ -122,19 +140,27 @@ public class UIComp : GComponent
         parent.AddChild(view);
     }
 
-    public void close()
+    /// <summary>
+    /// 销毁组件
+    /// </summary>
+    public void Close()
     {
         //onCloseAnimation(() => {
+        _dispose();
         Destory();
         //});
     }
-    /** 添加到旧父级（用于界面回退管理，开发者请勿调用）**/
+    /// <summary>
+    /// 添加到旧父级（用于界面回退管理，开发者请勿调用）
+    /// </summary>
     public void AddSelfToOldParent()
     {
         __doEnter();
         SetParent(_oldParent);
     }
-    /** 从父级移除（用于界面回退管理，开发者请勿调用）**/
+    /// <summary>
+    /// 从父级移除（用于界面回退管理，开发者请勿调用）
+    /// </summary>
     public void RemoveSelf()
     {
         _dispose();
@@ -146,18 +172,27 @@ public class UIComp : GComponent
         //self.clearAllTimeoutOrInterval();
         //self.rmAllTweens();
 
-        Debug.Log("退出" + className);
+        Debug.Log("退出" + ClassName);
+        foreach (var item in childComp)
+        {
+            item._dispose();
+        }
         OnExit_b();
         OnExit();
         OnExit_a();
     }
 
     /** 销毁*/
-    public void Destory()
+    private void Destory()
     {
         if (hasDestory) return;
-        Debug.Log("onDestroy: " + className);
-        Dispose();
         hasDestory = true;
+        foreach (var item in childComp)
+        {
+            item.Destory();
+        }
+        Debug.Log("onDestroy: " + ClassName);
+        Dispose();
+        
     }
 }

@@ -13,7 +13,9 @@ public class UILayer : UIComp
     {
         UILayer layer = BaseUT.Inst.CreateClassByName<UILayer>(layerName);
         layer.gameObjectName = layerName + "_script";
-        layer.AddToLayer();
+        BaseUT.Inst.SetFitSize(layer);
+        layer.GetParent().AddChild(layer);
+        BaseUT.Inst.SetFitSize(layer.view);
         if (data != null) layer.SetData(data);
         return layer;
     }
@@ -21,12 +23,5 @@ public class UILayer : UIComp
     public virtual GComponent GetParent()
     {
         return SceneMgr.inst.curScene.layer;
-    }
-    /// <summary>
-    /// Ìí¼Óµ½²ã¼¶
-    /// </summary>
-    protected void AddToLayer()
-    {
-        SetParent(GetParent());
     }
 }

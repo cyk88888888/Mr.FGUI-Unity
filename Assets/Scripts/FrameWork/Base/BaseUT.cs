@@ -20,10 +20,12 @@ public class BaseUT
             return _inst;
         }
     }
-
-    public void SetFitSize(GComponent comp)
+    public ScaleMode scaleMode;
+    public Vector2 SetFitSize(GComponent comp)
     {
-        comp.MakeFullScreen();
+        float designHeight = GRoot.inst.height < scaleMode.designHeight_max ? GRoot.inst.height : scaleMode.designHeight_max;
+        comp.SetSize(scaleMode.designWidth, designHeight);
+        return new Vector2(scaleMode.designWidth, designHeight);
     }
 
     /// <summary>

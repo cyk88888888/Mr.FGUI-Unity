@@ -12,6 +12,7 @@ public class Main : MonoBehaviour
     private void Awake()
     {
         ModuleMgr.inst.Init();
+        BaseUT.Inst.scaleMode = new(640, 1280, 1030, 1280);
     }
     // Start is called before the first frame update
     void Start()

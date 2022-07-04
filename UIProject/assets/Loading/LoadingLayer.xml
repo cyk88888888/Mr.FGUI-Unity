@@ -8,8 +8,5 @@
       <relation target="" sidePair="center-center,bottom-bottom"/>
       <ProgressBar max="100"/>
     </component>
-    <movieclip id="n2_pht5" name="n2" src="orwc1" fileName="pet.jta" xy="278,603">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </movieclip>
   </displayList>
 </component>

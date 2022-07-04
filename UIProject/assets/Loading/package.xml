@@ -8,6 +8,7 @@
     <image id="orwc4" name="huawen2_png.png" path="/img/"/>
     <image id="orwc5" name="loading.png" path="/img/" duplicatePadding="true"/>
     <image id="orwc6" name="change.png" path="/img/"/>
+    <image id="h98z8" name="btnimage.png" path="/img/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

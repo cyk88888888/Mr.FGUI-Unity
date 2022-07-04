@@ -89,7 +89,8 @@ public class SceneMgr
 
         curScene = BaseUT.Inst.CreateClassByName<UIScene>(moduleInfo.name);
         curScene.gameObjectName = moduleInfo.name;
-        BaseUT.Inst.SetFitSize(curScene);
+        Vector2 size = BaseUT.Inst.SetFitSize(curScene);
+        curScene.SetXY((GRoot.inst.width - size.x) / 2, (GRoot.inst.height - size.y) / 2);
         GRoot.inst.AddChild(curScene);
         if (data != null) curScene.SetData(data);
     }
