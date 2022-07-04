@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="640,1280">
+  <displayList>
+    <image id="n5_jtzd" name="n5" src="nx961" fileName="images/bg_currency1.png" xy="0,-60">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </image>
+    <list id="n0" name="list_card" xy="0,289" size="640,387" layout="row" overflow="scroll" scroll="horizontal" scrollBarFlags="2" scrollBar="hidden" clipSoftness="20,0" colGap="23" defaultItem="ui://ubco8aujnx962">
+      <item icon="ui://ubco8aujjtzd1"/>
+      <item icon="ui://ubco8aujjtzd2"/>
+      <item icon="ui://ubco8aujjtzd3"/>
+    </list>
+    <text id="n2" name="n2" xy="87,767" size="298,39" fontSize="28" color="#ffffff" text="Index of the middle is:"/>
+    <text id="n3" name="lbl_index" xy="416,766" size="145,32" fontSize="28" color="#ffffff" autoSize="height" text=""/>
+    <component id="n4_jtzd" name="btn_back" src="jtzd8" fileName="components/btnBack.xml" pkg="g2zhtj9b" xy="11,14"/>
+  </displayList>
+</component>

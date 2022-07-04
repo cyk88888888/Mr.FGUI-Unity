@@ -35,8 +35,9 @@ public class ModuleMgr
     private void InitModule()
     {
         moduleDic["LoadingScene"] = new ModuleCfgInfo("LoadingScene", false, new string[1] { "UI/Loading" });
-        moduleDic["HomeScene"] = new ModuleCfgInfo("HomeScene", false, new string[1] { "UI/Home" });
+        moduleDic["HomeScene"] = new ModuleCfgInfo("HomeScene", true, new string[1] { "UI/Home" });
         moduleDic["RoleScene"] = new ModuleCfgInfo("RoleScene", false, new string[1] { "UI/Role" });
+        moduleDic["LoopListScene"] = new ModuleCfgInfo("LoopListScene", false, new string[1] { "UI/LoopList" });
     }
 
     /// <summary>

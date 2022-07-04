@@ -18,7 +18,7 @@ public class UIComp : GComponent, IEmmiter
     private bool isFirstEnter = true;
     public bool hasDestory = false;
     protected bool sameSizeWithView = true;//脚本容器宽高是否需要和view一样
-    private List<UIComp> childComp;
+    private Dictionary<string, UIComp> childCompDic;
     private Dictionary<string, EventListenerDelegate> notifications = new Dictionary<string, EventListenerDelegate>();
     public UIComp()
     {
@@ -97,7 +97,7 @@ public class UIComp : GComponent, IEmmiter
     protected void InitProperty()
     {
         GObject[] children = view.GetChildren();
-        if (childComp == null) childComp = new();
+        if (childCompDic == null) childCompDic = new();
         for (int i = 0; i < children.Length; i++)
         {
             GObject item = children[i];
@@ -107,10 +107,14 @@ public class UIComp : GComponent, IEmmiter
                 Type type = Type.GetType(gameObjectName);
                 if (type != null)
                 {
-                    UIComp comp = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
-                    comp.gameObjectName = gameObjectName;
-                    comp.SetView((GComponent)item);
-                    childComp.Add(comp);
+                    UIComp script;
+                    if (!childCompDic.TryGetValue(item.name, out script))
+                    {
+                        script = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
+                        script.gameObjectName = gameObjectName;
+                        childCompDic.Add(item.name, script);
+                    }
+                    script.SetView((GComponent)item);
                 }
             }
         }
@@ -213,9 +217,13 @@ public class UIComp : GComponent, IEmmiter
         //self.rmAllTweens();
 
         Debug.Log("退出" + ClassName);
-        foreach (var item in childComp)
+        if (childCompDic != null)
         {
-            item.__dispose();
+            foreach (var item in childCompDic)
+            {
+                item.Value.__dispose();
+            }
+
         }
 
         foreach (var item in notifications)
@@ -234,10 +242,12 @@ public class UIComp : GComponent, IEmmiter
     {
         if (hasDestory) return;
         hasDestory = true;
-        foreach (var item in childComp)
+
+        foreach (var item in childCompDic)
         {
-            item.Destory();
+            item.Value.Destory();
         }
+
         Debug.Log("onDestroy: " + ClassName);
         Dispose();
 

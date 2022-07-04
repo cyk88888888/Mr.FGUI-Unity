@@ -37,12 +37,3 @@ public class LoadingLayer: UILayer
         }
     }
 }
-
-public class B<T> where T : new()
-{
-    public static T Get()
-    {
-        T result = new T();//这样就可以实例化。也可以编译通过。 
-        return result;
-    }
-}
