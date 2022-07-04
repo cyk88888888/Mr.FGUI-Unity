@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="gkk0ykz2">
+  <resources>
+    <component id="jtzd0" name="RoleLayer.xml" path="/" exported="true"/>
+    <image id="jtzd1" name="n1.png" path="/images/" exported="true"/>
+    <image id="jtzd2" name="n2.png" path="/images/" exported="true"/>
+    <image id="jtzd3" name="n3.png" path="/images/" exported="true"/>
+    <image id="jtzd4" name="n4.png" path="/images/" exported="true"/>
+    <image id="jtzd5" name="n5.png" path="/images/" exported="true"/>
+    <component id="jtzd6" name="item.xml" path="/components/"/>
+    <image id="l3um1" name="bg_currency1.png" path="/images/"/>
+  </resources>
+  <publish name=""/>
+</packageDescription>

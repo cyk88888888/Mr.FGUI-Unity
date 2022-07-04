@@ -24,5 +24,13 @@ public class HomeScene : UIScene
     {
         if (_topUsrLayer == null) _topUsrLayer = UILayer.Show("TopInfoLayer") as TopInfoLayer;
         if (_bottomLayer == null) _bottomLayer = UILayer.Show("BottomTabLayer") as BottomTabLayer;
+
+        OnEmitter("jumpToLayer", OnJumpToLayer);
+    }
+
+    private void OnJumpToLayer(EventCallBack prarm)
+    {
+        if (prarm.Params == null) return;
+        Run((string)prarm.Params[0]);
     }
 }

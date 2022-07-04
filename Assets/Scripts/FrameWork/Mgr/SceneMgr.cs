@@ -103,9 +103,14 @@ public class SceneMgr
             ModuleCfgInfo lastModuleInfo = ModuleMgr.inst.GetModuleInfo(curScene.gameObjectName);
             if (destory)
             {//销毁上个场景
-                curScene.Destory();
-                if (!lastModuleInfo.cacheEnabled)
+                curScene.Close();
+                if (!lastModuleInfo.cacheEnabled && lastModuleInfo.preResList!=null)
                 {
+                    //todo....
+                    foreach (var item in lastModuleInfo.preResList)
+                    {
+                        UIPackage.RemovePackage(item);
+                    }
                     //ResMgr.inst.releaseResModule(this.curScene.className);//释放场景资源
                 }
             }
@@ -122,7 +127,7 @@ public class SceneMgr
         }
         checkDestoryLastScene(true);
 
-        curScene = _popArr[_popArr.Count];
+        curScene = _popArr[_popArr.Count - 1];
         _popArr.RemoveAt(_popArr.Count - 1);
         curSceneName = curScene.gameObjectName;
         curScene.AddSelfToOldParent();

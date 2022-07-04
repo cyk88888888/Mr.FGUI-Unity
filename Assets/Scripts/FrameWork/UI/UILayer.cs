@@ -12,6 +12,7 @@ public class UILayer : UIComp
     public static UILayer Show(string layerName, object data = null)
     {
         UILayer layer = BaseUT.Inst.CreateClassByName<UILayer>(layerName);
+        layer.sameSizeWithView = false;
         layer.gameObjectName = layerName + "_script";
         BaseUT.Inst.SetFitSize(layer);
         layer.GetParent().AddChild(layer);
@@ -20,7 +21,7 @@ public class UILayer : UIComp
         return layer;
     }
 
-    public virtual GComponent GetParent()
+    protected virtual GComponent GetParent()
     {
         return SceneMgr.inst.curScene.layer;
     }

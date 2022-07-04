@@ -17,9 +17,13 @@ public class HomeLayer : UILayer
         get { return "HomeLayer"; }
     }
 
+    private GButton btn_bag;
     protected override void OnEnter()
     {
-
+        btn_bag = view.GetChild("btn_bag").asButton;
+        btn_bag.onClick.Add(() => {
+            Show("BagDlg");
+        });
     }
 
 

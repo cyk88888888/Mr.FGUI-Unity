@@ -22,7 +22,7 @@
     <image id="h98zp" name="abount.png" path="/img/"/>
     <image id="h98zq" name="8.png" path="/img/"/>
     <image id="h98zr" name="7.png" path="/img/"/>
-    <image id="h98zs" name="5.png" path="/img/"/>
+    <image id="h98zs" name="5.png" path="/img/" scale="9grid" scale9grid="153,177,306,110"/>
     <image id="h98zt" name="4.png" path="/img/"/>
     <image id="h98zu" name="3.png" path="/img/"/>
     <image id="h98zv" name="2.png" path="/img/"/>
@@ -35,8 +35,13 @@
     <component id="h98z13" name="TopInfoLayer.xml" path="/" exported="true"/>
     <component id="h98z14" name="EquipLayer.xml" path="/" exported="true"/>
     <component id="h98z15" name="ShopLayer.xml" path="/" exported="true"/>
-    <component id="h98z16" name="Skilllayer.xml" path="/" exported="true"/>
+    <component id="h98z16" name="SkillLayer.xml" path="/" exported="true"/>
     <component id="h98z17" name="SettingLayer.xml" path="/" exported="true"/>
+    <component id="h98z18" name="BagButton.xml" path="/Bag/"/>
+    <component id="h98z19" name="BagDlg.xml" path="/Bag/" exported="true"/>
+    <component id="h98z1a" name="BagIR.xml" path="/Bag/"/>
+    <component id="h98z1b" name="dot.xml" path="/Bag/"/>
+    <component id="h98z1c" name="WindowFrame.xml" path="/Bag/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

@@ -36,6 +36,7 @@ public class ModuleMgr
     {
         moduleDic["LoadingScene"] = new ModuleCfgInfo("LoadingScene", false, new string[1] { "UI/Loading" });
         moduleDic["HomeScene"] = new ModuleCfgInfo("HomeScene", false, new string[1] { "UI/Home" });
+        moduleDic["RoleScene"] = new ModuleCfgInfo("RoleScene", false, new string[1] { "UI/Role" });
     }
 
     /// <summary>
@@ -45,10 +46,7 @@ public class ModuleMgr
     /// <returns></returns>
     public ModuleCfgInfo GetModuleInfo(string moduleName)
     {
-        if (!moduleDic.TryGetValue(moduleName, out ModuleCfgInfo info))
-        {
-            Debug.LogError("Î´×¢²áÄ£¿é£º" + moduleName);
-        }
+        moduleDic.TryGetValue(moduleName, out ModuleCfgInfo info);
         return info;
     }
 

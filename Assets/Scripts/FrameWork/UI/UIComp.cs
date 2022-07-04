@@ -8,7 +8,7 @@ using UnityEngine;
 /// 组件基类
 /// author：cyk
 /// </summary>
-public class UIComp : GComponent
+public class UIComp : GComponent, IEmmiter
 {
     /// 皮肤
     /// </summary>
@@ -17,7 +17,9 @@ public class UIComp : GComponent
     public object __data = null;
     private bool isFirstEnter = true;
     public bool hasDestory = false;
+    protected bool sameSizeWithView = true;//脚本容器宽高是否需要和view一样
     private List<UIComp> childComp;
+    private Dictionary<string, EventListenerDelegate> notifications = new Dictionary<string, EventListenerDelegate>();
     public UIComp()
     {
         Ctor_b();
@@ -75,9 +77,10 @@ public class UIComp : GComponent
     public void SetView(GComponent _view)
     {
         view = _view;
+        if (sameSizeWithView) SetSize(view.viewWidth, view.viewHeight);
         __doEnter();
     }
-    private void __doEnter()
+    public void __doEnter()
     {
         Debug.Log("进入" + ClassName);
         OnEnter_b();
@@ -113,6 +116,34 @@ public class UIComp : GComponent
         }
     }
 
+    public void Emit(string notificationName)
+    {
+        Emmiter.Emit(new EventCallBack(notificationName));
+    }
+    public void Emit(string notificationName, object[] body)
+    {
+        Emmiter.Emit(new EventCallBack(notificationName, body));
+    }
+    public void Emit(string notificationName, object[] body, object sender)
+    {
+        Emmiter.Emit(new EventCallBack(notificationName, body, sender));
+    }
+    public void OnEmitter(string type, EventListenerDelegate listener)
+    {
+        if (!notifications.ContainsKey(type))
+        {
+            Emmiter.On(type, listener);
+            notifications.Add(type, listener);
+        }
+    }
+    public void UnEmitter(string type, EventListenerDelegate listener)
+    {
+        if (notifications.ContainsKey(type))
+        {
+            Emmiter.Off(type, listener);
+        }
+    }
+
     public void SetData(object _data)
     {
         if (_data == data) return;
@@ -137,7 +168,7 @@ public class UIComp : GComponent
     {
         if (view == null) return;
         _oldParent = parent;
-        parent.AddChild(view);
+        parent.AddChild(this);
     }
 
     /// <summary>
@@ -146,7 +177,7 @@ public class UIComp : GComponent
     public void Close()
     {
         //onCloseAnimation(() => {
-        _dispose();
+        __dispose();
         Destory();
         //});
     }
@@ -163,11 +194,11 @@ public class UIComp : GComponent
     /// </summary>
     public void RemoveSelf()
     {
-        _dispose();
+        __dispose();
         RemoveFromParent();
     }
 
-    private void _dispose()
+    public void __dispose()
     {
         //self.clearAllTimeoutOrInterval();
         //self.rmAllTweens();
@@ -175,8 +206,15 @@ public class UIComp : GComponent
         Debug.Log("退出" + ClassName);
         foreach (var item in childComp)
         {
-            item._dispose();
+            item.__dispose();
         }
+
+        foreach (var item in notifications)
+        {
+            Emmiter.Off(item.Key, item.Value);
+        }
+        notifications.Clear();
+
         OnExit_b();
         OnExit();
         OnExit_a();
@@ -193,6 +231,6 @@ public class UIComp : GComponent
         }
         Debug.Log("onDestroy: " + ClassName);
         Dispose();
-        
+
     }
 }

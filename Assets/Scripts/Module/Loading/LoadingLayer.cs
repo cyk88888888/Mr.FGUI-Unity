@@ -21,6 +21,7 @@ public class LoadingLayer: UILayer
     private bool isEntering;
     protected override void OnEnter()
     {
+        UIPackage.AddPackage("UI/Common");
         bar = view.GetChild("bar").asProgress;
         Timers.inst.AddUpdate(OnTick);
     }

@@ -19,7 +19,17 @@ public class BottomTabLayer : UIMenu
 
     private GList list_bottom;
     private int _curSelectIndex;
+    private List<object> _layerInfos;
 
+    protected override void Ctor()
+    {
+        _layerInfos = new List<object>();
+        _layerInfos.Add("EquipLayer");
+        _layerInfos.Add("ShopLayer");
+        _layerInfos.Add("HomeLayer");
+        _layerInfos.Add("SkillLayer");
+        _layerInfos.Add("SettingLayer");
+    }
     protected override void OnEnter()
     {
         list_bottom = view.GetChild("list_bottom").asList;
@@ -35,7 +45,9 @@ public class BottomTabLayer : UIMenu
     {
         if (_curSelectIndex == list_bottom.selectedIndex) return;
         _curSelectIndex = list_bottom.selectedIndex;
-        Debug.Log("list_bottom.selectedIndex: " + list_bottom.selectedIndex);
+        object layerInfo = _layerInfos[_curSelectIndex];
+        //let layerName = layerInfo.layer;
+        Emit("jumpToLayer", new object[] { layerInfo });
     }
 
 

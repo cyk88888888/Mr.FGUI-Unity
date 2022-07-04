@@ -17,9 +17,13 @@ public class TopInfoLayer : UIMenu
         get { return "TopInfoLayer"; }
     }
 
-
+    private GComponent tap_head;
     protected override void OnEnter()
     {
+        tap_head = view.GetChild("tap_head").asCom;
+        tap_head.onClick.Add(() => {
+            SceneMgr.inst.Push("RoleScene");
+        });
     }
 
 

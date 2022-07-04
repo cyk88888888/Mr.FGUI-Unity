@@ -8,7 +8,7 @@ using UnityEngine;
 /// ui场景基类
 /// author：cyk
 /// </summary>
-public class UIScene : GComponent
+public class UIScene : GComponent, IEmmiter
 {
     protected SubLayerMgr subLayerMgr;
     public GComponent layer;
@@ -18,6 +18,7 @@ public class UIScene : GComponent
     protected string mainClassLayer;
     private bool _isFirstEnter = true;
     protected object _moduleParam;
+    private Dictionary<string, EventListenerDelegate> notifications = new Dictionary<string, EventListenerDelegate>();
     public UIScene()
     {
         subLayerMgr = new SubLayerMgr();
@@ -92,6 +93,34 @@ public class UIScene : GComponent
         _moduleParam = data;
     }
 
+    public void Emit(string notificationName)
+    {
+        Emmiter.Emit(new EventCallBack(notificationName));
+    }
+    public void Emit(string notificationName, object[] body)
+    {
+        Emmiter.Emit(new EventCallBack(notificationName, body));
+    }
+    public void Emit(string notificationName, object[] body, object sender)
+    {
+        Emmiter.Emit(new EventCallBack(notificationName, body, sender));
+    }
+    public void OnEmitter(string type, EventListenerDelegate listener)
+    {
+        if (!notifications.ContainsKey(type))
+        {
+            Emmiter.On(type, listener);
+            notifications.Add(type, listener);
+        }
+    }
+    public void UnEmitter(string type, EventListenerDelegate listener)
+    {
+        if (notifications.ContainsKey(type))
+        {
+            Emmiter.Off(type, listener);
+        }
+    }
+
     public string ClassName
     {
         get
@@ -129,6 +158,10 @@ public class UIScene : GComponent
     /// </summary>
     public void AddSelfToOldParent()
     {
+        DisposeByParent(layer,true);
+        DisposeByParent(dlg, true);
+        DisposeByParent(msg, true);
+        DisposeByParent(menuLayer, true);
         __doEnter();
         GRoot.inst.AddChild(SceneMgr.inst.curScene);
     }
@@ -137,45 +170,61 @@ public class UIScene : GComponent
     /// </summary>
     public void RemoveSelf()
     {
+        DisposeByParent(layer);
+        DisposeByParent(dlg);
+        DisposeByParent(msg);
+        DisposeByParent(menuLayer);
         _dispose();
         SceneMgr.inst.curScene.RemoveFromParent();
     }
 
     /**清除所有layer */
-    public void ReleaseAllLayer()
+    private void ReleaseAllLayer()
     {
         subLayerMgr.ReleaseAllLayer();
     }
 
-    public void DisposeSubLayerMgr()
+    private void _dispose()
     {
-        subLayerMgr.Dispose();
-        subLayerMgr = null;
-    }
+        foreach (var item in notifications)
+        {
+            Emmiter.Off(item.Key, item.Value);
+        }
+        notifications.Clear();
 
-    public void _dispose()
-    {
-        //if (_emmitMap != null)
-        //{
-            //        for (let event in _emmitMap) {
-            //    unEmitter(event, _emmitMap [event]);
-            //}
-            //_emmitMap = null;
-        //}
         Debug.Log("退出" + ClassName);
         OnExit_b();
         OnExit();
         OnExit_a();
     }
 
-    public void Destory()
+    private void DisposeByParent(GComponent _parent,bool isEnter = false)
     {
-        _dispose();
+        foreach (var item in _parent.GetChildren())
+        {
+            if (isEnter)
+            {
+                (item as UIComp).__doEnter();
+            }
+            else
+            {
+                (item as UIComp).__dispose();
+            }
+        }
+    }
+
+    private void Destory()
+    {
         subLayerMgr.Dispose();
         subLayerMgr = null;
         Debug.Log("onDestroy: " + ClassName);
         Dispose();
     }
 
-   
+    public void Close()
+    {
+        _dispose();
+        Destory();
+    }
+
 }

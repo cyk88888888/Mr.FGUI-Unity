@@ -88,7 +88,7 @@ public class SubLayerMgr
             return;
         }
         CheckDestoryLastLayer(true);
-        curLayer = _popArr[_popArr.Count];
+        curLayer = _popArr[_popArr.Count - 1];
         _popArr.RemoveAt(_popArr.Count - 1);
         curLayer.AddSelfToOldParent();
     }

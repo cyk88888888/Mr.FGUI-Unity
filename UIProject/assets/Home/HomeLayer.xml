@@ -7,5 +7,8 @@
     <text id="n3_h98z" name="n3" xy="279,622" size="81,36" fontSize="26" color="#ffffff" text="主界面">
       <relation target="" sidePair="center-center,middle-middle"/>
     </text>
+    <component id="n5_h98z" name="btn_bag" src="h98z18" fileName="Bag/BagButton.xml" xy="537,975">
+      <relation target="" sidePair="bottom-bottom"/>
+    </component>
   </displayList>
 </component>
