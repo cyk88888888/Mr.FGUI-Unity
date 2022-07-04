@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="640,1280" scroll="both">
+<component size="640,1280" opaque="false" scroll="both">
   <controller name="page" pages="0,,1,,2," selected="0"/>
   <displayList>
     <component id="n7" name="frame" src="h98z1c" fileName="Bag/WindowFrame.xml" xy="0,349" size="640,582" group="n26_pzzl">
@@ -30,7 +30,7 @@
     <image id="n9" name="n9" src="h98zr" fileName="img/7.png" xy="61,767" size="511,2" group="n26_pzzl"/>
     <image id="n10" name="n10" src="h98zq" fileName="img/8.png" xy="61,774" size="130,124" group="n26_pzzl"/>
     <loader id="n11" name="n11" xy="67,781" size="120,110" group="n26_pzzl" align="center" vAlign="middle"/>
-    <text id="n12" name="n12" xy="205,810" size="111,34" group="n26_pzzl" fontSize="24" color="#ff0099" text="Selected:"/>
+    <text id="n12" name="n12" xy="205,810" size="112,34" group="n26_pzzl" fontSize="24" color="#ff0099" text="Selected:"/>
     <text id="n13" name="n13" xy="336,810" size="119,28" group="n26_pzzl" fontSize="24" color="#ff0099" autoSize="height" text=""/>
     <list id="n25_osdo" name="n25" xy="185,742" size="269,19" group="n26_pzzl" touchable="false" layout="row" colGap="40" defaultItem="ui://kxn7l2boh98z1b" align="center" selectionController="page">
       <item/>
