@@ -11,6 +11,8 @@ public class Main : MonoBehaviour
 {
     private void Awake()
     {
+        Application.targetFrameRate = 60;
+        UIConfig.defaultFont = "Microsoft YaHei";
         ModuleMgr.inst.Init();
         BaseUT.Inst.scaleMode = new(640, 1280, 1030, 1280);
     }

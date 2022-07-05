@@ -5,7 +5,7 @@
     <image id="n20_pzzl" name="img_head" src="h98za" fileName="img/r3.png" xy="11,11"/>
     <image id="n15_pzzl" name="n15" src="h98zd" fileName="img/k1.png" xy="0,0" size="113,113" aspect="true"/>
     <image id="n18_pzzl" name="n18" src="h98zc" fileName="img/k26.png" xy="115,50"/>
-    <text id="n16_pzzl" name="txt_name" xy="116,11" size="150,30" fontSize="21" text="我的名字七个字"/>
+    <text id="n16_pzzl" name="txt_name" xy="116,11" size="108,30" fontSize="21" text="我叫巨无霸"/>
     <text id="n19_pzzl" name="txt_dmd" xy="160,50" size="52,30" fontSize="21" text="9999"/>
     <component id="n25_h98z" name="tap_head" src="h98zb" fileName="components/EmptyComp.xml" pkg="g2zhtj9b" xy="7,5"/>
   </displayList>

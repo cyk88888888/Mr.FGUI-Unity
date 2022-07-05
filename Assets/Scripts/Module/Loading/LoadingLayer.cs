@@ -28,7 +28,7 @@ public class LoadingLayer: UILayer
 
     private void OnTick(object param)
     {
-        bar.value += 0.2;
+        bar.value += 1;
         if (!isEntering && bar.value >= 100)
         {
             isEntering = true;
