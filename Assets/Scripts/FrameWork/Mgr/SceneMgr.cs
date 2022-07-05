@@ -18,13 +18,13 @@ public class SceneMgr
             if (_inst == null)
             {
                 _inst = new SceneMgr();
-                _inst._popArr = new List<UIScene>();
+                _inst._popArr = new Stack<UIScene>();
 
             }
             return _inst;
         }
     }
-    private List<UIScene> _popArr;
+    private Stack<UIScene> _popArr;
     /**当前场景**/
     public UIScene curScene;
     public string curSceneName;
@@ -79,7 +79,7 @@ public class SceneMgr
     {
         if (toPush && curScene != null)
         {
-            _popArr.Add(curScene);
+            _popArr.Push(curScene);
             curScene.RemoveSelf();
         }
         else
@@ -127,8 +127,7 @@ public class SceneMgr
         }
         checkDestoryLastScene(true);
 
-        curScene = _popArr[_popArr.Count - 1];
-        _popArr.RemoveAt(_popArr.Count - 1);
+        curScene = _popArr.Pop();
         curSceneName = curScene.gameObjectName;
         curScene.AddSelfToOldParent();
     }

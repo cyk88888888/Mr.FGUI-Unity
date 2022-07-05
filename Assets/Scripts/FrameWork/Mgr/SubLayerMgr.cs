@@ -9,12 +9,12 @@ public class SubLayerMgr
     private Dictionary<string, Type> _classMap;
     private Dictionary<string, UILayer> _scriptMap;
     public UILayer curLayer;
-    private List<UILayer> _popArr;
+    private Stack<UILayer> _popArr;
     public SubLayerMgr()
     {
         _classMap = new Dictionary<string, Type>();
         _scriptMap = new Dictionary<string, UILayer>();
-        _popArr = new List<UILayer>();
+        _popArr = new Stack<UILayer>();
     }
 
     /**
@@ -49,7 +49,7 @@ public class SubLayerMgr
 
         if (curLayer != null)
         {
-            if (toPush) _popArr.Add(curLayer);
+            if (toPush) _popArr.Push(curLayer);
             if (toPush || !needDestory)
             {
                 curLayer.RemoveSelf();
@@ -88,8 +88,7 @@ public class SubLayerMgr
             return;
         }
         CheckDestoryLastLayer(true);
-        curLayer = _popArr[_popArr.Count - 1];
-        _popArr.RemoveAt(_popArr.Count - 1);
+        curLayer = _popArr.Pop();
         curLayer.AddSelfToOldParent();
     }
 
@@ -110,7 +109,7 @@ public class SubLayerMgr
             }
         }
 
-        _popArr = new List<UILayer>();
+        _popArr = new Stack<UILayer>();
     }
 
     public void Dispose()
