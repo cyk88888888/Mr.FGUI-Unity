@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="640,1280">
+<component size="640,1280" scroll="both">
   <displayList>
     <image id="n1_orwc" name="n1" src="ock18" fileName="img/bg_loading2.png" xy="0,-60" size="640,1400">
       <relation target="" sidePair="center-center,middle-middle"/>
     </image>
-    <graph id="n3_nx96" name="graph_line" xy="0,164" size="50,50" type="rect" lineSize="0" fillColor="#ff000000"/>
-    <component id="n5_nx96" name="n5" src="nx961d" fileName="components/MapComp.xml" xy="0,248"/>
+    <component id="n5_nx96" name="n5" src="nx961d" fileName="components/MapComp.xml" xy="0,116" size="640,1062">
+      <relation target="" sidePair="height-height"/>
+    </component>
   </displayList>
 </component>

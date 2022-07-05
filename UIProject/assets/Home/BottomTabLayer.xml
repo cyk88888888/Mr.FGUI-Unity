@@ -4,7 +4,7 @@
     <image id="n13_h1du" name="n13" src="h98zn" fileName="img/c1_png.png" xy="0,1180" size="640,158">
       <relation target="" sidePair="bottom-bottom"/>
     </image>
-    <list id="n15_e0g5" name="list_bottom" xy="23,1186" size="594,143" layout="row" overflow="scroll" colGap="35" defaultItem="ui://kxn7l2boh98z10">
+    <list id="n15_e0g5" name="list_bottom" xy="23,1186" size="594,143" layout="row" overflow="scroll" scroll="horizontal" colGap="35" defaultItem="ui://kxn7l2boh98z10">
       <relation target="" sidePair="center-center,bottom-bottom"/>
       <item icon="ui://kxn7l2boh98zh"/>
       <item icon="ui://kxn7l2boh98zl"/>
