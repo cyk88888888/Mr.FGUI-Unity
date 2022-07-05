@@ -42,6 +42,7 @@
     <component id="h98z1a" name="BagIR.xml" path="/Bag/"/>
     <component id="h98z1b" name="dot.xml" path="/Bag/"/>
     <component id="h98z1c" name="WindowFrame.xml" path="/Bag/"/>
+    <component id="nx961d" name="MapComp.xml" path="/components/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

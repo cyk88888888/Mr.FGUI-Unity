@@ -5,5 +5,6 @@
       <relation target="" sidePair="center-center,middle-middle"/>
     </image>
     <graph id="n3_nx96" name="graph_line" xy="0,164" size="50,50" type="rect" lineSize="0" fillColor="#ff000000"/>
+    <component id="n5_nx96" name="n5" src="nx961d" fileName="components/MapComp.xml" xy="0,248"/>
   </displayList>
 </component>
