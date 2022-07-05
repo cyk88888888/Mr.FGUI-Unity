@@ -58,7 +58,7 @@ public class SceneMgr
             return;
         }
         curSceneName = sceneName;
-        if (moduleInfo.preResList != null && moduleInfo.preResList.Length > 0)
+        if (moduleInfo.preResList != null)
         {
             //todo....
             foreach (var item in moduleInfo.preResList)

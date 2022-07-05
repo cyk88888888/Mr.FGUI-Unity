@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using FairyGUI;
 /// <summary>
 /// Ö÷½çÃæ
@@ -19,7 +16,6 @@ public class HomeLayer : UILayer
 
     protected override void Ctor()
     {
-        UIPackage.AddPackage("UI/TurnPage");
         UIObjectFactory.SetPackageItemExtension("ui://TurnPage/Book", typeof(FairyBook));
         UIObjectFactory.SetPackageItemExtension("ui://TurnPage/Page", typeof(BookPage));
     }

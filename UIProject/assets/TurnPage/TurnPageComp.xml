@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="640,558">
-  <controller name="bookPos" pages="0,,1,,2," selected="2"/>
+  <controller name="bookPos" pages="0,,1,,2," selected="0"/>
   <displayList>
-    <component id="n7_jva6" name="book" src="jva6n" fileName="Book.xml" xy="150,0">
+    <component id="n7_jva6" name="book" src="jva6n" fileName="Book.xml" xy="10,0">
       <gearXY controller="bookPos" pages="0,1,2" values="10,0|-138,0|150,0" tween="true"/>
     </component>
-    <component id="n10_jva6" name="pageSlide" src="jva6v" fileName="slide/Slider2.xml" xy="-2,461" size="644,23">
-      <Slider value="5" max="10"/>
+    <component id="n10_jva6" name="pageSlide" src="jva6v" fileName="slide/Slider2.xml" xy="34,461" size="571,23">
+      <relation target="" sidePair="center-center"/>
+      <Slider value="10" max="10"/>
     </component>
     <component id="n16_gn0v" name="btnPrev" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="158,508" size="125,39">
       <Button title="Previous"/>

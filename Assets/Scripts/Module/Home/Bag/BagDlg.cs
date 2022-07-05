@@ -24,6 +24,23 @@ public class BagDlg : UIDlg
         _list.onClickItem.Add(__clickItem);
         _list.itemRenderer = RenderListItem;
 
+        GButton btn_refresh = view.GetChild("btn_refresh").asButton;
+        btn_refresh.onClick.Add(() =>
+        {
+            InitBag();
+        });
+
+        GButton btn_close = view.GetChild("frame").asCom.GetChild("closeButton").asButton;
+        btn_close.onClick.Add(() =>
+        {
+            Close();
+        });
+
+        InitBag();
+    }
+
+    private void InitBag()
+    {
         _bagData = new();
         int len = 45;
         for (int i = 0; i < len; i++)
@@ -39,10 +56,6 @@ public class BagDlg : UIDlg
             _list.ScrollToView(_list.selectedIndex);
             ShowItemDetail(_list.selectedIndex);
         }
-        GButton btn_close = view.GetChild("frame").asCom.GetChild("closeButton").asButton;
-        btn_close.onClick.Add(() =>{
-            Close();
-        });
     }
 
     private void RenderListItem(int index, GObject obj)
