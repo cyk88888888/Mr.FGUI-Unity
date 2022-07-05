@@ -18,6 +18,7 @@ public class UIComp : GComponent, IEmmiter
     private bool isFirstEnter = true;
     public bool hasDestory = false;
     protected bool sameSizeWithView = true;//脚本容器宽高是否需要和view一样
+    private bool needCreateView = true;//是否需要创建view
     private Dictionary<string, UIComp> childCompDic;
     private Dictionary<string, EventListenerDelegate> notifications = new Dictionary<string, EventListenerDelegate>();
     public UIComp()
@@ -64,6 +65,7 @@ public class UIComp : GComponent, IEmmiter
     private void Init()
     {
         onAddedToStage.Remove(Init);
+        if (!needCreateView) return;
         _oldParent = parent;
         if (PkgName == "" || CompName == "")
         {
@@ -107,14 +109,24 @@ public class UIComp : GComponent, IEmmiter
                 Type type = Type.GetType(gameObjectName);
                 if (type != null)
                 {
-                    UIComp script;
-                    if (!childCompDic.TryGetValue(item.name, out script))
+                    UIComp childComp_Script;
+                    if (!childCompDic.TryGetValue(item.name, out childComp_Script))
                     {
-                        script = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
-                        script.gameObjectName = gameObjectName;
-                        childCompDic.Add(item.name, script);
+                        childComp_Script = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
+                        childComp_Script.needCreateView = false;
+                        childComp_Script.gameObjectName = gameObjectName + "_script";
+                        int index = item.parent.GetChildIndex(item);
+                        item.parent.AddChildAt(childComp_Script, index);
+                        childComp_Script.SetPivot(item.pivotX, item.pivotY);
+                        childComp_Script.SetXY(item.x, item.y);
+                        childComp_Script.SetSize(item.width,item.height);
+                        childComp_Script.SetScale(item.scaleX, item.scaleY);
+                        childComp_Script.AddChild(item);
+                        item.SetXY(0, 0);
+
+                        childCompDic.Add(item.name, childComp_Script);
                     }
-                    script.SetView((GComponent)item);
+                    childComp_Script.SetView((GComponent)item);
                 }
             }
         }
