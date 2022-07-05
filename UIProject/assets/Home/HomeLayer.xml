@@ -11,6 +11,7 @@
       <relation target="" sidePair="center-center,middle-middle"/>
     </component>
     <component id="n8_nx96" name="btn_loopList" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="250,1114" size="139,36">
+      <relation target="" sidePair="bottom-bottom"/>
       <Button title="LoopList"/>
     </component>
   </displayList>

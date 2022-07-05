@@ -9,6 +9,8 @@
     <component id="jtzd8" name="btnBack.xml" path="/components/" exported="true"/>
     <component id="pzzla" name="Button1.xml" path="/components/" exported="true"/>
     <component id="h98zb" name="EmptyComp.xml" path="/components/" exported="true"/>
+    <component id="bvhzc" name="MsgTip.xml" path="/" exported="true"/>
+    <image id="bvhzf" name="background.png" path="/images/" scale="9grid" scale9grid="90,5,180,10"/>
   </resources>
   <publish name=""/>
 </packageDescription>
