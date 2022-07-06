@@ -22,6 +22,8 @@ public class MapEditorLayer : UILayer
     private GButton btn_block;
     private GButton btn_blockVert;
     private GButton btn_resizeGrid;
+    private GButton btn_exportJson;
+    private GButton btn_importJson;
     private GTextInput txt_cellSize;
     protected override void OnEnter()
     {
@@ -40,6 +42,11 @@ public class MapEditorLayer : UILayer
         btn_resizeGrid = view.GetChild("btn_resizeGrid").asButton;
         btn_resizeGrid.onClick.Add(_tap_btn_resizeGrid);
 
+        btn_exportJson = view.GetChild("btn_exportJson").asButton;
+        btn_exportJson.onClick.Add(_tap_btn_exportJson);
+
+        btn_importJson = view.GetChild("btn_importJson").asButton;
+        btn_importJson.onClick.Add(_tap_btn_importJson);
     }
 
     private void _tap_btn_walk()
@@ -66,6 +73,18 @@ public class MapEditorLayer : UILayer
         }
         _curCellSize = txt_cellSize.text;
         Emit(GameEvent.ResizeGrid, new object[] { txt_cellSize.text });
+    }
+
+    /** 导入json地图数据**/
+    private void _tap_btn_exportJson()
+    {
+
+    }
+
+    /** 导出json地图数据**/
+    private void _tap_btn_importJson()
+    {
+
     }
 
 }
