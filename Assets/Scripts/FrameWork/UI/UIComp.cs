@@ -115,10 +115,11 @@ public class UIComp : GComponent, IEmmiter
                         childComp_Script = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
                         childComp_Script.gameObjectName = gameObjectName + "_script";
                         childComp_Script.needCreateView = false;
+                        childComp_Script.SetParent(SceneMgr.inst.curScene.scripLayer);
                         childCompDic.Add(item.name, childComp_Script);
                     }
                     childComp_Script.SetView((GComponent)item);
-                    childComp_Script.SetParent(SceneMgr.inst.curScene.scripLayer);
+                   
                 }
             }
         }
@@ -190,7 +191,6 @@ public class UIComp : GComponent, IEmmiter
     /// <param name="parent"></param>
     public void SetParent(GComponent parent)
     {
-        if (view == null) return;
         _oldParent = parent;
         parent.AddChild(this);
     }
