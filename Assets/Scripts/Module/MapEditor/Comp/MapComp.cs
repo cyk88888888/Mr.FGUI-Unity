@@ -62,6 +62,8 @@ public class MapComp : UIComp
         GGraph bg = view.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
 
+      
+        lineContainer.SetSize(mapWidth, mapHeight);
         RemoveAllLine();
         RemoveAllGrid();
 
@@ -138,8 +140,8 @@ public class MapComp : UIComp
 
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        float gridX = Mathf.Floor(inputPos.x / _cellSize) * _cellSize;
-        float gridY = Mathf.Floor(inputPos.y / _cellSize) * _cellSize;
+        float gridX = Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize) * _cellSize;
+        float gridY = Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize) * _cellSize;
 
         if (!_gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
         {
