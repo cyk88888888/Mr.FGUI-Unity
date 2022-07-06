@@ -18,7 +18,7 @@ public class UIComp : GComponent, IEmmiter
     private bool isFirstEnter = true;
     public bool hasDestory = false;
     protected bool sameSizeWithView = true;//脚本容器宽高是否需要和view一样
-    private bool needCreateView = true;//是否需要创建view
+    private bool needCreateView = true;
     private Dictionary<string, UIComp> childCompDic;
     private Dictionary<string, EventListenerDelegate> notifications = new Dictionary<string, EventListenerDelegate>();
     public UIComp()
@@ -113,24 +113,32 @@ public class UIComp : GComponent, IEmmiter
                     if (!childCompDic.TryGetValue(item.name, out childComp_Script))
                     {
                         childComp_Script = BaseUT.Inst.CreateClassByName<UIComp>(gameObjectName);
-                        childComp_Script.needCreateView = false;
                         childComp_Script.gameObjectName = gameObjectName + "_script";
-                        int index = item.parent.GetChildIndex(item);
-                        item.parent.AddChildAt(childComp_Script, index);
-                        childComp_Script.SetPivot(item.pivotX, item.pivotY);
-                        childComp_Script.SetXY(item.x, item.y);
-                        childComp_Script.SetSize(item.width,item.height);
-                        childComp_Script.SetScale(item.scaleX, item.scaleY);
-                        childComp_Script.AddChild(item);
-                        item.SetXY(0, 0);
-
+                        childComp_Script.needCreateView = false;
                         childCompDic.Add(item.name, childComp_Script);
                     }
                     childComp_Script.SetView((GComponent)item);
+                    childComp_Script.SetParent(SceneMgr.inst.curScene.scripLayer);
                 }
             }
         }
     }
+
+    //public override GObject AddChildAt(GObject child, int index)
+    //{
+    //    if (child is UIComp)
+    //    {
+    //        if (view == null)
+    //        {
+    //            return base.AddChildAt(child, index);
+    //        }
+    //        else
+    //        {
+    //            return view.AddChildAt(child, index);
+    //        }
+    //    }
+    //    return base.AddChildAt(child, index);
+    //}
 
     public void Emit(string notificationName)
     {
@@ -261,6 +269,7 @@ public class UIComp : GComponent, IEmmiter
         }
 
         Debug.Log("onDestroy: " + ClassName);
+        view.Dispose();
         Dispose();
 
     }

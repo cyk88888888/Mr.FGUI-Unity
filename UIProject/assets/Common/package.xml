@@ -11,6 +11,7 @@
     <component id="h98zb" name="EmptyComp.xml" path="/components/" exported="true"/>
     <component id="bvhzc" name="MsgTip.xml" path="/" exported="true"/>
     <image id="bvhzf" name="background.png" path="/images/" scale="9grid" scale9grid="90,5,180,10"/>
+    <component id="gtatg" name="TestComp.xml" path="/components/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

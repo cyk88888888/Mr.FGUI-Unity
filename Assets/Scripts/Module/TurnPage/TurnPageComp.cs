@@ -5,7 +5,15 @@ public class TurnPageComp : UIComp
 {
     private FairyBook _book;
     private GSlider _slider;
+    protected override string PkgName
+    {
+        get { return "TurnPage"; }
+    }
 
+    protected override string CompName
+    {
+        get { return "TurnPageComp"; }
+    }
     protected override void Ctor()
     {
         

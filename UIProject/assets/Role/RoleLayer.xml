@@ -8,5 +8,6 @@
     <graph id="n6_gn0v" name="holder" xy="270,590" size="100,100">
       <relation target="" sidePair="center-center,middle-middle"/>
     </graph>
+    <component id="n7_gtat" name="n7" src="gtatg" fileName="components/TestComp.xml" pkg="g2zhtj9b" xy="184,342"/>
   </displayList>
 </component>

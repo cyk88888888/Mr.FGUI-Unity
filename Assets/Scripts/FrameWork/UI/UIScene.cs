@@ -15,6 +15,7 @@ public class UIScene : GComponent, IEmmiter
     public GComponent dlg;
     public GComponent msg;
     public GComponent menuLayer;
+    public GComponent scripLayer;//脚本容器，开发者可忽视
     protected string mainClassLayer;
     private bool _isFirstEnter = true;
     protected object _moduleParam;
@@ -58,6 +59,8 @@ public class UIScene : GComponent, IEmmiter
         menuLayer = AddGCom2GRoot("UIMenuLayer");
         dlg = AddGCom2GRoot("UIDlg");
         msg = AddGCom2GRoot("UIMsg");
+        scripLayer = AddGCom2GRoot("UIScript");
+        scripLayer.touchable = false;
         __doEnter();
     }
 
@@ -158,10 +161,10 @@ public class UIScene : GComponent, IEmmiter
     /// </summary>
     public void AddSelfToOldParent()
     {
-        DisposeByParent(layer,true);
-        DisposeByParent(dlg, true);
-        DisposeByParent(msg, true);
-        DisposeByParent(menuLayer, true);
+        foreach (var item in GetChildren())
+        {
+            EachChildByParent((GComponent)item, true);
+        }
         __doEnter();
         GRoot.inst.AddChild(SceneMgr.inst.curScene);
     }
@@ -170,10 +173,10 @@ public class UIScene : GComponent, IEmmiter
     /// </summary>
     public void RemoveSelf()
     {
-        DisposeByParent(layer);
-        DisposeByParent(dlg);
-        DisposeByParent(msg);
-        DisposeByParent(menuLayer);
+        foreach (var item in GetChildren())
+        {
+            EachChildByParent((GComponent)item);
+        }
         _dispose();
         SceneMgr.inst.curScene.RemoveFromParent();
     }
@@ -198,7 +201,7 @@ public class UIScene : GComponent, IEmmiter
         OnExit_a();
     }
 
-    private void DisposeByParent(GComponent _parent,bool isEnter = false)
+    private void EachChildByParent(GComponent _parent,bool isEnter = false)
     {
         foreach (var item in _parent.GetChildren())
         {

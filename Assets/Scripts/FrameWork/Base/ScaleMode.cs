@@ -13,20 +13,26 @@ public class ScaleMode
      * 设计宽度
      */
     public float designWidth;
-     /**
-     * 设计高度
-     */
+    /**
+    * 设计高度
+    */
     public float designHeight;
     /**
      * 设计最小高度
      */
     public float designHeight_min;
-     /**
-     * 设计最大高度
-     */
+    /**
+    * 设计最大高度
+    */
     public float designHeight_max;
 
-    
+    /// <summary>
+    /// UI屏幕宽高设置
+    /// </summary>
+    /// <param name="_designWidth"></param>
+    /// <param name="_designHeight"></param>
+    /// <param name="_designHeight_min"></param>
+    /// <param name="_designHeight_max"></param>
     public ScaleMode(float _designWidth, float _designHeight, float _designHeight_min, float _designHeight_max)
     {
         designWidth = _designWidth;

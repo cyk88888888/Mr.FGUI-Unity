@@ -20,7 +20,7 @@ public class MapComp : UIComp
     private GComponent gridContainer;
 
     private int _cellSize;
-    private GridType _gridType = GridType.None;//格子类型
+    private GridType _gridType = GridType.None;//当前格子类型
     private ObjectPool<GComponent> _lineCompPool;
     private ObjectPool<GComponent> _gridCompPool;
     private Dictionary<GridType, Dictionary<string, GComponent>> _gridTypeDic;
@@ -99,6 +99,7 @@ public class MapComp : UIComp
         }
     }
 
+    //移除所有线条
     private void RemoveAllLine()
     {
         foreach (var item in lineContainer.GetChildren())
@@ -107,6 +108,7 @@ public class MapComp : UIComp
         }
     }
 
+    //移除所有格子
     private void RemoveAllGrid()
     {
         foreach (var item in gridContainer.GetChildren())
@@ -116,6 +118,7 @@ public class MapComp : UIComp
         _gridTypeDic = new Dictionary<GridType, Dictionary<string, GComponent>>();
     }
 
+    //重置格子大小
     private void OnResizeGrid(EventCallBack evt)
     {
         int cellSize = int.Parse((string)evt.Data[0]);
@@ -123,6 +126,7 @@ public class MapComp : UIComp
         InitGrid();
     }
 
+    //更改格子类型样式
     private void OnChangeGridType(EventCallBack evt)
     {
         GridType gridType = (GridType)evt.Data[0];
