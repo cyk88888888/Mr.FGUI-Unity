@@ -39,6 +39,7 @@ public class MapComp : UIComp
             (GComponent obj) => { obj.RemoveFromParent(); }
         );
 
+        _gridMap = new Dictionary<GridType, Dictionary<string, GComponent>>();
         view.scrollPane.onScroll.Add(OnScroll);
         view.onRightClick.Add(_onRightClick);
         _cellSize = 40;
@@ -62,6 +63,8 @@ public class MapComp : UIComp
         GGraph bg = view.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
 
+      
+        lineContainer.SetSize(mapWidth, mapHeight);
         RemoveAllLine();
         RemoveAllGrid();
 
