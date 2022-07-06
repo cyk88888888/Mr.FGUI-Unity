@@ -29,7 +29,7 @@ public class MsgMgr
         if (txt_msg.textWidth > 300) msgTip.width = txt_msg.textWidth + 20;
         SceneMgr.inst.curScene.msg.AddChild(msgTip);
         msgTip.SetXY((msgTip.parent.width - msgTip.width) / 2, (msgTip.parent.height - msgTip.height) / 2 - 200);
-        msgTip.TweenMoveY(msgTip.y - 100, 0.3f).SetDelay(0.3f).SetEase(EaseType.QuadOut).OnComplete(() =>
+        msgTip.TweenMoveY(msgTip.y - 100, 0.3f).SetDelay(0.5f).SetEase(EaseType.QuadOut).OnComplete(() =>
         {
             msgTip.Dispose();
         });

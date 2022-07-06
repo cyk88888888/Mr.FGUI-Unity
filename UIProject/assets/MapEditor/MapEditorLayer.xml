@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1400,760" designImageLayer="1">
+  <displayList>
+    <component id="n1_g4oc" name="n1" src="nx961d" fileName="components/MapComp.xml" xy="0,0" size="1033,760"/>
+    <graph id="n9_g4oc" name="n9" xy="1185,301" size="73,41" type="rect"/>
+    <component id="n3_g4oc" name="btn_walk" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,9" size="120,36">
+      <Button title="设置可行走"/>
+    </component>
+    <component id="n2_g4oc" name="btn_block" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,60" size="120,36">
+      <Button title="设置障碍物"/>
+    </component>
+    <component id="n4_g4oc" name="btn_blockVert" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,115" size="164,36">
+      <Button title="设置障碍物顶点"/>
+    </component>
+    <component id="n5_g4oc" name="btn_exportJson" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,513" size="120,36">
+      <Button title="导出Json"/>
+    </component>
+    <component id="n6_g4oc" name="btn_importJson" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,569" size="120,36">
+      <Button title="导入Json"/>
+    </component>
+    <text id="n7_g4oc" name="n7" xy="1043,307" size="144,29" fontSize="20" color="#ffffff" text="设置格子大小："/>
+    <text id="n8_g4oc" name="txt_cellSize" xy="1189,307" size="60,29" fontSize="20" autoSize="none" singleLine="true" text="" input="true" prompt="40" maxLength="3" keyboardType="2"/>
+    <component id="n10_g4oc" name="btn_resizeGrid" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1274,303" size="107,36">
+      <Button title="确定"/>
+    </component>
+  </displayList>
+</component>

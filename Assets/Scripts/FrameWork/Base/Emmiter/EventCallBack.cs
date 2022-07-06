@@ -14,7 +14,7 @@ public class EventCallBack
         set { type = value; }
     }
 
-    public object[] Params
+    public object[] Data
     {
         get { return arguments; }
         set { arguments = value; }

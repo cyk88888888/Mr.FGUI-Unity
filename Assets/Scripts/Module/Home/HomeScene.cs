@@ -30,7 +30,7 @@ public class HomeScene : UIScene
 
     private void OnJumpToLayer(EventCallBack prarm)
     {
-        if (prarm.Params == null) return;
-        Run((string)prarm.Params[0]);
+        if (prarm.Data == null) return;
+        Run((string)prarm.Data[0]);
     }
 }
