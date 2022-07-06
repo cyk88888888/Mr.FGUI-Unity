@@ -34,6 +34,7 @@ public class ModuleMgr
     /// </summary>
     private void InitModule()
     {
+        moduleDic["MapEditorScene"] = new ModuleCfgInfo("MapEditorScene", false, new List<string>() { "UI/Common", "UI/MapEditor" });
         moduleDic["LoadingScene"] = new ModuleCfgInfo("LoadingScene", false, new List<string>() { "UI/Loading" });
         moduleDic["HomeScene"] = new ModuleCfgInfo("HomeScene", true, new List<string>() { "UI/Home", "UI/TurnPage" });
         moduleDic["RoleScene"] = new ModuleCfgInfo("RoleScene", false, new List<string>() { "UI/Role" });

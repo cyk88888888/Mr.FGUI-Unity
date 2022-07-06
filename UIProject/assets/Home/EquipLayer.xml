@@ -4,8 +4,8 @@
     <image id="n1_orwc" name="n1" src="ock18" fileName="img/bg_loading2.png" xy="0,-60" size="640,1400">
       <relation target="" sidePair="center-center,middle-middle"/>
     </image>
-    <component id="n5_nx96" name="n5" src="nx961d" fileName="components/MapComp.xml" xy="0,116" size="640,1062">
-      <relation target="" sidePair="height-height"/>
-    </component>
+    <image id="n6_g4oc" name="n6" src="h98ze" fileName="img/item_33.png" xy="260,580">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </image>
   </displayList>
 </component>

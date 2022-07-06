@@ -2,7 +2,7 @@
 /// 游戏事件类型
 /// CYK
 /// </summary>
-public enum GameEvent
+public class GameEvent
 {
-    jumpToLayer,
+    public static string ChangeGridType = "ChangeGridType";//变更格子类型
 }
