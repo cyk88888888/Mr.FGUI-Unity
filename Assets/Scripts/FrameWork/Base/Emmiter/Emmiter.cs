@@ -62,3 +62,31 @@ public class Emmiter
 
 }
 
+namespace Global
+{
+    public class GlobalEmmiter
+    {
+        public static void Emit(string notificationName)
+        {
+            Emmiter.Emit(new EventCallBack(notificationName));
+        }
+        public static void Emit(string notificationName, object[] body)
+        {
+            Emmiter.Emit(new EventCallBack(notificationName, body));
+        }
+        public static void Emit(string notificationName, object[] body, object sender)
+        {
+            Emmiter.Emit(new EventCallBack(notificationName, body, sender));
+        }
+        public static void OnEmitter(string type, EventListenerDelegate listener)
+        {
+            Emmiter.On(type, listener);
+        }
+        public static void UnEmitter(string type, EventListenerDelegate listener)
+        {
+            Emmiter.Off(type, listener);
+        }
+
+    }
+}
+

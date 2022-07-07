@@ -29,11 +29,15 @@ public class MapEditorLayer : UILayer
     
     private GButton btn_importJson;
     private GTextInput txt_cellSize;
+    private GTextField txt_mapSize;
     protected override void OnEnter()
     {
         txt_cellSize = view.GetChild("txt_cellSize").asTextInput;
-        txt_cellSize.text = _curCellSize = MapMgr.cellSize.ToString();
+        txt_cellSize.text = _curCellSize = MapMgr.inst.cellSize.ToString();
 
+        txt_mapSize = view.GetChild("txt_mapSize").asTextField;
+        txt_mapSize.text = MapMgr.inst.mapWidth + "," + MapMgr.inst.mapHeight;
+        
         btn_walk = view.GetChild("btn_walk").asButton;
         btn_walk.onClick.Add(_tap_btn_walk);
 
