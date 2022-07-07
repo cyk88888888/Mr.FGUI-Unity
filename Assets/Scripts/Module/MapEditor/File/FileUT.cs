@@ -4,74 +4,60 @@ using System;
 using System.Runtime.InteropServices;
 using System.IO;
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-public class OpenFileName
+/// <summary>
+/// 本地文件IO工具类
+/// author：cyk
+/// </summary>
+public class FileUT
 {
-    #region Config Field
-    public int structSize = 0;
-    public IntPtr dlgOwner = IntPtr.Zero;
-    public IntPtr instance = IntPtr.Zero;
-    public String filter = null;
-    public String customFilter = null;
-    public int maxCustFilter = 0;
-    public int filterIndex = 0;
-    public String file = null;
-    public int maxFile = 0;
-    public String fileTitle = null;
-    public int maxFileTitle = 0;
-    public String initialDir = null;
-    public String title = null;
-    public int flags = 0;
-    public short fileOffset = 0;
-    public short fileExtension = 0;
-    public String defExt = null;
-    public IntPtr custData = IntPtr.Zero;
-    public IntPtr hook = IntPtr.Zero;
-    public String templateName = null;
-    public IntPtr reservedPtr = IntPtr.Zero;
-    public int reservedInt = 0;
-    public int flagsEx = 0;
-    #endregion
-
-
-    #region Win32API WRAP
-    [DllImport("user32.dll")]
-    static extern IntPtr GetForegroundWindow();
-    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
-    static extern bool GetOpenFileName([In, Out] LocalDialog dialog);  //这个方法名称必须为GetOpenFileName
-    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
-    static extern bool GetSaveFileName([In, Out] LocalDialog dialog);  //这个方法名称必须为GetSaveFileName
-    #endregion
-}
-
-public class LocalDialog
-{
-    //链接指定系统函数       打开文件对话框
-    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
-    public static extern bool GetOpenFileName([In, Out] OpenFileName ofn);
-    public static bool GetOFN([In, Out] OpenFileName ofn)
-    {
-        return GetOpenFileName(ofn);
-    }
-
-    //链接指定系统函数        另存为对话框
-    [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
-    public static extern bool GetSaveFileName([In, Out] OpenFileName ofn);
-    public static bool GetSFN([In, Out] OpenFileName ofn)
-    {
-        return GetSaveFileName(ofn);
-    }
-
     //窗口置顶
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
-}
 
-public class FileUT
-{
-    public static void OpenFileDownLoadFunction()
+    /// <summary>
+    /// 选择文件夹
+    /// </summary>
+    public static void OpenDirectoryBrower(Action<string> cb = null)
     {
-        OpenFileName ofn = new OpenFileName();
+        OpenDialogDir openDir = new OpenDialogDir();
+        openDir.pszDisplayName = new string(new char[2000]);
+        openDir.lpszTitle = "文件夹选择";
+        openDir.ulFlags = 1;// BIF_NEWDIALOGSTYLE | BIF_EDITBOX;
+        openDir.hwndOwner = GetForegroundWindow();
+
+        IntPtr pidl = DllOpenFileDialog.SHBrowseForFolder(openDir);
+        char[] path = new char[2000];
+        for (int i = 0; i < 2000; i++)
+            path[i] = '\0';
+        if (DllOpenFileDialog.SHGetPathFromIDList(pidl, path))
+        {
+            string str = new string(path);
+            string DirPath = str.Substring(0, str.IndexOf('\0'));
+            cb?.Invoke(DirPath);
+
+        }
+    }
+    /// <summary>
+    /// 选择文件导入
+    /// </summary>
+    public static void OpenFileBrower(Action<string> cb = null)
+    {
+
+        DealFile(true, "选择要导入的地图json文件：", cb);
+    }
+
+    /// <summary>
+    /// 保存文件
+    /// </summary>
+    public static void SaveFileBrower(Action<string> cb = null)
+    {
+        DealFile(false, "导出当前地图json数据：", cb);
+    }
+
+    //处理文件
+    private static void DealFile(bool isOpen, string title, Action<string> cb = null)
+    {
+        OpenDialogFile ofn = new OpenDialogFile();
 
         ofn.structSize = Marshal.SizeOf(ofn);
 
@@ -87,19 +73,28 @@ public class FileUT
 
         ofn.initialDir = Application.dataPath;//默认路径
 
-        ofn.title = "选择要导入的json文件：";
+        ofn.title = title;
 
         //ofn.defExt = "JPG";//显示文件的类型
 
         //注意 一下项目不一定要全选 但是0x00000008项不要缺少
         ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;//OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
 
-        ofn.dlgOwner = LocalDialog.GetForegroundWindow(); //这一步将文件选择窗口置顶。
+        ofn.dlgOwner = GetForegroundWindow(); //这一步将文件选择窗口置顶。
 
-        if (LocalDialog.GetOpenFileName(ofn))
-        {
-            string json = File.ReadAllText(ofn.file);
-            Debug.Log(json);
+        if (isOpen)
+        {//打开文件
+            if (DllOpenFileDialog.GetOpenFileName(ofn))
+            {
+                cb?.Invoke(ofn.file);
+            }
+        }
+        else
+        {//保存文件
+            if (DllOpenFileDialog.GetSaveFileName(ofn))
+            {
+                cb?.Invoke(ofn.file);
+            }
         }
 
     }

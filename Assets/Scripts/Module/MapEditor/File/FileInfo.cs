@@ -4,30 +4,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class OpenFileToCK
-{
-
-    public static void Open()
-    {
-        OpenDialogDir openDir = new OpenDialogDir();
-        openDir.pszDisplayName = new string(new char[2000]);
-        openDir.lpszTitle = "文件夹选择";
-        openDir.ulFlags = 1;// BIF_NEWDIALOGSTYLE | BIF_EDITBOX;
-        IntPtr pidl = DllOpenFileDialog.SHBrowseForFolder(openDir);
-
-        char[] path = new char[2000];
-        for (int i = 0; i < 2000; i++)
-            path[i] = '\0';
-        if (DllOpenFileDialog.SHGetPathFromIDList(pidl, path))
-        {
-            string str = new string(path);
-            string DirPath = str.Substring(0, str.IndexOf('\0'));
-            Debug.Log("路径" + DirPath);
-        }
-    }
-   
-}
-
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 public class OpenDialogFile
 {
@@ -38,7 +14,7 @@ public class OpenDialogFile
     public String customFilter = null;
     public int maxCustFilter = 0;
     public int filterIndex = 0;
-    public String file = null;
+    public String file = null;//当前选择的文件完整路径
     public int maxFile = 0;
     public String fileTitle = null;
     public int maxFileTitle = 0;

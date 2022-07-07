@@ -104,16 +104,14 @@ public class MapEditorLayer : UILayer
     /** 导出json地图数据**/
     private void _tap_btn_exportJson()
     {
-        Directory.CreateDirectory("ExportFile");
-        File.WriteAllText("ExportFile/text.json", JsonConvert.SerializeObject(new List<int>() { 111,222,333}));
-        MsgMgr.ShowMsg("导出成功！！！");
+        MapMgr.inst.ExportJsonData();
     }
 
     /** 导入json地图数据**/
     private void _tap_btn_importJson()
     {
-        //FileUT.OpenFileDownLoadFunction();
-        OpenFileToCK.Open();
+        MapMgr.inst.ImportJsonData();
+        //FileUT.OpenDirectoryBrower();
     }
 
 }

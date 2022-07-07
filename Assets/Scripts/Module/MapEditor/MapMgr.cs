@@ -1,3 +1,7 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 /// <summary>
 /// 地图管理器
 /// author：cyk
@@ -38,6 +42,31 @@ public class MapMgr
                 break;
         }
         return url;
+    }
+
+    public void OpenDirectoryBrower()
+    {
+        FileUT.OpenDirectoryBrower((string path) => {
+            Debug.Log(path);
+        });
+    }
+    
+    public void ImportJsonData()
+    {
+        FileUT.OpenFileBrower((string path)=> {
+            string json = File.ReadAllText(path);
+            Debug.Log(json);
+        });
+    }
+
+    public void ExportJsonData()
+    {
+        FileUT.SaveFileBrower((string path) => {
+            string fullPath = path + ExtensionJson;
+            File.WriteAllText(fullPath, JsonConvert.SerializeObject(new List<int>() { 111,222,333}));
+            Debug.Log(fullPath);
+            MsgMgr.ShowMsg("导出成功");
+        });
     }
 }
 
