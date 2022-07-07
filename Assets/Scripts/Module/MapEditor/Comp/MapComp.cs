@@ -23,7 +23,7 @@ public class MapComp : UIComp
     private GridType _gridType = GridType.None;//当前格子类型
     private ObjectPool<GComponent> _lineCompPool;
     private ObjectPool<GComponent> _gridCompPool;
-    private Dictionary<GridType, Dictionary<string, GComponent>> _gridTypeDic;
+
     protected override void OnFirstEnter()
     {
         lineContainer = view.GetChild("lineContainer").asCom;
@@ -46,7 +46,7 @@ public class MapComp : UIComp
         view.onRightUp.Add(_onRightUp);
         view.onClick.Add(_onClick);
         //view.onRightClick.Add(_onRightClick);
-        _cellSize = 40;
+        _cellSize = MapMgr.inst.cellSize;
         InitGrid();
     }
 
@@ -60,8 +60,8 @@ public class MapComp : UIComp
 
     private void InitGrid()
     {
-        float mapWidth = 3000;
-        float mapHeight = 3000;
+        int mapWidth = MapMgr.inst.mapWidth;
+        int mapHeight = MapMgr.inst.mapHeight;
         float numCols = Mathf.Floor(mapWidth / _cellSize);
         float numRows = Mathf.Floor(mapHeight / _cellSize);
         Debug.Log("列数：" + numCols);
@@ -122,7 +122,7 @@ public class MapComp : UIComp
         {
             _gridCompPool.ReleaseObject((GComponent)item);
         }
-        _gridTypeDic = new Dictionary<GridType, Dictionary<string, GComponent>>();
+        MapMgr.inst.gridTypeDic = new Dictionary<GridType, Dictionary<string, GComponent>>();
     }
 
     //重置格子大小
@@ -130,6 +130,7 @@ public class MapComp : UIComp
     {
         int cellSize = int.Parse((string)evt.Data[0]);
         _cellSize = cellSize;
+        MapMgr.inst.cellSize = cellSize;
         InitGrid();
     }
 
@@ -154,22 +155,21 @@ public class MapComp : UIComp
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        float gridX = Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize) * _cellSize;
-        float gridY = Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize) * _cellSize;
-        if (!_gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
+        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize), Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize));//所在格子位置
+        float gridX = gridPos.x * _cellSize;
+        float gridY = gridPos.y * _cellSize;
+        if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
         {
-            _gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
+            MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
         }
-        Dictionary<string, GComponent> curGridTypeDic = _gridTypeDic[_gridType];
-        string gridKey = gridX + "_" + gridY;
-        if (curGridTypeDic.TryGetValue(gridKey, out GComponent gridComp))//当前格子已有
-        {
-            return;
-        }
+        Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[_gridType];
+        string gridKey = gridPos.x + "_" + gridPos.y;
+        if (curGridTypeDic.TryGetValue(gridKey, out GComponent gridComp)) return;//当前格子已有
+
         AddOrRmGrid(evt);
     }
     private void _onRightUp(EventContext evt) { }
-    
+
     private void _onClick(EventContext evt)
     {
         if (_gridType == GridType.None)
@@ -177,7 +177,7 @@ public class MapComp : UIComp
             MsgMgr.ShowMsg("请先点击设置格子类型！！！");
             return;
         }
-  
+
         AddOrRmGrid(evt);
     }
 
@@ -186,15 +186,16 @@ public class MapComp : UIComp
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        float gridX = Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize) * _cellSize;
-        float gridY = Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize) * _cellSize;
+        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize), Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize));//所在格子位置
+        float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
+        float gridY = gridPos.y * _cellSize;//绘制颜色格子的坐标Y
 
-        if (!_gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
+        if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
         {
-            _gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
+            MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
         }
-        Dictionary<string, GComponent> curGridTypeDic = _gridTypeDic[_gridType];
-        string gridKey = gridX + "_" + gridY;
+        Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[_gridType];
+        string gridKey = gridPos.x + "_" + gridPos.y;
         GComponent gridComp;
         if (curGridTypeDic.TryGetValue(gridKey, out gridComp))
         {
@@ -215,11 +216,11 @@ public class MapComp : UIComp
     private void OnClearGridType(EventCallBack evt)
     {
         GridType gridType = (GridType)evt.Data[0];
-        if (!_gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> dic))
+        if (!MapMgr.inst.gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> dic))
         {
             return;
         }
-        Dictionary<string, GComponent> curGridTypeDic = _gridTypeDic[gridType];
+        Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[gridType];
         foreach (var item in curGridTypeDic)
         {
             _gridCompPool.ReleaseObject(item.Value);

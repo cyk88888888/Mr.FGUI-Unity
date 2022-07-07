@@ -32,5 +32,7 @@
     <component id="n10_g4oc" name="btn_resizeGrid" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1274,303" size="107,36">
       <Button title="确定"/>
     </component>
+    <text id="n14_o1cz" name="n14" xy="1043,266" size="144,29" fontSize="20" color="#ffffff" text="当前地图宽高："/>
+    <text id="n15_o1cz" name="txt_mapSize" xy="1187,266" size="144,29" fontSize="20" color="#ffffff" text="当前地图宽高："/>
   </displayList>
 </component>
