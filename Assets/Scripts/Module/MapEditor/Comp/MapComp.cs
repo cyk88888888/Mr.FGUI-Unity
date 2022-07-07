@@ -40,7 +40,12 @@ public class MapComp : UIComp
         );
 
         view.scrollPane.onScroll.Add(OnScroll);
-        view.onRightClick.Add(_onRightClick);
+
+        view.onRightDown.Add(_onRightDown);
+        view.onRightMove.Add(_onRightMove);
+        view.onRightUp.Add(_onRightUp);
+        view.onClick.Add(_onClick);
+        //view.onRightClick.Add(_onRightClick);
         _cellSize = 40;
         InitGrid();
     }
@@ -48,7 +53,9 @@ public class MapComp : UIComp
     protected override void OnEnter()
     {
         OnEmitter(GameEvent.ChangeGridType, OnChangeGridType);//格子类型变化
+        OnEmitter(GameEvent.ClearGridType, OnClearGridType);//格子类型变化 
         OnEmitter(GameEvent.ResizeGrid, OnResizeGrid);
+
     }
 
     private void InitGrid()
@@ -62,7 +69,7 @@ public class MapComp : UIComp
         GGraph bg = view.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
 
-      
+
         lineContainer.SetSize(mapWidth, mapHeight);
         RemoveAllLine();
         RemoveAllGrid();
@@ -131,17 +138,52 @@ public class MapComp : UIComp
     {
         GridType gridType = (GridType)evt.Data[0];
         _gridType = gridType;
-     
     }
 
-    private void _onRightClick(EventContext evt)
+    private void _onRightDown(EventContext evt)
+    {
+        evt.CaptureTouch();//这个方法一定要调用，否则不糊出发rightMove
+        if (_gridType == GridType.None)
+        {
+            MsgMgr.ShowMsg("请先点击设置格子类型！！！");
+            return;
+        }
+    }
+    private void _onRightMove(EventContext evt)
+    {
+        if (_gridType == GridType.None) return;
+        InputEvent inputEvt = (InputEvent)evt.data;
+        Vector2 inputPos = inputEvt.position;
+        float gridX = Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize) * _cellSize;
+        float gridY = Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize) * _cellSize;
+        if (!_gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
+        {
+            _gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
+        }
+        Dictionary<string, GComponent> curGridTypeDic = _gridTypeDic[_gridType];
+        string gridKey = gridX + "_" + gridY;
+        if (curGridTypeDic.TryGetValue(gridKey, out GComponent gridComp))//当前格子已有
+        {
+            return;
+        }
+        AddOrRmGrid(evt);
+    }
+    private void _onRightUp(EventContext evt) { }
+    
+    private void _onClick(EventContext evt)
     {
         if (_gridType == GridType.None)
         {
             MsgMgr.ShowMsg("请先点击设置格子类型！！！");
             return;
         }
+  
+        AddOrRmGrid(evt);
+    }
 
+    private void AddOrRmGrid(EventContext evt)
+    {
+        if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
         float gridX = Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize) * _cellSize;
@@ -168,6 +210,21 @@ public class MapComp : UIComp
         gridComp.SetXY(gridX + 1, gridY + 1);
         gridContainer.AddChild(gridComp);
         curGridTypeDic.Add(gridKey, gridComp);
+    }
+
+    private void OnClearGridType(EventCallBack evt)
+    {
+        GridType gridType = (GridType)evt.Data[0];
+        if (!_gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> dic))
+        {
+            return;
+        }
+        Dictionary<string, GComponent> curGridTypeDic = _gridTypeDic[gridType];
+        foreach (var item in curGridTypeDic)
+        {
+            _gridCompPool.ReleaseObject(item.Value);
+        }
+        curGridTypeDic.Clear();
     }
 }
 

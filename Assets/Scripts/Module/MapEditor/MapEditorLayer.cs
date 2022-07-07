@@ -21,8 +21,12 @@ public class MapEditorLayer : UILayer
     private GButton btn_walk;
     private GButton btn_block;
     private GButton btn_blockVert;
+    private GButton btn_clearWalk;
+    private GButton btn_clearBolck;
+    private GButton btn_clearBolckVert;
     private GButton btn_resizeGrid;
     private GButton btn_exportJson;
+    
     private GButton btn_importJson;
     private GTextInput txt_cellSize;
     protected override void OnEnter()
@@ -38,6 +42,15 @@ public class MapEditorLayer : UILayer
 
         btn_blockVert = view.GetChild("btn_blockVert").asButton;
         btn_blockVert.onClick.Add(_tap_btn_blockVert);
+
+        btn_clearWalk = view.GetChild("btn_clearWalk").asButton;
+        btn_clearWalk.onClick.Add(_tap_btn_clearWalk);
+
+        btn_clearBolck = view.GetChild("btn_clearBolck").asButton;
+        btn_clearBolck.onClick.Add(_tap_btn_clearBolck);
+
+        btn_clearBolckVert = view.GetChild("btn_clearBolckVert").asButton;
+        btn_clearBolckVert.onClick.Add(_tap_btn_clearBolckVert);
 
         btn_resizeGrid = view.GetChild("btn_resizeGrid").asButton;
         btn_resizeGrid.onClick.Add(_tap_btn_resizeGrid);
@@ -62,6 +75,19 @@ public class MapEditorLayer : UILayer
     private void _tap_btn_blockVert()
     {
         Emit(GameEvent.ChangeGridType, new object[] { GridType.BlockVerts });
+    }
+
+    private void _tap_btn_clearWalk()
+    {
+        Emit(GameEvent.ClearGridType, new object[] { GridType.Walk });
+    }
+    private void _tap_btn_clearBolck()
+    {
+        Emit(GameEvent.ClearGridType, new object[] { GridType.Block });
+    }
+    private void _tap_btn_clearBolckVert()
+    {
+        Emit(GameEvent.ClearGridType, new object[] { GridType.BlockVerts });
     }
 
     private void _tap_btn_resizeGrid()

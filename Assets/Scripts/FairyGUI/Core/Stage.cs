@@ -1072,6 +1072,10 @@ namespace FairyGUI
 
                     touch.UpdateEvent();
                     touch.target.BubbleEvent("onTouchBegin", touch.evt);
+                    if(Input.GetMouseButtonDown(1))
+                    {
+                        touch.target.BubbleEvent("onRightDown", touch.evt);
+                    }
                 }
             }
             if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2))
@@ -1087,7 +1091,9 @@ namespace FairyGUI
                         touch.UpdateEvent();
 
                         if (Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(2))
+                        {
                             clickTarget.BubbleEvent("onRightClick", touch.evt);
+                        }
                         else
                             clickTarget.BubbleEvent("onClick", touch.evt);
                     }
@@ -1582,6 +1588,7 @@ namespace FairyGUI
                         if ((e is GObject) && !((GObject)e).onStage)
                             continue;
                         e.GetChainBridges("onTouchMove", sHelperChain, false);
+                        if(button == 1) e.GetChainBridges("onRightMove", sHelperChain, false);
                     }
                 }
 
@@ -1589,7 +1596,9 @@ namespace FairyGUI
                 sHelperChain.Clear();
             }
             else
+            {
                 Stage.inst.DispatchEvent("onTouchMove", evt);
+            }
         }
 
         public void End()
@@ -1636,7 +1645,11 @@ namespace FairyGUI
                 {
                     EventDispatcher e = touchMonitors[i];
                     if (e != null)
+                    {
                         e.GetChainBridges("onTouchEnd", sHelperChain, false);
+                        if (Input.GetMouseButtonUp(1)) target.BubbleEvent("onRightUp", evt);
+                    }
+                      
                 }
                 target.BubbleEvent("onTouchEnd", evt, sHelperChain);
 
@@ -1644,7 +1657,14 @@ namespace FairyGUI
                 sHelperChain.Clear();
             }
             else
+            {
                 target.BubbleEvent("onTouchEnd", evt);
+                if (Input.GetMouseButtonUp(1))
+                {
+                    target.BubbleEvent("onRightUp", evt);
+                }
+            }
+               
         }
 
         public DisplayObject ClickTest()
