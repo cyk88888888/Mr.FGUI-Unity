@@ -305,7 +305,7 @@ namespace FairyGUI
                 if (context._touchCapture)
                 {
                     context._touchCapture = false;
-                    if (strType == "onTouchBegin")
+                    if (strType == "onTouchBegin" || strType == "onRightDown")
                         Stage.inst.AddTouchMonitor(context.inputEvent.touchId, bubbleChain[i].owner);
                 }
             }
@@ -319,7 +319,7 @@ namespace FairyGUI
                     if (context._touchCapture)
                     {
                         context._touchCapture = false;
-                        if (strType == "onTouchBegin")
+                        if (strType == "onTouchBegin" || strType == "onRightDown")
                             Stage.inst.AddTouchMonitor(context.inputEvent.touchId, bubbleChain[i].owner);
                     }
 

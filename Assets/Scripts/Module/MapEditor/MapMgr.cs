@@ -21,7 +21,7 @@ public class MapMgr
     /// 格子大小（默认40）
     /// </summary>
     public static int cellSize = 40;
-
+    public const string ExtensionJson = ".json";//json后缀名
     public string getGridUrlByType(GridType type)
     {
         string url = "";

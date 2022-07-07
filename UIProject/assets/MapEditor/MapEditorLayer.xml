@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1400,760" designImageLayer="1">
+<component size="1450,810" designImageLayer="1">
   <displayList>
-    <component id="n1_g4oc" name="n1" src="nx961d" fileName="components/MapComp.xml" xy="0,0" size="1033,760"/>
+    <component id="n1_g4oc" name="n1" src="nx961d" fileName="components/MapComp.xml" xy="0,0" size="1033,810"/>
     <graph id="n9_g4oc" name="n9" xy="1185,301" size="73,41" type="rect"/>
     <component id="n3_g4oc" name="btn_walk" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,9" size="120,36">
       <Button title="设置可行走"/>
@@ -11,6 +11,15 @@
     </component>
     <component id="n4_g4oc" name="btn_blockVert" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,115" size="164,36">
       <Button title="设置障碍物顶点"/>
+    </component>
+    <component id="n11_vlox" name="btn_clearWalk" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1202,9" size="172,36">
+      <Button title="清除所有可行走"/>
+    </component>
+    <component id="n12_vlox" name="btn_clearBolck" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1202,60" size="165,36">
+      <Button title="清除所有障碍物"/>
+    </component>
+    <component id="n13_vlox" name="btn_clearBolckVert" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1234,115" size="200,36">
+      <Button title="清除所有障碍物顶点"/>
     </component>
     <component id="n5_g4oc" name="btn_exportJson" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,513" size="120,36">
       <Button title="导出Json"/>

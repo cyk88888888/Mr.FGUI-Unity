@@ -15,5 +15,6 @@ public class GameEvent
         }
     }
     public static string ChangeGridType = next;//变更格子类型
+    public static string ClearGridType = next;//删除指定类型格子
     public static string ResizeGrid = next;//变更格子类型
 }

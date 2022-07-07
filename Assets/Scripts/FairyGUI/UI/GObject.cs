@@ -118,6 +118,9 @@ namespace FairyGUI
 
         EventListener _onClick;
         EventListener _onRightClick;
+        EventListener _onRightDown;
+        EventListener _onRightMove;
+        EventListener _onRightUp;
         EventListener _onTouchBegin;
         EventListener _onTouchMove;
         EventListener _onTouchEnd;
@@ -181,6 +184,21 @@ namespace FairyGUI
         public EventListener onRightClick
         {
             get { return _onRightClick ?? (_onRightClick = new EventListener(this, "onRightClick")); }
+        }
+
+        public EventListener onRightDown
+        {
+            get { return _onRightDown ?? (_onRightDown = new EventListener(this, "onRightDown")); }
+        }
+
+        public EventListener onRightMove
+        {
+            get { return _onRightMove ?? (_onRightMove = new EventListener(this, "onRightMove")); }
+        }
+
+        public EventListener onRightUp
+        {
+            get { return _onRightUp ?? (_onRightUp = new EventListener(this, "onRightUp")); }
         }
 
         /// <summary>

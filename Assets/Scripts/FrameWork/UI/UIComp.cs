@@ -125,22 +125,6 @@ public class UIComp : GComponent, IEmmiter
         }
     }
 
-    //public override GObject AddChildAt(GObject child, int index)
-    //{
-    //    if (child is UIComp)
-    //    {
-    //        if (view == null)
-    //        {
-    //            return base.AddChildAt(child, index);
-    //        }
-    //        else
-    //        {
-    //            return view.AddChildAt(child, index);
-    //        }
-    //    }
-    //    return base.AddChildAt(child, index);
-    //}
-
     public void Emit(string notificationName)
     {
         Emmiter.Emit(new EventCallBack(notificationName));
