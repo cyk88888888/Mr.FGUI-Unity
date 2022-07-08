@@ -26,7 +26,7 @@ public class MapEditorLayer : UILayer
     private GButton btn_clearWater;
     private GButton btn_resizeGrid;
     private GButton btn_exportJson;
-
+    private GButton btn_screenShot;
     private GList list_map;
     private GButton btn_importJson;
     private GTextInput txt_cellSize;
@@ -74,7 +74,9 @@ public class MapEditorLayer : UILayer
         btn_importJson = view.GetChild("btn_importJson").asButton;
         btn_importJson.onClick.Add(_tap_btn_importJson);
 
-    
+        btn_screenShot = view.GetChild("btn_screenShot").asButton;
+        btn_screenShot.onClick.Add(_tap_btn_screenShot);
+        
         list_map = view.GetChild("list_map").asList;
         list_map.onClickItem.Add(OnClickMapItem);
         list_map.itemRenderer = RenderListMapItem;
@@ -154,6 +156,12 @@ public class MapEditorLayer : UILayer
     private void _tap_btn_importJson()
     {
         MapMgr.inst.ImportJsonData();
+    }
+
+    /** ½ØÍ¼»æ»­ÇøÓò**/
+    private void _tap_btn_screenShot()
+    {
+        Emit(GameEvent.ScreenShoot);
     }
 
 }

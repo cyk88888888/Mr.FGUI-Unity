@@ -47,21 +47,29 @@ public class FileUT
     }
 
     /// <summary>
-    /// 保存文件
+    /// 保存json文件
     /// </summary>
     public static void SaveFileBrower(Action<string> cb = null)
     {
         DealFile(false, "导出当前地图json数据：", cb);
     }
 
+
+    /// <summary>
+    /// 保存png图片文件
+    /// </summary>
+    public static void SavePngImageBrower(Action<string> cb = null)
+    {
+        DealFile(false, "保存图片：", cb, ".png");
+    }
     //处理文件
-    private static void DealFile(bool isOpen, string title, Action<string> cb = null)
+    private static void DealFile(bool isOpen, string title, Action<string> cb = null,string extension = ".json")
     {
         OpenDialogFile ofn = new OpenDialogFile();
 
         ofn.structSize = Marshal.SizeOf(ofn);
 
-        ofn.filter = "格式(.json)\0*.json;";//"所有图片格式(.bmp;.jpeg;.jpg;.png;)\0*.bmp;*.jpeg;*.jpg;*.png;";
+        ofn.filter = extension == ".json" ?  "格式(.json)\0*.json;" : "图片格式(.png;)\0*.png;";//"所有图片格式(.bmp;.jpeg;.jpg;.png;)\0*.bmp;*.jpeg;*.jpg;*.png;";
 
         ofn.file = new string(new char[256]);
 

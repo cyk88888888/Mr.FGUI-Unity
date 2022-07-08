@@ -15,6 +15,7 @@ public class MapComp : UIComp
     {
         get { return "MapComp"; }
     }
+    private GComponent grp_container;
     private GComponent lineContainer;
     private GComponent gridContainer;
 
@@ -25,8 +26,9 @@ public class MapComp : UIComp
 
     protected override void OnFirstEnter()
     {
-        lineContainer = view.GetChild("lineContainer").asCom;
-        gridContainer = view.GetChild("gridContainer").asCom;
+        grp_container = view.GetChild("grp_container").asCom;
+        lineContainer = grp_container.GetChild("lineContainer").asCom;
+        gridContainer = grp_container.GetChild("gridContainer").asCom;
 
         _lineCompPool = new(
             () => { return UIPackage.CreateObject("MapEditor", "LineComp").asCom; },
@@ -54,6 +56,7 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.ImportMapJson, OnImportMapJson);//清除所有线条和格子
         OnEmitter(GameEvent.ResizeGrid, OnResizeGrid);
         OnEmitter(GameEvent.ChangeMap, onChangeMap);
+        OnEmitter(GameEvent.ScreenShoot, onScreenShoot);//截图绘画区域
     }
 
     private void Init(bool needCreate = true)
@@ -64,8 +67,9 @@ public class MapComp : UIComp
         float numCols = Mathf.Floor(mapWidth / _cellSize);
         float numRows = Mathf.Floor(mapHeight / _cellSize);
         Debug.Log("行数：" + numRows + "，列数：" + numCols);
-        GGraph bg = view.GetChild("bg").asGraph;
+        GGraph bg = grp_container.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
+        grp_container.SetSize(mapWidth, mapHeight);
         //bg.url = MapMgr.inst.mapId;//设置背景图todo....
         RemoveAllLine();
         RemoveAllGrid();
@@ -267,7 +271,10 @@ public class MapComp : UIComp
         Init();
     }
 
-
+    private void onScreenShoot(EventCallBack evt)
+    {
+        MapMgr.inst.SaveViewShotToLocal(grp_container);
+    }
 }
 
 
