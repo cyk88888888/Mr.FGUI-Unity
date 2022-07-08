@@ -39,7 +39,6 @@ public class MapComp : UIComp
             (GComponent obj) => { obj.RemoveFromParent(); }
         );
 
-        view.scrollPane.onScroll.Add(OnScroll);
 
         view.onRightDown.Add(_onRightDown);
         view.onRightMove.Add(_onRightMove);
@@ -66,8 +65,7 @@ public class MapComp : UIComp
         int mapHeight = MapMgr.inst.mapHeight;
         float numCols = Mathf.Floor(mapWidth / _cellSize);
         float numRows = Mathf.Floor(mapHeight / _cellSize);
-        Debug.Log("列数：" + numCols);
-        Debug.Log("行数：" + numRows);
+        Debug.Log("行数：" + numRows + "，列数：" + numCols);
         GGraph bg = view.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
         //bg.url = MapMgr.inst.mapId;//设置背景图todo....
@@ -82,7 +80,6 @@ public class MapComp : UIComp
             line.width = lineStroke;
             line.height = mapHeight;
             line.SetXY(i * _cellSize, 0);
-            line.visible = view.scrollPane.IsChildInView(line);
             line.gameObjectName = "Col_" + i;
         }
 
@@ -93,16 +90,7 @@ public class MapComp : UIComp
             line.width = mapWidth;
             line.height = lineStroke;
             line.SetXY(0, i * _cellSize);
-            line.visible = view.scrollPane.IsChildInView(line);
             line.gameObjectName = "Row_" + i;
-        }
-    }
-
-    private void OnScroll()
-    {
-        foreach (var line in lineContainer.GetChildren())
-        {
-            line.visible = view.scrollPane.IsChildInView(line);
         }
     }
 
