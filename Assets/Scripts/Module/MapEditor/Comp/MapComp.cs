@@ -43,7 +43,6 @@ public class MapComp : UIComp
         view.onRightMove.Add(_onRightMove);
         view.onRightUp.Add(_onRightUp);
         view.onClick.Add(_onClick);
-        //view.onRightClick.Add(_onRightClick);
         _cellSize = MapMgr.inst.cellSize;
         Init();
     }
