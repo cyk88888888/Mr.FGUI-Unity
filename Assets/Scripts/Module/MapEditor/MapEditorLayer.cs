@@ -21,15 +21,20 @@ public class MapEditorLayer : UILayer
     private GButton btn_walk;
     private GButton btn_block;
     private GButton btn_blockVert;
+    private GButton btn_water;
     private GButton btn_clearWalk;
     private GButton btn_clearBolck;
     private GButton btn_clearBolckVert;
+    private GButton btn_clearWater;
     private GButton btn_resizeGrid;
     private GButton btn_exportJson;
-    
+
+    private GList list_map;
     private GButton btn_importJson;
     private GTextInput txt_cellSize;
     private GTextField txt_mapSize;
+
+    private List<MapSelectInfo> _mapData;
     protected override void OnEnter()
     {
         txt_cellSize = view.GetChild("txt_cellSize").asTextInput;
@@ -37,7 +42,7 @@ public class MapEditorLayer : UILayer
 
         txt_mapSize = view.GetChild("txt_mapSize").asTextField;
         txt_mapSize.text = MapMgr.inst.mapWidth + "," + MapMgr.inst.mapHeight;
-        
+
         btn_walk = view.GetChild("btn_walk").asButton;
         btn_walk.onClick.Add(_tap_btn_walk);
 
@@ -46,6 +51,9 @@ public class MapEditorLayer : UILayer
 
         btn_blockVert = view.GetChild("btn_blockVert").asButton;
         btn_blockVert.onClick.Add(_tap_btn_blockVert);
+
+        btn_water = view.GetChild("btn_water").asButton;
+        btn_water.onClick.Add(_tap_btn_water);
 
         btn_clearWalk = view.GetChild("btn_clearWalk").asButton;
         btn_clearWalk.onClick.Add(_tap_btn_clearWalk);
@@ -56,6 +64,9 @@ public class MapEditorLayer : UILayer
         btn_clearBolckVert = view.GetChild("btn_clearBolckVert").asButton;
         btn_clearBolckVert.onClick.Add(_tap_btn_clearBolckVert);
 
+        btn_clearWater = view.GetChild("btn_clearWater").asButton;
+        btn_clearWater.onClick.Add(_tap_btn_clearWater);
+
         btn_resizeGrid = view.GetChild("btn_resizeGrid").asButton;
         btn_resizeGrid.onClick.Add(_tap_btn_resizeGrid);
 
@@ -64,6 +75,14 @@ public class MapEditorLayer : UILayer
 
         btn_importJson = view.GetChild("btn_importJson").asButton;
         btn_importJson.onClick.Add(_tap_btn_importJson);
+
+    
+        list_map = view.GetChild("list_map").asList;
+        list_map.onClickItem.Add(OnClickMapItem);
+        list_map.itemRenderer = RenderListMapItem;
+        _mapData = MapMgr.inst.mapDataList;
+        list_map.numItems = _mapData.Count;
+        list_map.selectedIndex = 0;
     }
 
     private void _tap_btn_walk()
@@ -81,6 +100,11 @@ public class MapEditorLayer : UILayer
         Emit(GameEvent.ChangeGridType, new object[] { GridType.BlockVerts });
     }
 
+    private void _tap_btn_water()
+    {
+        Emit(GameEvent.ChangeGridType, new object[] { GridType.Water });
+    }
+
     private void _tap_btn_clearWalk()
     {
         Emit(GameEvent.ClearGridType, new object[] { GridType.Walk });
@@ -93,7 +117,10 @@ public class MapEditorLayer : UILayer
     {
         Emit(GameEvent.ClearGridType, new object[] { GridType.BlockVerts });
     }
-
+    private void _tap_btn_clearWater()
+    {
+        Emit(GameEvent.ClearGridType, new object[] { GridType.Water });
+    }
     private void _tap_btn_resizeGrid()
     {
         if (_curCellSize == txt_cellSize.text)
@@ -103,6 +130,20 @@ public class MapEditorLayer : UILayer
         }
         _curCellSize = txt_cellSize.text;
         Emit(GameEvent.ResizeGrid, new object[] { txt_cellSize.text });
+    }
+
+
+    private void OnClickMapItem(EventContext context)
+    {
+        MapSelectInfo itemInfo = _mapData[list_map.selectedIndex];
+        Emit(GameEvent.ChangeMap, new object[] { itemInfo });
+    }
+
+    private void RenderListMapItem(int index, GObject obj)
+    {
+        GButton button = (GButton)obj;
+        MapSelectInfo itemInfo = _mapData[index];
+        button.title = itemInfo.mapName;
     }
 
     /** 导出json地图数据**/

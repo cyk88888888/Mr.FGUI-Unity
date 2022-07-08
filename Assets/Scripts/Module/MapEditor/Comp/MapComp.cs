@@ -56,6 +56,7 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.ClearGridType, OnClearGridType);//清除指定格子类型 
         OnEmitter(GameEvent.ImportMapJson, OnImportMapJson);//清除所有线条和格子
         OnEmitter(GameEvent.ResizeGrid, OnResizeGrid);
+        OnEmitter(GameEvent.ChangeMap, onChangeMap);
     }
 
     private void Init(bool needCreate = true)
@@ -69,6 +70,7 @@ public class MapComp : UIComp
         Debug.Log("行数：" + numRows);
         GGraph bg = view.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
+        //bg.url = MapMgr.inst.mapId;//设置背景图todo....
         RemoveAllLine();
         RemoveAllGrid();
 
@@ -255,9 +257,13 @@ public class MapComp : UIComp
         /** 设置障碍物节点**/
         AddBlockByType(GridType.Block);
         AddBlockByType(GridType.BlockVerts);
+        AddBlockByType(GridType.Water);
         void AddBlockByType(GridType gridType)
         {
-            List<List<int>> blockList = gridType == GridType.Block ? mapInfo.blockList : mapInfo.blockVertList;
+            List<List<int>> blockList = new();
+            if (gridType == GridType.Block) blockList = mapInfo.blockList;
+            else if(gridType == GridType.BlockVerts) blockList = mapInfo.blockVertList;
+            else if (gridType == GridType.Water) blockList = mapInfo.waterList;
             foreach (var item in blockList)
             {
                 Vector2 gridPos = new Vector2(item[0], item[1]);//所在格子位置
@@ -268,7 +274,14 @@ public class MapComp : UIComp
         }
     }
 
-  
+    private void onChangeMap(EventCallBack evt)
+    {
+        MapSelectInfo mapInfo = (MapSelectInfo)evt.Data[0];
+        MapMgr.inst.mapId = mapInfo.mapId;
+        Init();
+    }
+
+
 }
 
 

@@ -31,7 +31,6 @@
     <image id="h98zy" name="z_suotou.png" path="/img/"/>
     <component id="h98zz" name="BottomTabLayer.xml" path="/" exported="true"/>
     <component id="h98z10" name="TabBottomIR.xml" path="/components/"/>
-    <component id="h98z11" name="TabBottomIR1.xml" path="/components/"/>
     <component id="h98z13" name="TopInfoLayer.xml" path="/" exported="true"/>
     <component id="h98z14" name="EquipLayer.xml" path="/" exported="true"/>
     <component id="h98z15" name="ShopLayer.xml" path="/" exported="true"/>

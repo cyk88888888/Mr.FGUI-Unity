@@ -24,9 +24,18 @@ public class MapMgr
 
     public int mapWidth = 4000;//地图宽
     public int mapHeight = 4000;//地图高
+    public int mapId = 1;//当前地图id
     public int cellSize = 40;//格子大小（默认40）
     public const string ExtensionJson = ".json";//保存文件的后缀名
     public Dictionary<GridType, Dictionary<string, GComponent>> gridTypeDic;//当前地图数据
+    public List<MapSelectInfo> mapDataList = new()//所有地图信息列表
+    {
+        new MapSelectInfo("地图1", 1),
+        new MapSelectInfo("地图2", 2),
+        new MapSelectInfo("地图3", 3),
+        new MapSelectInfo("地图4", 4),
+        new MapSelectInfo("地图5", 5),
+    };
 
     public string getGridUrlByType(GridType type)
     {
@@ -40,7 +49,10 @@ public class MapMgr
                 url = "ui://MapEditor/black";
                 break;
             case GridType.BlockVerts:
-                url = "ui://MapEditor/red";
+                url = "ui://MapEditor/redCircle";
+                break;
+            case GridType.Water:
+                url = "ui://MapEditor/blue";
                 break;
         }
         return url;
@@ -64,6 +76,7 @@ public class MapMgr
             mapWidth = mapInfo.mapWidth;
             mapHeight = mapInfo.mapHeight;
             cellSize = mapInfo.cellSize;
+            mapId = mapInfo.mapId;
             Global.GlobalEmmiter.Emit(GameEvent.ImportMapJson, new object[] { mapInfo });
             Debug.Log(json);
         });
@@ -78,7 +91,7 @@ public class MapMgr
             mapInfo.mapWidth = mapWidth;
             mapInfo.mapHeight = mapHeight;
             mapInfo.cellSize = cellSize;
-
+            mapInfo.mapId = mapId;
             /** 设置行走区域**/
             float numCols = Mathf.Floor(mapWidth / cellSize);//列
             float numRows = Mathf.Floor(mapHeight / cellSize);//行
@@ -104,7 +117,7 @@ public class MapMgr
             /** 设置障碍物**/
             AddBlockByType(GridType.Block);
             AddBlockByType(GridType.BlockVerts);
-       
+            AddBlockByType(GridType.Water);
             void AddBlockByType(GridType gridType) {
                 gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> blockGridDic);
                 if (blockGridDic != null)
@@ -134,5 +147,6 @@ public enum GridType
     None,
     Walk,
     Block,
-    BlockVerts
+    BlockVerts,
+    Water
 }
