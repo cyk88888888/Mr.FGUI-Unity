@@ -156,7 +156,6 @@ public class MapEditorLayer : UILayer
     private void _tap_btn_importJson()
     {
         MapMgr.inst.ImportJsonData();
-        //FileUT.OpenDirectoryBrower();
     }
 
 }
