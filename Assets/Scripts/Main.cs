@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using FairyGUI;
-using System;
 using UnityEngine.SceneManagement;
 /// <summary>
 /// 主入口文件

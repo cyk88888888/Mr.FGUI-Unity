@@ -1,9 +1,7 @@
 using FairyGUI;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 /// <summary>
-/// 游戏登入加载界面
+/// 地图编辑器主界面
 /// </summary>
 public class MapEditorLayer : UILayer
 {

@@ -1,7 +1,4 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
 /// <summary>
 /// 地图json数据结构
 /// author：cyk
