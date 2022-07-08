@@ -18,10 +18,10 @@
     <component id="n12_vlox" name="btn_clearBolck" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1202,60" size="165,36">
       <Button title="清除所有障碍物"/>
     </component>
-    <component id="n13_vlox" name="btn_clearBolckVert" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1234,115" size="200,36">
+    <component id="n13_vlox" name="btn_clearBolckVert" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1234,115" size="210,36">
       <Button title="清除所有障碍物顶点"/>
     </component>
-    <component id="n5_g4oc" name="btn_exportJson" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,513" size="120,36">
+    <component id="n5_g4oc" name="btn_exportJson" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,624" size="120,36">
       <Button title="导出Json"/>
     </component>
     <component id="n6_g4oc" name="btn_importJson" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,569" size="120,36">
