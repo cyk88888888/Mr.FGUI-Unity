@@ -100,7 +100,7 @@ public class MapMgr
                     }
                 }
             }
-
+     
             /** …Ë÷√’œ∞≠ŒÔ**/
             AddBlockByType(GridType.Block);
             AddBlockByType(GridType.BlockVerts);
