@@ -39,8 +39,6 @@ public class MapComp : UIComp
             (GComponent obj) => { obj.RemoveFromParent(); }
         );
 
-        view.scrollPane.onScroll.Add(OnScroll);
-
         view.onRightDown.Add(_onRightDown);
         view.onRightMove.Add(_onRightMove);
         view.onRightUp.Add(_onRightUp);
@@ -48,6 +46,7 @@ public class MapComp : UIComp
         //view.onRightClick.Add(_onRightClick);
         _cellSize = MapMgr.inst.cellSize;
         Init();
+
     }
 
     protected override void OnEnter()
@@ -82,7 +81,6 @@ public class MapComp : UIComp
             line.width = lineStroke;
             line.height = mapHeight;
             line.SetXY(i * _cellSize, 0);
-            line.visible = view.scrollPane.IsChildInView(line);
             line.gameObjectName = "Col_" + i;
         }
 
@@ -93,16 +91,7 @@ public class MapComp : UIComp
             line.width = mapWidth;
             line.height = lineStroke;
             line.SetXY(0, i * _cellSize);
-            line.visible = view.scrollPane.IsChildInView(line);
             line.gameObjectName = "Row_" + i;
-        }
-    }
-
-    private void OnScroll()
-    {
-        foreach (var line in lineContainer.GetChildren())
-        {
-            line.visible = view.scrollPane.IsChildInView(line);
         }
     }
 
