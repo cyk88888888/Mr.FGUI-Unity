@@ -275,6 +275,7 @@ public class MapComp : UIComp
 
     private void onScreenShoot(EventCallBack evt)
     {
+        //用RenderTexture截图显示的话会比较模糊
         //DisplayObject dObject = grp_container.displayObject;
         //dObject.EnterPaintingMode(1024, null);
         ////纹理将在本帧渲染后才能更新，所以访问纹理的代码需要延迟到下一帧执行。
