@@ -182,8 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleMode: 1
   screenMatchMode: 1
-  designResolutionX: 1450
-  designResolutionY: 810
+  designResolutionX: 1550
+  designResolutionY: 910
   fallbackScreenDPI: 96
   defaultSpriteDPI: 96
   constantScaleFactor: 1

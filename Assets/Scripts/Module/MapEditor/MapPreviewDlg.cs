@@ -30,14 +30,15 @@ public class MapPreviewDlg : UIDlg
         GButton btn_close = view.GetChild("btn_close").asButton;
         btn_close.onClick.Add(() => { Close(); });
         holder = view.GetChild("previewComp").asCom.GetChild("holder").asGraph;
-        RenderTexture renderTexture = (RenderTexture)__data;
+        //RenderTexture renderTexture = (RenderTexture)__data;
+        Texture2D renderTexture = (Texture2D)__data;
         _renderTextureSize = new(renderTexture.width, renderTexture.height);
         holder.SetSize(renderTexture.width, renderTexture.height);
         _image = new Image();
         holder.SetNativeObject(_image);
         _image.texture = new NTexture(renderTexture);
         _image.blendMode = BlendMode.Off;
-
+        
         view.displayObject.onMouseWheel.Add(_onMouseWheel);
     }
 
@@ -54,5 +55,10 @@ public class MapPreviewDlg : UIDlg
             holder.SetScale(holder.scaleX + delta, holder.scaleY + delta);
         }
         holder.SetSize(_renderTextureSize.x * holder.scaleX, _renderTextureSize.y * holder.scaleX);
+    }
+
+    protected override void OnExit()
+    {
+        _image.Dispose();
     }
 }

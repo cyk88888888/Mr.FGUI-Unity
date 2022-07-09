@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1450,810" designImageLayer="1">
+<component size="1550,910" designImageLayer="1">
   <displayList>
-    <component id="n1_g4oc" name="n1" src="nx961d" fileName="components/MapComp.xml" xy="0,0" size="1033,810"/>
+    <component id="n1_g4oc" name="n1" src="nx961d" fileName="components/MapComp.xml" xy="0,0" size="1033,910"/>
     <graph id="n16_d7z4" name="n16" xy="1043,307" size="227,262" type="rect"/>
     <graph id="n9_g4oc" name="n9" xy="1185,619" size="73,41" type="rect"/>
     <component id="n3_g4oc" name="btn_walk" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1043,9" size="120,36">

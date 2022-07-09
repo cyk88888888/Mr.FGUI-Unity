@@ -44,7 +44,7 @@ public class BaseUT
     }
 
     /** 组件截图并保存图像到本地**/
-    public void SaveViewShotToLocal(GObject aObject)
+    public void SaveViewShotToLocal(GObject aObject, Action<string> cb = null, bool needBrower = false)
     {
         DisplayObject dObject = aObject.displayObject;
         dObject.EnterPaintingMode(1024, null);
@@ -52,7 +52,6 @@ public class BaseUT
         //纹理将在本帧渲染后才能更新，所以访问纹理的代码需要延迟到下一帧执行。
         Timers.inst.CallLater((object param) =>
         {
-
             RenderTexture renderTexture = (RenderTexture)dObject.paintingGraphics.texture.nativeTexture;
 
             int width = renderTexture.width;
@@ -63,9 +62,21 @@ public class BaseUT
             texture2D.Apply();
             byte[] vs = texture2D.EncodeToPNG();
 
-            FileUT.SavePngImageBrower((string path) =>
+            if (needBrower)
             {
-                string fullPath = path + ".png";//保存的json文件数据完整地址
+                FileUT.SavePngImageBrower((string path) =>
+                {
+                    SaveImage(path);
+                });
+            }
+            else
+            {
+                SaveImage("mapPreview");
+            }
+
+            void SaveImage(string path)
+            {
+                string fullPath = path + ".png";//保存的图片文件数据完整地址
                 FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
                 fileStream.Write(vs, 0, vs.Length);
                 fileStream.Dispose();
@@ -73,9 +84,9 @@ public class BaseUT
 
                 //处理结束后结束绘画模式。id要和Enter方法的对应。
                 dObject.LeavePaintingMode(1024);
-
-                MsgMgr.ShowMsg("保存成功");
-            });
+                cb?.Invoke(fullPath);
+                if(needBrower)  MsgMgr.ShowMsg("保存成功");
+            }
         });
     }
 

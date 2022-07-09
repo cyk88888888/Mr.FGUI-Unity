@@ -14,7 +14,7 @@ public class Main : MonoBehaviour
         UIConfig.defaultFont = "Microsoft YaHei";
         ModuleMgr.inst.Init();
         curScene = SceneManager.GetActiveScene();
-        BaseUT.Inst.scaleMode = curScene.name == "Main" ?  new(640, 1280, 1030, 1280) : new(1450, 810, 810, 810);
+        BaseUT.Inst.scaleMode = curScene.name == "Main" ?  new(640, 1280, 1030, 1280) : new(1550, 910, 910, 910);
     }
     // Start is called before the first frame update
     void Start()

@@ -54,6 +54,14 @@ public class FileUT
         DealFile(false, "导出当前地图json数据：", cb);
     }
 
+    /// <summary>
+    /// 选择文件导入
+    /// </summary>
+    public static void OpenPngImgBrower(Action<string> cb = null)
+    {
+
+        DealFile(true, "选择图片：", cb, ".png");
+    }
 
     /// <summary>
     /// 保存png图片文件

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="1450,810" overflow="scroll" scroll="both" scrollBarFlags="128">
+<component size="1550,910" scroll="both">
   <displayList>
-    <component id="n2_os3c" name="previewComp" src="os3c1o" fileName="components/MapPreviewComp.xml" xy="0,0"/>
-    <component id="n1_os3c" name="btn_close" src="os3ch" fileName="components/CloseButton1.xml" pkg="g2zhtj9b" xy="1400,0"/>
+    <component id="n2_os3c" name="previewComp" src="os3c1o" fileName="components/MapPreviewComp.xml" xy="0,0" size="1550,910">
+      <relation target="" sidePair="width-width,height-height"/>
+    </component>
+    <component id="n1_os3c" name="btn_close" src="os3cj" fileName="components/CloseButton2.xml" pkg="g2zhtj9b" xy="1500,0">
+      <relation target="" sidePair="right-right,top-top"/>
+    </component>
   </displayList>
 </component>
