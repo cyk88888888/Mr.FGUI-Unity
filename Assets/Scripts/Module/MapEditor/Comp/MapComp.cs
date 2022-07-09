@@ -275,44 +275,7 @@ public class MapComp : UIComp
 
     private void onScreenShoot(EventCallBack evt)
     {
-        //用RenderTexture截图显示的话会比较模糊
-        //DisplayObject dObject = grp_container.displayObject;
-        //dObject.EnterPaintingMode(1024, null);
-        ////纹理将在本帧渲染后才能更新，所以访问纹理的代码需要延迟到下一帧执行。
-        //Timers.inst.CallLater((object param) =>
-        //{
-
-        //    RenderTexture renderTexture = (RenderTexture)dObject.paintingGraphics.texture.nativeTexture;
-        //    UILayer.Show("MapPreviewDlg", renderTexture);
-        //});
-
-        JuHuaDlg juahua = (JuHuaDlg)UILayer.Show("JuHuaDlg");
-        //先保存图片到本地，再读取为Texture2D格式。这种方式显示会更清晰
-        BaseUT.Inst.SaveViewShotToLocal(grp_container, (string path) =>
-        {
-            //创建文件读取流
-            FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            fileStream.Seek(0, SeekOrigin.Begin);
-
-            //创建文件长度缓冲区
-            byte[] bytes = new byte[fileStream.Length];
-
-            //读取文件
-            fileStream.Read(bytes, 0, (int)fileStream.Length);
-
-            //释放文件读取流
-            fileStream.Close();
-
-            fileStream.Dispose();
-            fileStream = null;
-
-            //创建Texture
-
-            Texture2D texture = new Texture2D(MapMgr.inst.mapWidth, MapMgr.inst.mapHeight);
-            texture.LoadImage(bytes);
-            juahua.Close();
-            UILayer.Show("MapPreviewDlg", texture);
-        });
+        MapMgr.inst.ShowMapPreviewDlg(grp_container);
     }
 }
 

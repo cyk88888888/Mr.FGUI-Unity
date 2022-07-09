@@ -44,7 +44,7 @@ public class BaseUT
     }
 
     /** 组件截图并保存图像到本地**/
-    public void SaveViewShotToLocal(GObject aObject, Action<string> cb = null, bool needBrower = false)
+    public void SaveViewShotToLocal(GObject aObject, Action<string> cb = null, bool needBrower = true, string pngName = "newPng")
     {
         DisplayObject dObject = aObject.displayObject;
         dObject.EnterPaintingMode(1024, null);
@@ -62,7 +62,7 @@ public class BaseUT
             texture2D.Apply();
             byte[] vs = texture2D.EncodeToPNG();
 
-            if (needBrower)
+            if (needBrower)//自定义保存
             {
                 FileUT.SavePngImageBrower((string path) =>
                 {
@@ -71,13 +71,13 @@ public class BaseUT
             }
             else
             {
-                SaveImage("mapPreview");
+                SaveImage(pngName);
             }
 
             void SaveImage(string path)
             {
                 string fullPath = path + ".png";//保存的图片文件数据完整地址
-                FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
+                FileStream fileStream = new(fullPath, FileMode.Create, FileAccess.Write);
                 fileStream.Write(vs, 0, vs.Length);
                 fileStream.Dispose();
                 fileStream.Close();
