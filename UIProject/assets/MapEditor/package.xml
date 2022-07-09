@@ -13,6 +13,8 @@
     <image id="d7z41i" name="blue.png" path="/imgs/" exported="true"/>
     <image id="d7z41k" name="redCircle.png" path="/imgs/" exported="true"/>
     <component id="9szr1l" name="MapCompContainer.xml" path="/components/"/>
+    <component id="os3c1n" name="MapPreviewDlg.xml" path="/" exported="true"/>
+    <component id="os3c1o" name="MapPreviewComp.xml" path="/components/"/>
   </resources>
   <publish name=""/>
 </packageDescription>
