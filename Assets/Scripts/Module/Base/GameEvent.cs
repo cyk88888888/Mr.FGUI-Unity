@@ -20,4 +20,5 @@ public class GameEvent
     public static string ChangeMap = next;//切换地图
     public static string ImportMapJson = next;//导入地图json数据
     public static string ResizeGrid = next;//变更格子类型
+    public static string ScreenShoot = next;//截图绘画区域
 }

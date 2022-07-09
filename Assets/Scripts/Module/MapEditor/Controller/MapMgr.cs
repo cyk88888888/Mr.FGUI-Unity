@@ -113,19 +113,20 @@ public class MapMgr
                     }
                 }
             }
-     
+
             /** 设置障碍物**/
             AddBlockByType(GridType.Block);
             AddBlockByType(GridType.BlockVerts);
             AddBlockByType(GridType.Water);
-            void AddBlockByType(GridType gridType) {
+            void AddBlockByType(GridType gridType)
+            {
                 gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> blockGridDic);
                 if (blockGridDic != null)
                 {
                     foreach (var item in blockGridDic)
                     {
                         List<int> newList = new List<int>();
-                        if(gridType == GridType.Block) mapInfo.blockList.Add(newList);
+                        if (gridType == GridType.Block) mapInfo.blockList.Add(newList);
                         else mapInfo.blockVertList.Add(newList);
 
                         string[] splitArr = item.Key.Split("_");
@@ -137,6 +138,44 @@ public class MapMgr
 
             File.WriteAllText(fullPath, JsonConvert.SerializeObject(mapInfo));
             MsgMgr.ShowMsg("导出成功");
+        });
+    }
+
+
+    /** 组件截图并保存图像到本地**/
+    public void SaveViewShotToLocal(GObject aObject)
+    {
+        DisplayObject dObject = aObject.displayObject;
+        dObject.EnterPaintingMode(1024, null);
+
+        //纹理将在本帧渲染后才能更新，所以访问纹理的代码需要延迟到下一帧执行。
+        Timers.inst.CallLater((object param) =>
+        {
+
+            RenderTexture renderTexture = (RenderTexture)dObject.paintingGraphics.texture.nativeTexture;
+            //得到tex后，你可以使用Unity的方法保存为图片或者进行其他处理。具体处理略。
+
+            int width = renderTexture.width;
+            int height = renderTexture.height;
+            Texture2D texture2D = new Texture2D(width, height, TextureFormat.ARGB32, false);
+            RenderTexture.active = renderTexture;
+            texture2D.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            texture2D.Apply();
+            byte[] vs = texture2D.EncodeToPNG();
+
+            FileUT.SavePngImageBrower((string path) =>
+            {
+                string fullPath = path + ".png";//保存的json文件数据完整地址
+                FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
+                fileStream.Write(vs, 0, vs.Length);
+                fileStream.Dispose();
+                fileStream.Close();
+
+                //处理结束后结束绘画模式。id要和Enter方法的对应。
+                dObject.LeavePaintingMode(1024);
+
+                MsgMgr.ShowMsg("保存成功");
+            });
         });
     }
 }
