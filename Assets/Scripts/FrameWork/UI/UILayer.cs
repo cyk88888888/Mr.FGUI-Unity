@@ -15,9 +15,9 @@ public class UILayer : UIComp
         layer.sameSizeWithView = false;
         layer.gameObjectName = layerName + "_script";
         BaseUT.Inst.SetFitSize(layer);
+        if (data != null) layer.SetData(data);
         layer.GetParent().AddChild(layer);
         BaseUT.Inst.SetFitSize(layer.view);
-        if (data != null) layer.SetData(data);
         layer.OnAddToLayer();
         return layer;
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class UIDlg : UILayer
 {
+    protected bool needOpenAnimation = true;
     protected override GComponent GetParent()
     {
         return SceneMgr.inst.curScene.dlg;
@@ -18,7 +19,13 @@ public class UIDlg : UILayer
         bgMask.onClick.Add(Close);
         AddChildAt(bgMask, 0);
         bgMask.SetXY((bgMask.parent.width - bgMask.width) / 2, (bgMask.parent.height - bgMask.height) / 2);
-        OnOpenAnimation();
+        GComponent frame = view.GetChild("frame")?.asCom;
+        GButton btn_close = frame?.GetChild("closeButton")?.asButton;
+        btn_close?.onClick?.Add(() =>
+        {
+            Close();
+        });
+        if(needOpenAnimation) OnOpenAnimation();
     }
 
     protected override void OnOpenAnimation()

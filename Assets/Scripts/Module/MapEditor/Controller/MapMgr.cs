@@ -153,7 +153,6 @@ public class MapMgr
         {
 
             RenderTexture renderTexture = (RenderTexture)dObject.paintingGraphics.texture.nativeTexture;
-            //得到tex后，你可以使用Unity的方法保存为图片或者进行其他处理。具体处理略。
 
             int width = renderTexture.width;
             int height = renderTexture.height;

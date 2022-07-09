@@ -56,7 +56,7 @@
     </list>
     <text id="n18_d7z4" name="n18" xy="1058,322" size="104,29" fontSize="20" text="地图列表："/>
     <component id="n21_9szr" name="btn_screenShot" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1186,713" size="243,36">
-      <Button title="预览保存截图绘画区域"/>
+      <Button title="保存绘画区域预览截图"/>
     </component>
   </displayList>
 </component>
