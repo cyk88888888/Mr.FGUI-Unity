@@ -274,7 +274,7 @@ public class MapComp : UIComp
 
     private void onScreenShoot(EventCallBack evt)
     {
-        MapMgr.inst.SaveViewShotToLocal(grp_container);
+        BaseUT.Inst.SaveViewShotToLocal(grp_container);
     }
 }
 

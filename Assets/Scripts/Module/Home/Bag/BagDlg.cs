@@ -29,13 +29,6 @@ public class BagDlg : UIDlg
         {
             InitBag();
         });
-
-        GButton btn_close = view.GetChild("frame").asCom.GetChild("closeButton").asButton;
-        btn_close.onClick.Add(() =>
-        {
-            Close();
-        });
-
         InitBag();
     }
 
