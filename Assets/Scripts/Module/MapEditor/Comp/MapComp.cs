@@ -235,7 +235,7 @@ public class MapComp : UIComp
             List<int> lineList = mapInfo.walkList[i];
             for (int j = 0; j < lineList.Count; j++)
             {
-                if(lineList[j] == 1)
+                if (lineList[j] == 1)
                 {
                     Vector2 gridPos = new Vector2(j, i);//所在格子位置
                     float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
@@ -253,7 +253,7 @@ public class MapComp : UIComp
         {
             List<List<int>> blockList = new();
             if (gridType == GridType.Block) blockList = mapInfo.blockList;
-            else if(gridType == GridType.BlockVerts) blockList = mapInfo.blockVertList;
+            else if (gridType == GridType.BlockVerts) blockList = mapInfo.blockVertList;
             else if (gridType == GridType.Water) blockList = mapInfo.waterList;
             foreach (var item in blockList)
             {
@@ -274,7 +274,18 @@ public class MapComp : UIComp
 
     private void onScreenShoot(EventCallBack evt)
     {
-        BaseUT.Inst.SaveViewShotToLocal(grp_container);
+        //BaseUT.Inst.SaveViewShotToLocal(grp_container);
+
+        DisplayObject dObject = grp_container.displayObject;
+        dObject.EnterPaintingMode(1024, null);
+
+        //纹理将在本帧渲染后才能更新，所以访问纹理的代码需要延迟到下一帧执行。
+        Timers.inst.CallLater((object param) =>
+        {
+
+            RenderTexture renderTexture = (RenderTexture)dObject.paintingGraphics.texture.nativeTexture;
+            UILayer.Show("MapPreviewDlg", renderTexture);
+        });
     }
 }
 

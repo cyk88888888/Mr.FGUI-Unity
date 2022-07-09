@@ -14,6 +14,8 @@
     <component id="gtatg" name="TestComp.xml" path="/components/" exported="true"/>
     <component id="h98z1c" name="WindowFrame.xml" path="/components/" exported="true"/>
     <image id="h98zs" name="5.png" path="/images/" scale="9grid" scale9grid="153,177,306,110"/>
+    <image id="os3c1p" name="8_png.png" path="/images/"/>
+    <component id="os3ch" name="CloseButton1.xml" path="/components/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

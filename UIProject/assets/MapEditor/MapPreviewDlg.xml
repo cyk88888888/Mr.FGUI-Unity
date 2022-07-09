@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="1450,810" overflow="scroll" scroll="both" scrollBarFlags="128">
+  <displayList>
+    <component id="n2_os3c" name="previewComp" src="os3c1o" fileName="components/MapPreviewComp.xml" xy="0,0"/>
+    <component id="n1_os3c" name="btn_close" src="os3ch" fileName="components/CloseButton1.xml" pkg="g2zhtj9b" xy="1400,0"/>
+  </displayList>
+</component>
