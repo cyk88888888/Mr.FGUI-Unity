@@ -9,7 +9,6 @@
     <image id="g4oc3" name="red.png" path="/imgs/" exported="true" scale="9grid" scale9grid="4,4,8,8"/>
     <component id="g4oc4" name="GridComp.xml" path="/components/" exported="true"/>
     <component id="d7z41f" name="MapIR.xml" path="/components/"/>
-    <image id="d7z41g" name="s9g_4.png" path="/components/" scale="9grid" scale9grid="15,15,30,30"/>
     <image id="d7z41i" name="blue.png" path="/imgs/" exported="true"/>
     <image id="d7z41k" name="redCircle.png" path="/imgs/" exported="true"/>
     <component id="9szr1l" name="MapCompContainer.xml" path="/components/"/>
