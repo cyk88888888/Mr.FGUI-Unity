@@ -19,7 +19,7 @@ public class MapComp : UIComp
     private GComponent grp_container;
     private GComponent lineContainer;
     private GComponent gridContainer;
-
+    private GLoader pet;
     private int _cellSize;
     private GridType _gridType = GridType.None;//当前格子类型
     private ObjectPool<GComponent> _lineCompPool;
@@ -30,7 +30,7 @@ public class MapComp : UIComp
         grp_container = view.GetChild("grp_container").asCom;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
-
+        pet = grp_container.GetChild("pet").asLoader;
         _lineCompPool = new(
             () => { return UIPackage.CreateObject("MapEditor", "LineComp").asCom; },
             (GComponent obj) => { obj.RemoveFromParent(); }
@@ -59,6 +59,8 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.ResizeGrid, OnResizeGrid);
         OnEmitter(GameEvent.ChangeMap, onChangeMap);
         OnEmitter(GameEvent.ScreenShoot, onScreenShoot);//截图绘画区域
+        OnEmitter(GameEvent.RunDemo, OnRunDemo);
+        OnEmitter(GameEvent.CloseDemo, OnCloseDemo);
     }
 
     private void Init(bool needCreate = true)
@@ -276,6 +278,16 @@ public class MapComp : UIComp
     private void onScreenShoot(EventCallBack evt)
     {
         MapMgr.inst.ShowMapPreviewDlg(grp_container);
+    }
+
+    private void OnCloseDemo(EventCallBack evt)
+    {
+        pet.visible = false;
+    }
+
+    private void OnRunDemo(EventCallBack evt)
+    {
+        pet.visible = true;
     }
 }
 
