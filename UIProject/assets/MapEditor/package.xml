@@ -19,6 +19,8 @@
     <image id="t19y1r" name="0.png" path="/imgs/"/>
     <image id="t19y1s" name="1.png" path="/imgs/"/>
     <movieclip id="j0gg1u" name="pet.jta" path="/"/>
+    <image id="j0gg1v" name="bg.png" path="/imgs/"/>
+    <image id="j0gg1w" name="joystick.png" path="/imgs/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

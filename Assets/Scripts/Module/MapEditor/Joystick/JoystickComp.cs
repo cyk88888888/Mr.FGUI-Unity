@@ -86,10 +86,9 @@ public class JoystickComp : EventDispatcher
 
             float deltaX = bx - _InitX;
             float deltaY = by - _InitY;
-            float degrees = Mathf.Atan2(deltaY, deltaX) * 180 / Mathf.PI;
-            Debug.Log(degrees);
-            _thumb.rotation = degrees + 90;
-
+            float degree = Mathf.Atan2(deltaY, deltaX) * 180 / Mathf.PI;
+            _thumb.rotation = degree + 90;
+            onMove.Call(degree);
             context.CaptureTouch();
         }
     }
@@ -122,38 +121,28 @@ public class JoystickComp : EventDispatcher
         if (touchId != -1 && evt.touchId == touchId)
         {
             Vector2 pt = GRoot.inst.GlobalToLocal(new Vector2(evt.x, evt.y));
-            float bx = pt.x;
-            float by = pt.y;
-            float moveX = bx - _lastStageX;
-            float moveY = by - _lastStageY;
-            _lastStageX = bx;
-            _lastStageY = by;
-            float buttonX = _button.x + moveX;
-            float buttonY = _button.y + moveY;
 
-            float offsetX = buttonX + _button.width / 2 - _startStageX;
-            float offsetY = buttonY + _button.height / 2 - _startStageY;
-
-            float rad = Mathf.Atan2(offsetY, offsetX);
+            float rad = Mathf.Atan2(pt.y - _startStageY, pt.x - _startStageX);
             float degree = rad * 180 / Mathf.PI;
+
             _thumb.rotation = degree + 90;
-
-            float maxX = radius * Mathf.Cos(rad);
-            float maxY = radius * Mathf.Sin(rad);
-            if (Mathf.Abs(offsetX) > Mathf.Abs(maxX))
-                offsetX = maxX;
-            if (Mathf.Abs(offsetY) > Mathf.Abs(maxY))
-                offsetY = maxY;
-
-            buttonX = _startStageX + offsetX;
-            buttonY = _startStageY + offsetY;
-            if (buttonX < 0)
-                buttonX = 0;
-            if (buttonY > GRoot.inst.height)
-                buttonY = GRoot.inst.height;
+            float buttonX;
+            float buttonY;
+            float distance = (pt - new Vector2(_startStageX, _startStageY)).magnitude;
+            if(distance > radius)
+            {
+                float maxX = _startStageX + radius * Mathf.Cos(rad);
+                float maxY = _startStageY + radius * Mathf.Sin(rad);
+                buttonX = maxX;
+                buttonY = maxY;
+            }
+            else
+            {
+                buttonX = pt.x;
+                buttonY = pt.y;
+            }
 
             _button.SetXY(buttonX - _button.width / 2, buttonY - _button.height / 2);
-
             onMove.Call(degree);
         }
     }
