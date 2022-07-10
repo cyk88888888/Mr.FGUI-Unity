@@ -14,6 +14,10 @@
     <component id="9szr1l" name="MapCompContainer.xml" path="/components/"/>
     <component id="os3c1n" name="MapPreviewDlg.xml" path="/" exported="true"/>
     <component id="os3c1o" name="MapPreviewComp.xml" path="/components/"/>
+    <component id="t19y1p" name="JoystickThumb.xml" path="/components/"/>
+    <component id="t19y1q" name="JoystickLayer.xml" path="/" exported="true"/>
+    <image id="t19y1r" name="0.png" path="/imgs/"/>
+    <image id="t19y1s" name="1.png" path="/imgs/"/>
   </resources>
   <publish name=""/>
 </packageDescription>

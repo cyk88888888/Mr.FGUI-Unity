@@ -39,8 +39,7 @@ public class MapPreviewDlg : UIDlg
         holder.SetNativeObject(_image);
         _image.texture = new NTexture(renderTexture);
         _image.blendMode = BlendMode.Off;
-        holder.SetSize(_renderTextureSize.x * curScale, _renderTextureSize.y * curScale);
-        UpdateHoldXY();
+        UpdateHoldSizeXY();
         view.displayObject.onMouseWheel.Add(_onMouseWheel);
     }
 
@@ -59,16 +58,16 @@ public class MapPreviewDlg : UIDlg
             if (Mathf.Floor(holder.width) >= _renderTextureSize.x && Mathf.Floor(holder.height) >= _renderTextureSize.y) return;//已达到原大小
             curScale += scaleDelta;
         }
-      
-        holder.SetSize(_renderTextureSize.x * curScale, _renderTextureSize.y * curScale);
-        UpdateHoldXY();
-        Debug.Log("holder.width: " + holder.width + ", holder.height: " + holder.height + ", curScale: " + curScale);
+
+        UpdateHoldSizeXY();
     }
 
-    private void UpdateHoldXY()
+    private void UpdateHoldSizeXY()
     {
+        holder.SetSize(_renderTextureSize.x * curScale, _renderTextureSize.y * curScale);
         holder.x = holder.width < GRoot.inst.width ? (GRoot.inst.width - holder.width) / 2 : 0;
         holder.y = holder.height < GRoot.inst.height ? (GRoot.inst.height - holder.height) / 2 : 0;
+        Debug.Log("holder.width: " + holder.width + ", holder.height: " + holder.height + ", curScale: " + curScale);
     }
 
     protected override void OnExit()

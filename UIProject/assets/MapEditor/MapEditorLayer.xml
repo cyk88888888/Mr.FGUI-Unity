@@ -58,5 +58,8 @@
     <component id="n21_9szr" name="btn_screenShot" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1186,713" size="161,36">
       <Button title="预览绘画区域"/>
     </component>
+    <component id="n22_t19y" name="btn_runDemo" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1187,768" size="115,36">
+      <Button title="测试运行"/>
+    </component>
   </displayList>
 </component>
