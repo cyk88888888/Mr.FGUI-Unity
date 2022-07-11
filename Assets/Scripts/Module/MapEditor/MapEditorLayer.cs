@@ -80,7 +80,7 @@ public class MapEditorLayer : UILayer
 
         btn_runDemo = view.GetChild("btn_runDemo").asButton;
         btn_runDemo.onClick.Add(_tap_btn_runDemo);
-        
+
 
         list_map = view.GetChild("list_map").asList;
         list_map.onClickItem.Add(OnClickMapItem);
@@ -88,6 +88,8 @@ public class MapEditorLayer : UILayer
         _mapData = MapMgr.inst.mapDataList;
         list_map.numItems = _mapData.Count;
         list_map.selectedIndex = 0;
+
+        OnEmitter(GameEvent.ImportMapJson, OnImportMapJson);//清除所有线条和格子
     }
 
     private void _tap_btn_walk()
@@ -131,7 +133,10 @@ public class MapEditorLayer : UILayer
         _curCellSize = txt_cellSize.text;
         Emit(GameEvent.ResizeGrid, new object[] { txt_cellSize.text });
     }
-
+    private void OnImportMapJson(EventCallBack evt)
+    {
+        txt_cellSize.text = MapMgr.inst.cellSize.ToString();
+    }
 
     private void OnClickMapItem(EventContext context)
     {
@@ -168,7 +173,7 @@ public class MapEditorLayer : UILayer
     private void _tap_btn_runDemo()
     {
         Show("JoystickLayer");
-        Emit(GameEvent.RunDemo); 
+        Emit(GameEvent.RunDemo);
     }
 
 }

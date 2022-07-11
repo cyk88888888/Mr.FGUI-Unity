@@ -297,6 +297,8 @@ public class MapComp : UIComp
     {
         pet.visible = true;
         pet.SetXY(0, 0);
+        view.scrollPane.SetPosX(0, false);
+        view.scrollPane.SetPosY(0, false);
         Timers.inst.AddUpdate(OnUpdate);
     }
 
@@ -323,6 +325,14 @@ public class MapComp : UIComp
         if (toY < 0) toY = 0;
         if (toY > MapMgr.inst.mapHeight - pet.height) toY = MapMgr.inst.mapHeight - pet.height;
         pet.SetXY(toX, toY);
+
+        //ÒÆ¶¯¾µÍ·
+        ScrollPane scrollPane = view.scrollPane;
+        //if (scrollPane.scrollingPosX < scrollPane.contentWidth - scrollPane.viewWidth) scrollPane.SetPosX(pet.x, false);
+        //if (scrollPane.scrollingPosY < scrollPane.contentHeight - scrollPane.viewHeight) scrollPane.SetPosY(pet.y, false);
+        scrollPane.SetPosX(pet.x - scrollPane.viewWidth / 2, false);
+        scrollPane.SetPosY(pet.y - scrollPane.viewHeight / 2, false);
+
     }
 }
 
