@@ -6,18 +6,16 @@ using UnityEngine;
 /// </summary>
 public class JoystickComp : EventDispatcher
 {
-    float _InitX;
-    float _InitY;
-    float _startStageX;
-    float _startStageY;
-    float _lastStageX;
-    float _lastStageY;
-    GButton _button;
-    GObject _touchArea;
-    GObject _thumb;
-    GObject _center;
-    int touchId;
-    GTweener _tweener;
+    private float _InitX;
+    private float _InitY;
+    private float _startStageX;
+    private float _startStageY;
+    private GButton _button;
+    private GObject _touchArea;
+    private GObject _thumb;
+    private GObject _center;
+    private int touchId;
+    private GTweener _tweener;
 
     public EventListener onMove { get; private set; }
     public EventListener onEnd { get; private set; }
@@ -25,6 +23,7 @@ public class JoystickComp : EventDispatcher
     public int radius { get; set; }
 
     public Vector2 vector = Vector2.zero;//摇杆当前位置
+    public float curDegree;
     public JoystickComp(GComponent mainView)
     {
         onMove = new EventListener(this, "onMove");
@@ -85,8 +84,6 @@ public class JoystickComp : EventDispatcher
             else if (by < _touchArea.y)
                 by = _touchArea.y;
 
-            _lastStageX = bx;
-            _lastStageY = by;
             _startStageX = bx;
             _startStageY = by;
 
@@ -96,7 +93,7 @@ public class JoystickComp : EventDispatcher
 
             float deltaX = bx - _InitX;
             float deltaY = by - _InitY;
-            float degree = Mathf.Atan2(deltaY, deltaX) * 180 / Mathf.PI;
+            float degree = curDegree = Mathf.Atan2(deltaY, deltaX) * 180 / Mathf.PI;
             _thumb.rotation = degree + 90;
             onMove.Call(degree);
             context.CaptureTouch();
@@ -134,15 +131,15 @@ public class JoystickComp : EventDispatcher
             Vector2 pt = GRoot.inst.GlobalToLocal(new Vector2(evt.x, evt.y));
 
             float rad = Mathf.Atan2(pt.y - _startStageY, pt.x - _startStageX);
-            float degree = rad * 180 / Mathf.PI;
+            float degree = curDegree = rad * 180 / Mathf.PI;
 
             _thumb.rotation = degree + 90;
             Vector2 buttonVec = new();
             float distance = (pt - new Vector2(_startStageX, _startStageY)).magnitude;
-            if(distance > radius)
+            if (distance > radius)
             {
-                buttonVec.x = _startStageX + radius * Mathf.Cos(rad); 
-                buttonVec.y = _startStageY + radius * Mathf.Sin(rad); 
+                buttonVec.x = _startStageX + radius * Mathf.Cos(rad);
+                buttonVec.y = _startStageY + radius * Mathf.Sin(rad);
             }
             else
             {
@@ -158,7 +155,6 @@ public class JoystickComp : EventDispatcher
             vector.y = pt.x * (pt.y > _startStageY ? 1 : -1);
 
             onMove.Call(degree);
-            Debug.Log(vector.normalized);
         }
     }
 }

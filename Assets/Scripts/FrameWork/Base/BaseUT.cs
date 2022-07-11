@@ -1,9 +1,6 @@
 using FairyGUI;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using UnityEngine;
 /// <summary>
 /// 基础工具类
@@ -44,7 +41,7 @@ public class BaseUT
     }
 
     /** 组件截图并保存图像到本地**/
-    public void SaveViewShotToLocal(GObject aObject, Action<string> cb = null, bool needBrower = true, string pngName = "newPng")
+    public static void SaveViewShotToLocal(GObject aObject, Action<string> cb = null, bool needBrower = true, string pngName = "newPng")
     {
         DisplayObject dObject = aObject.displayObject;
         dObject.EnterPaintingMode(1024, null);
@@ -85,9 +82,45 @@ public class BaseUT
                 //处理结束后结束绘画模式。id要和Enter方法的对应。
                 dObject.LeavePaintingMode(1024);
                 cb?.Invoke(fullPath);
-                if(needBrower)  MsgMgr.ShowMsg("保存成功");
+                if (needBrower) MsgMgr.ShowMsg("保存成功");
             }
         });
+    }
+
+    //// 向量转角度
+    //public static float vector_to_angle(Vector2 vector)
+    //{
+    //    // 将传入的向量归一化
+    //    Vector2 dir = vector.normalized;
+    //    // 计算出目标角度的弧度
+    //    float radian = dir.signAngle(new Vector2(1, 0));
+    //    // 把弧度计算成角度
+    //    float angle = -radian_to_angle(radian);
+    //    // 返回角度
+    //    return angle;
+    //}
+
+    // 角度转向量   
+    public static Vector2 angle_to_vector(float angle)
+    {
+        float radian = angle_to_radian(angle);
+        float cos = Mathf.Cos(radian);
+        float sin = Mathf.Sin(radian);
+        Vector2 vec = new Vector2(cos, sin).normalized;
+        return vec;
+    }
+
+    // 角度转弧度
+    public static float angle_to_radian(float angle)
+    {
+        float radian = Mathf.PI / 180 * angle;
+        return radian;
+    }
+
+    // 弧度转角度
+    public static float radian_to_angle(float radian) {
+        float angle = (float)(180 / Math.PI * radian);
+        return angle;
     }
 
 }

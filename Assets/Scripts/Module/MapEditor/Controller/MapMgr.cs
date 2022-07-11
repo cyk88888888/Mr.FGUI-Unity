@@ -128,8 +128,8 @@ public class MapMgr
                     {
                         List<int> newList = new List<int>();
                         if (gridType == GridType.Block) mapInfo.blockList.Add(newList);
-                        else mapInfo.blockVertList.Add(newList);
-
+                        else if(gridType == GridType.BlockVerts) mapInfo.blockVertList.Add(newList);
+                        else if (gridType == GridType.Water) mapInfo.waterList.Add(newList);
                         string[] splitArr = item.Key.Split("_");
                         newList.Add(int.Parse(splitArr[0]));
                         newList.Add(int.Parse(splitArr[1]));
@@ -157,7 +157,7 @@ public class MapMgr
 
         JuHuaDlg juahua = (JuHuaDlg)UILayer.Show("JuHuaDlg");
         //先保存图片到本地，再读取为Texture2D格式。这种方式显示会更清晰
-        BaseUT.Inst.SaveViewShotToLocal(aObject, (string path) =>
+        BaseUT.SaveViewShotToLocal(aObject, (string path) =>
         {
             //创建文件读取流
             FileStream fileStream = new(path, FileMode.Open, FileAccess.Read);
@@ -177,7 +177,7 @@ public class MapMgr
 
             //创建Texture
 
-            Texture2D texture = new Texture2D(mapWidth, mapHeight);
+            Texture2D texture = new(mapWidth, mapHeight);
             texture.LoadImage(bytes);
             juahua.Close();
             UILayer.Show("MapPreviewDlg", texture);

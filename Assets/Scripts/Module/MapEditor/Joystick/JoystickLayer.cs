@@ -17,31 +17,21 @@ public class JoystickLayer : UILayer
         get { return "JoystickLayer"; }
     }
 
-    private GTextField txt_degree;
     private JoystickComp _joystick;
 
     protected override void OnEnter()
     {
-        txt_degree = view.GetChild("txt_degree").asTextField;
         GButton btn_close = view.GetChild("btn_close").asButton;
         btn_close.onClick.Add(() => { 
             Close();
             Emit(GameEvent.CloseDemo);
         });
         _joystick = new JoystickComp(view);
-        _joystick.onMove.Add(__joystickMove);
-        _joystick.onEnd.Add(__joystickEnd);
         MapMgr.inst.joystick = _joystick;
     }
 
-    void __joystickMove(EventContext context)
+    protected override void OnExit()
     {
-        float degree = (float)context.data;
-        txt_degree.text = "" + degree;
-    }
-
-    void __joystickEnd()
-    {
-        txt_degree.text = "";
+        MapMgr.inst.joystick = null;
     }
 }

@@ -128,11 +128,6 @@ public class MapEditorLayer : UILayer
     }
     private void _tap_btn_resizeGrid()
     {
-        if (_curCellSize == txt_cellSize.text)
-        {
-            MsgMgr.ShowMsg("格子大小未变！！！");
-            return;
-        }
         _curCellSize = txt_cellSize.text;
         Emit(GameEvent.ResizeGrid, new object[] { txt_cellSize.text });
     }
