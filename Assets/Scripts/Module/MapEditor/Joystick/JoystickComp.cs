@@ -1,6 +1,9 @@
 ﻿using FairyGUI;
 using UnityEngine;
-
+/// <summary>
+/// 摇杆组件
+/// author：cyk
+/// </summary>
 public class JoystickComp : EventDispatcher
 {
     float _InitX;
@@ -21,6 +24,7 @@ public class JoystickComp : EventDispatcher
 
     public int radius { get; set; }
 
+    public Vector2 vector = Vector2.zero;//摇杆当前位置
     public JoystickComp(GComponent mainView)
     {
         onMove = new EventListener(this, "onMove");
@@ -47,6 +51,12 @@ public class JoystickComp : EventDispatcher
         OnTouchBegin(context);
     }
 
+    /** 摇杆是否在移动中**/
+    public bool isMoving
+    {
+        get { return vector != Vector2.zero; }
+    }
+
     private void OnTouchBegin(EventContext context)
     {
         if (touchId == -1)//First touch
@@ -59,7 +69,7 @@ public class JoystickComp : EventDispatcher
                 _tweener.Kill();
                 _tweener = null;
             }
-
+            vector = Vector2.zero;
             Vector2 pt = GRoot.inst.GlobalToLocal(new Vector2(evt.x, evt.y));
             float bx = pt.x;
             float by = pt.y;
@@ -101,6 +111,7 @@ public class JoystickComp : EventDispatcher
             touchId = -1;
             _thumb.rotation = _thumb.rotation + 180;
             _center.visible = false;
+            vector = Vector2.zero;
             _tweener = _button.TweenMove(new Vector2(_InitX - _button.width / 2, _InitY - _button.height / 2), 0.3f).OnComplete(() =>
             {
                 _tweener = null;
@@ -126,24 +137,28 @@ public class JoystickComp : EventDispatcher
             float degree = rad * 180 / Mathf.PI;
 
             _thumb.rotation = degree + 90;
-            float buttonX;
-            float buttonY;
+            Vector2 buttonVec = new();
             float distance = (pt - new Vector2(_startStageX, _startStageY)).magnitude;
             if(distance > radius)
             {
-                float maxX = _startStageX + radius * Mathf.Cos(rad);
-                float maxY = _startStageY + radius * Mathf.Sin(rad);
-                buttonX = maxX;
-                buttonY = maxY;
+                buttonVec.x = _startStageX + radius * Mathf.Cos(rad); 
+                buttonVec.y = _startStageY + radius * Mathf.Sin(rad); 
             }
             else
             {
-                buttonX = pt.x;
-                buttonY = pt.y;
+                buttonVec.x = pt.x;
+                buttonVec.y = pt.y;
             }
 
-            _button.SetXY(buttonX - _button.width / 2, buttonY - _button.height / 2);
+            //设置摇杆中心点
+            buttonVec.x -= _button.width / 2;
+            buttonVec.y -= _button.height / 2;
+            _button.xy = buttonVec;
+            vector.x = pt.x * (pt.x > _startStageX ? 1 : -1);
+            vector.y = pt.x * (pt.y > _startStageY ? 1 : -1);
+
             onMove.Call(degree);
+            Debug.Log(vector.normalized);
         }
     }
 }

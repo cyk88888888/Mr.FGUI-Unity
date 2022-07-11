@@ -31,6 +31,7 @@ public class JoystickLayer : UILayer
         _joystick = new JoystickComp(view);
         _joystick.onMove.Add(__joystickMove);
         _joystick.onEnd.Add(__joystickEnd);
+        MapMgr.inst.joystick = _joystick;
     }
 
     void __joystickMove(EventContext context)

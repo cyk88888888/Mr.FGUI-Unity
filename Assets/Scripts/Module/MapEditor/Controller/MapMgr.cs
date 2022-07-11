@@ -28,6 +28,7 @@ public class MapMgr
     public int cellSize = 40;//格子大小（默认40）
     public const string ExtensionJson = ".json";//保存文件的后缀名
     public Dictionary<GridType, Dictionary<string, GComponent>> gridTypeDic;//当前地图数据
+    public JoystickComp joystick;//当前摇杆
     public List<MapSelectInfo> mapDataList = new()//所有地图信息列表
     {
         new MapSelectInfo("地图1", 1),
