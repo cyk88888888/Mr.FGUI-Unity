@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using FairyGUI;
-using System.IO;
 /// <summary>
 /// 地图界面
 /// </summary>
@@ -192,6 +191,7 @@ public class MapComp : UIComp
         GetGrid(_gridType, gridPos, gridX, gridY);
     }
 
+    /** 设置地图格子数据 && 添加格子到容器**/
     private void GetGrid(GridType gridType, Vector2 gridPos, float gridX, float gridY)
     {
         if (!MapMgr.inst.gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> dic))
@@ -209,6 +209,7 @@ public class MapComp : UIComp
         }
 
         gridComp = _gridCompPool.GetObject();
+        gridComp.gameObjectName = gridKey;
         GLoader loader = gridComp.GetChild("icon").asLoader;
         loader.url = MapMgr.inst.getGridUrlByType(gridType);
         gridComp.SetSize(_cellSize, _cellSize);
@@ -293,12 +294,25 @@ public class MapComp : UIComp
         Timers.inst.Remove(OnUpdate);
     }
 
+    private Dictionary<string, GComponent> _tempwalkGridDic;//当前可行走的所有格子
     private void OnRunDemo(EventCallBack evt)
     {
+        MapMgr.inst.gridTypeDic.TryGetValue(GridType.Walk, out Dictionary<string, GComponent> _tempwalkGridDic);
+        if(_tempwalkGridDic == null || _tempwalkGridDic.Count == 0)
+        {
+            MsgMgr.ShowMsg("没有找到可行走的格子！！！");
+            return;
+        }
+        Vector2 firstWalkGridVec = new();
+        foreach (var item in _tempwalkGridDic)
+        {
+            string[] splitKey = item.Key.Split("_");
+            firstWalkGridVec.x = int.Parse(splitKey[0]);
+            firstWalkGridVec.y = int.Parse(splitKey[1]);
+            break;
+        }
         pet.visible = true;
-        pet.SetXY(0, 0);
-        view.scrollPane.SetPosX(0, false);
-        view.scrollPane.SetPosY(0, false);
+        SetPetPosAndRollCamera(firstWalkGridVec.x * _cellSize, firstWalkGridVec.y * _cellSize + _cellSize);
         Timers.inst.AddUpdate(OnUpdate);
     }
 
@@ -320,6 +334,14 @@ public class MapComp : UIComp
         //角色坐标加上方向
         float toX = pet.x + dir_x;
         float toY = pet.y + dir_y;
+      
+        SetPetPosAndRollCamera(toX, toY);
+    }
+
+    /** 设置角色位置 && 移动镜头**/
+    private void SetPetPosAndRollCamera(float toX,float toY)
+    {
+        //判断边界&&设置角色位置
         if (toX < 0) toX = 0;
         if (toX > MapMgr.inst.mapWidth - pet.width) toX = MapMgr.inst.mapWidth - pet.width;
         if (toY < 0) toY = 0;
@@ -330,7 +352,6 @@ public class MapComp : UIComp
         ScrollPane scrollPane = view.scrollPane;
         scrollPane.SetPosX(pet.x - scrollPane.viewWidth / 2, false);
         scrollPane.SetPosY(pet.y - scrollPane.viewHeight / 2, false);
-
     }
 }
 
