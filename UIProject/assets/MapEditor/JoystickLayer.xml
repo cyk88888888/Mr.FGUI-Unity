@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1550,910">
   <displayList>
-    <image id="n7" name="joystick_center" src="t19y1r" fileName="imgs/0.png" xy="179,692">
+    <image id="n7" name="joystick_center" src="t19y1r" fileName="imgs/0.png" xy="217,730" pivot="0.5,0.5" anchor="true">
       <relation target="" sidePair="bottom-bottom"/>
     </image>
-    <component id="n4" name="joystick" src="t19y1p" fileName="components/JoystickThumb.xml" xy="109,621">
-      <relation target="" sidePair="bottom-bottom"/>
-    </component>
+    <image id="n11_f731" name="thumb" src="t19y1s" fileName="imgs/1.png" xy="218,731" pivot="0.5,0.5" anchor="true" aspect="true" visible="false"/>
     <graph id="n2" name="joystick_touch" xy="0,0" size="1550,910" type="rect" lineSize="0" fillColor="#00ffffff">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>

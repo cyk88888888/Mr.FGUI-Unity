@@ -328,8 +328,6 @@ public class MapComp : UIComp
 
         //ÒÆ¶¯¾µÍ·
         ScrollPane scrollPane = view.scrollPane;
-        //if (scrollPane.scrollingPosX < scrollPane.contentWidth - scrollPane.viewWidth) scrollPane.SetPosX(pet.x, false);
-        //if (scrollPane.scrollingPosY < scrollPane.contentHeight - scrollPane.viewHeight) scrollPane.SetPosY(pet.y, false);
         scrollPane.SetPosX(pet.x - scrollPane.viewWidth / 2, false);
         scrollPane.SetPosY(pet.y - scrollPane.viewHeight / 2, false);
 

@@ -10,7 +10,6 @@ public class JoystickComp : EventDispatcher
     private float _InitY;
     private float _startStageX;
     private float _startStageY;
-    private GButton _button;
     private GObject _touchArea;
     private GObject _thumb;
     private GObject _center;
@@ -29,14 +28,12 @@ public class JoystickComp : EventDispatcher
         onMove = new EventListener(this, "onMove");
         onEnd = new EventListener(this, "onEnd");
 
-        _button = mainView.GetChild("joystick").asButton;
-        _button.changeStateOnClick = false;
-        _thumb = _button.GetChild("thumb");
+        _thumb = mainView.GetChild("thumb");
         _touchArea = mainView.GetChild("joystick_touch");
         _center = mainView.GetChild("joystick_center");
 
-        _InitX = _center.x + _center.width / 2;
-        _InitY = _center.y + _center.height / 2;
+        _InitX = _center.x;
+        _InitY = _center.y;
         touchId = -1;
         radius = 150;
 
@@ -72,8 +69,6 @@ public class JoystickComp : EventDispatcher
             Vector2 pt = GRoot.inst.GlobalToLocal(new Vector2(evt.x, evt.y));
             float bx = pt.x;
             float by = pt.y;
-            _button.selected = true;
-
             if (bx < 0)
                 bx = 0;
             else if (bx > _touchArea.width)
@@ -87,9 +82,10 @@ public class JoystickComp : EventDispatcher
             _startStageX = bx;
             _startStageY = by;
 
-            _center.visible = true;
-            _center.SetXY(bx - _center.width / 2, by - _center.height / 2);
-            _button.SetXY(bx - _button.width / 2, by - _button.height / 2);
+            _thumb.visible = _center.visible = true;
+            
+            _center.SetXY(bx, by);
+            _thumb.SetXY(bx, by);
 
             float deltaX = bx - _InitX;
             float deltaY = by - _InitY;
@@ -109,13 +105,13 @@ public class JoystickComp : EventDispatcher
             _thumb.rotation = _thumb.rotation + 180;
             _center.visible = false;
             vector = Vector2.zero;
-            _tweener = _button.TweenMove(new Vector2(_InitX - _button.width / 2, _InitY - _button.height / 2), 0.3f).OnComplete(() =>
+            _tweener = _thumb.TweenMove(new Vector2(_InitX, _InitY), 0.3f).OnComplete(() =>
             {
                 _tweener = null;
-                _button.selected = false;
+                _thumb.visible = false;
                 _thumb.rotation = 0;
                 _center.visible = true;
-                _center.SetXY(_InitX - _center.width / 2, _InitY - _center.height / 2);
+                _center.SetXY(_InitX, _InitY);
             }
             );
 
@@ -147,10 +143,7 @@ public class JoystickComp : EventDispatcher
                 buttonVec.y = pt.y;
             }
 
-            //设置摇杆中心点
-            buttonVec.x -= _button.width / 2;
-            buttonVec.y -= _button.height / 2;
-            _button.xy = buttonVec;
+            _thumb.xy = buttonVec;
             vector.x = pt.x * (pt.x > _startStageX ? 1 : -1);
             vector.y = pt.x * (pt.y > _startStageY ? 1 : -1);
 
