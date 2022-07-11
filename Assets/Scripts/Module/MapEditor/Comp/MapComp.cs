@@ -285,27 +285,13 @@ public class MapComp : UIComp
     private void OnCloseDemo(EventCallBack evt)
     {
         pet.visible = false;
-        MapMgr.inst.joystick.onMove.Remove(__joystickMove);
-        MapMgr.inst.joystick.onEnd.Remove(__joystickEnd);
         Timers.inst.Remove(OnUpdate);
     }
 
     private void OnRunDemo(EventCallBack evt)
     {
         pet.visible = true;
-        MapMgr.inst.joystick.onMove.Add(__joystickMove);
-        MapMgr.inst.joystick.onEnd.Add(__joystickEnd);
         Timers.inst.AddUpdate(OnUpdate);
-    }
-
-    private void __joystickMove(EventContext context)
-    {
-        //float degree = (float)context.data;
-    }
-
-    private void __joystickEnd()
-    {
-
     }
 
     private void OnUpdate(object param)
@@ -313,10 +299,11 @@ public class MapComp : UIComp
         JoystickComp joystick = MapMgr.inst.joystick;
 
         if (!joystick.isMoving) return;
+
         //摇杆坐标
         Vector2 joysticPos = joystick.vector;
         //向量归一化
-        Vector2 dir = joysticPos.normalized;
+        Vector2 dir = BaseUT.angle_to_vector(joystick.curDegree);
         //乘速度
         float dir_x = dir.x * speed;
         float dir_y = dir.y * speed;

@@ -10,8 +10,6 @@
     <graph id="n2" name="joystick_touch" xy="0,0" size="1550,910" type="rect" lineSize="0" fillColor="#00ffffff">
       <relation target="" sidePair="width-width,height-height"/>
     </graph>
-    <text id="n8" name="n8" xy="642,113" size="94,34" fontSize="24" color="#ffffff" strokeColor="#000000" text="Degree:"/>
-    <text id="n9" name="txt_degree" xy="732,113" size="302,28" fontSize="24" color="#ffffff" autoSize="height" strokeColor="#000000" text=""/>
     <component id="n10_t19y" name="btn_close" src="os3cj" fileName="components/CloseButton2.xml" pkg="g2zhtj9b" xy="1500,0">
       <relation target="" sidePair="right-right,top-top"/>
     </component>
