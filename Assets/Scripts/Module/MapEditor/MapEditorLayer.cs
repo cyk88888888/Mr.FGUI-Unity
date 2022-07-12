@@ -20,6 +20,7 @@ public class MapEditorLayer : UILayer
     private GTextInput txt_mapWidth;
     private GTextInput txt_mapHeight;
     private List<MapSelectInfo> _mapData;
+    private int _lastSelctIdx = 0;
     protected override void OnEnter()
     {
         txt_cellSize = view.GetChild("txt_cellSize").asTextInput;
@@ -139,7 +140,7 @@ public class MapEditorLayer : UILayer
     {
         Emit(GameEvent.ToCenter);
     }
-    
+
     private void _tap_btn_originalScale()
     {
         Emit(GameEvent.ToOriginalScale);
@@ -158,8 +159,35 @@ public class MapEditorLayer : UILayer
 
     private void OnClickMapItem(EventContext context)
     {
-        MapSelectInfo itemInfo = _mapData[list_map.selectedIndex];
-        Emit(GameEvent.ChangeMap, new object[] { itemInfo });
+        bool isEmptyMap = true;
+        foreach (var item in MapMgr.inst.gridTypeDic)
+        {
+            if (item.Value.Count > 0)
+            {
+                isEmptyMap = false;
+                break;
+            }
+        }
+        if (!isEmptyMap)
+        {
+            MsgMgr.ShowMsg("当前有未保存的地图数据，确定切换地图吗？", MsgType.MsgBox, ()=> {
+                onSure();
+            },()=> {
+                list_map.selectedIndex = _lastSelctIdx;
+            });
+            return;
+        }
+        else
+        {
+            onSure();
+        }
+        void onSure()
+        {
+            _lastSelctIdx = list_map.selectedIndex;
+            MapSelectInfo itemInfo = _mapData[list_map.selectedIndex];
+            Emit(GameEvent.ChangeMap, new object[] { itemInfo });
+        }
+       
     }
 
     private void RenderListMapItem(int index, GObject obj)

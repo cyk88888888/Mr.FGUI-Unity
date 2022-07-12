@@ -1,4 +1,5 @@
 using FairyGUI;
+using System;
 
 public class UILayer : UIComp
 {
@@ -28,5 +29,32 @@ public class UILayer : UIComp
     }
 
     protected virtual void OnAddToLayer() { }
+
+    /**打开页面时的动画 */
+    protected virtual void OnOpenAnimation() { }
+    /**关闭页面时的动画 */
+    protected virtual void OnCloseAnimation(GTweenCallback callback)
+    {
+        if (callback != null) callback();
+    }
+
+    /// <summary>
+    /// 销毁页面
+    /// </summary>
+    public void Close()
+    {
+        OnCloseAnimation(() =>
+        {
+            _closeCb?.Invoke();
+            __dispose();
+            Destory();
+        });
+    }
+
+    private Action _closeCb;
+    public void OnClose(Action cb)
+    {
+        _closeCb = cb;
+    }
 
 }
