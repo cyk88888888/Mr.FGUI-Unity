@@ -54,6 +54,7 @@ public class MapComp : UIComp
         view.onRightDown.Add(_onRightDown);
         view.onRightMove.Add(_onRightMove);
         view.onRightUp.Add(_onRightUp);
+        view.onTouchMove.Add(_onTouchMove);
         view.onClick.Add(_onClick);
         view.displayObject.onMouseWheel.Add(_onMouseWheel);
         _cellSize = MapMgr.inst.cellSize;
@@ -449,16 +450,21 @@ public class MapComp : UIComp
         Debug.Log("inputEvt.xy: " + inputEvt.x + "," + inputEvt.y);
         UpdateContainerSizeXY();
 
-        //scrollPane.SetPosX(inputEvt.x * curScale, false);
-        //scrollPane.SetPosY(inputEvt.y * curScale, false);
+        //scrollPane.SetPosX(scrollPane.scrollingPosX * curScale, false);
+        //scrollPane.SetPosY(scrollPane.scrollingPosY * curScale, false);
 
-        //Debug.Log("resultView: " + scrollPane.scrollingPosX + "," + scrollPane.scrollingPosY);
+        Debug.Log("resultView: " + scrollPane.scrollingPosX + "," + scrollPane.scrollingPosY);
     }
 
     private void UpdateContainerSizeXY()
     {
         grp_container.SetScale(curScale, curScale);
         grp_setSize.SetSize(curScale * MapMgr.inst.mapWidth, curScale * MapMgr.inst.mapHeight);
+    }
+
+    private void _onTouchMove(EventContext evt)
+    {
+        Debug.Log("resultView: " + view.scrollPane.scrollingPosX + "," + view.scrollPane.scrollingPosY);
     }
 
     private void OnToOriginalScale(EventCallBack evt)
