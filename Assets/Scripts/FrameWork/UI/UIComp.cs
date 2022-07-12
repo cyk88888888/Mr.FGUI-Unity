@@ -179,25 +179,6 @@ public class UIComp : GComponent, IEmmiter
         parent.AddChild(this);
     }
 
-    /**打开页面时的动画 */
-    protected virtual void OnOpenAnimation() { }
-    /**关闭页面时的动画 */
-    protected virtual void OnCloseAnimation(GTweenCallback callback)
-    {
-        if (callback != null) callback();
-    }
-
-    /// <summary>
-    /// 销毁组件
-    /// </summary>
-    public void Close()
-    {
-        OnCloseAnimation(() =>
-        {
-            __dispose();
-            Destory();
-        });
-    }
     /// <summary>
     /// 添加到旧父级（用于界面回退管理，开发者请勿调用）
     /// </summary>
@@ -242,7 +223,7 @@ public class UIComp : GComponent, IEmmiter
     }
 
     /** 销毁*/
-    private void Destory()
+    protected void Destory()
     {
         if (hasDestory) return;
         hasDestory = true;

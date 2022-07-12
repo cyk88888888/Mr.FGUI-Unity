@@ -422,8 +422,8 @@ public class MapComp : UIComp
     {
         //ÒÆ¶¯¾µÍ·
         ScrollPane scrollPane = view.scrollPane;
-        scrollPane.SetPosX(center.x * curScale - scrollPane.viewWidth / 2 + center.width / 2, true);
-        scrollPane.SetPosY(center.y * curScale - scrollPane.viewHeight / 2 + center.height / 2, true);
+        scrollPane.SetPosX(center.x * curScale - scrollPane.viewWidth / 2 + center.width / 2 * curScale, true);
+        scrollPane.SetPosY(center.y * curScale - scrollPane.viewHeight / 2 + center.height / 2 * curScale, true);
     }
 
     private float curScale = 1;
@@ -445,12 +445,14 @@ public class MapComp : UIComp
         }
         float toViewX = curScale * MapMgr.inst.mapWidth - grp_setSize.width;
         float toViewY = curScale * MapMgr.inst.mapHeight - grp_setSize.height;
-        Debug.Log(toViewX + "," + toViewY);
-        Debug.Log((scrollPane.scrollingPosX + toViewX) + "," + (scrollPane.scrollingPosY + toViewY));
+        //Debug.Log(toViewX + "," + toViewY);
+        Debug.Log("inputEvt.xy: " + inputEvt.x + "," + inputEvt.y);
         UpdateContainerSizeXY();
 
-        scrollPane.SetPosX(scrollPane.scrollingPosX + toViewX, false);
-        scrollPane.SetPosY(scrollPane.scrollingPosY + toViewY, false);
+        scrollPane.SetPosX(inputEvt.x * curScale, false);
+        scrollPane.SetPosY(inputEvt.y * curScale, false);
+
+        //Debug.Log("resultView: " + scrollPane.scrollingPosX + "," + scrollPane.scrollingPosY);
     }
 
     private void UpdateContainerSizeXY()
