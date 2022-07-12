@@ -461,7 +461,7 @@ public class MapComp : UIComp
     {
         Init();
     }
-
+        
     private void onScreenShoot(EventCallBack evt)
     {
         MapMgr.inst.ShowMapPreviewDlg(grp_container);
