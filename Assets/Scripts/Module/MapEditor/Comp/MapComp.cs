@@ -15,9 +15,11 @@ public class MapComp : UIComp
     {
         get { return "MapComp"; }
     }
+    private GComponent grp_setSize;
     private GComponent grp_container;
     private GComponent lineContainer;
     private GComponent gridContainer;
+    private GGraph graph_remind;
     private GLoader pet;
     private GGraph bg;
     private GGraph center;
@@ -25,14 +27,17 @@ public class MapComp : UIComp
     private GridType _gridType = GridType.None;//当前格子类型
     private ObjectPool<GComponent> _lineCompPool;
     private ObjectPool<GComponent> _gridCompPool;
-
-    private float speed = 3;
+    private int lineStroke = 2;//线条粗度
+    private float speed = 3;//人物移动速度
 
     protected override void OnFirstEnter()
     {
+        grp_setSize = view.GetChild("grp_setSize").asCom;
         grp_container = view.GetChild("grp_container").asCom;
+        graph_remind = view.GetChild("graph_remind").asGraph;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
+
         bg = grp_container.GetChild("bg").asGraph;
         pet = grp_container.GetChild("pet").asLoader;
         center = grp_container.GetChild("center").asGraph;
@@ -46,14 +51,13 @@ public class MapComp : UIComp
             (GComponent obj) => { obj.RemoveFromParent(); }
         );
 
-
         view.onRightDown.Add(_onRightDown);
         view.onRightMove.Add(_onRightMove);
         view.onRightUp.Add(_onRightUp);
         view.onClick.Add(_onClick);
+        view.displayObject.onMouseWheel.Add(_onMouseWheel);
         _cellSize = MapMgr.inst.cellSize;
         Init();
-
     }
 
     protected override void OnEnter()
@@ -68,23 +72,24 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.RunDemo, OnRunDemo);
         OnEmitter(GameEvent.CloseDemo, OnCloseDemo);
         OnEmitter(GameEvent.ToCenter, OnToCenter);
+        OnEmitter(GameEvent.ToOriginalScale, OnToOriginalScale);
+        OnEmitter(GameEvent.ClearAllData, OnClearAllData);
     }
 
-    private void Init(bool needCreate = true)
+    private void Init()
     {
-        if (!needCreate) return;
         int mapWidth = MapMgr.inst.mapWidth;
         int mapHeight = MapMgr.inst.mapHeight;
         float numCols = Mathf.Floor(mapWidth / _cellSize);
         float numRows = Mathf.Floor(mapHeight / _cellSize);
         Debug.Log("行数：" + numRows + "，列数：" + numCols);
+        OnToOriginalScale(null);
+        center.SetXY((MapMgr.inst.mapWidth - center.width) / 2, (MapMgr.inst.mapHeight - center.height) / 2);
         bg.SetSize(mapWidth, mapHeight);
-        grp_container.SetSize(mapWidth, mapHeight);
         //bg.url = MapMgr.inst.mapId;//设置背景图todo....
         RemoveAllLine();
         RemoveAllGrid();
 
-        int lineStroke = 2;//线条粗度
         for (int i = 1; i < numCols; i++)//画竖线
         {
             GComponent line = _lineCompPool.GetObject();
@@ -149,9 +154,119 @@ public class MapComp : UIComp
             MsgMgr.ShowMsg("地图大小未变！！！");
             return;
         }
+        bool isReduce = false;//是否减小地图
+        if (mapWidth < MapMgr.inst.mapWidth || mapHeight < MapMgr.inst.mapHeight)//地图变小时，需要检测减小部分是否有已画格子数据，有的话不让改
+        {
+            isReduce = true;
+            bool isCanResizeMap = true;
+            foreach (var item in MapMgr.inst.gridTypeDic)
+            {
+                bool isExistGrid = false;
+                foreach (var subItem in item.Value)
+                {
+                    string[] splitKey = subItem.Key.Split("_");
+                    if (subItem.Value.x >= mapWidth || subItem.Value.y >= mapHeight)
+                    {
+                        isExistGrid = true;
+                        break;
+                    }
+                }
+                if (isExistGrid)
+                {
+                    isCanResizeMap = false;
+                    break;
+                }
+            }
+
+            if (!isCanResizeMap)
+            {
+                MsgMgr.ShowMsg("地图减少部分包含已画格子数据，请检查！！！");
+                GTween.Kill(graph_remind);
+                graph_remind.alpha = 1;
+                graph_remind.visible = true;
+                graph_remind.SetSize(mapWidth * curScale, mapHeight * curScale);
+                graph_remind.TweenFade(0.4f, 0.3f).SetRepeat(3).OnComplete(()=>{
+                    graph_remind.visible = false;
+                    graph_remind.SetSize(0, 0);
+                });
+                return;
+            }
+        }
+
+        int oldMapWidth = MapMgr.inst.mapWidth;
+        int oldMapHeight = MapMgr.inst.mapHeight;
+        int oldNumCols = (int)Mathf.Floor(oldMapWidth / _cellSize);
+        int oldNumRows = (int)Mathf.Floor(oldMapHeight / _cellSize);
         MapMgr.inst.mapWidth = mapWidth;
         MapMgr.inst.mapHeight = mapHeight;
-        Init();
+        int newNumCols = (int)Mathf.Floor(mapWidth / _cellSize);
+        int newNumRows = (int)Mathf.Floor(mapHeight / _cellSize);
+        Debug.Log("行数：" + newNumCols + "，列数：" + newNumRows);
+        grp_setSize.SetSize(curScale * MapMgr.inst.mapWidth, curScale * MapMgr.inst.mapHeight);
+        center.SetXY((MapMgr.inst.mapWidth - center.width) / 2, (MapMgr.inst.mapHeight - center.height) / 2);
+        bg.SetSize(mapWidth, mapHeight);
+
+        if (isReduce)//减小地图
+        {
+            GObject[] _children = lineContainer.GetChildren();
+            for (int i = _children.Length - 1; i >= 0; i--)
+            {
+                GComponent lineItem = (GComponent)_children[i];
+                if(lineItem.x >= mapWidth || lineItem.y >= mapHeight)
+                {
+                    _lineCompPool.ReleaseObject(lineItem);
+                }
+                else
+                {
+                    if (lineItem.gameObjectName.Contains("Col_"))
+                    {
+                        lineItem.width = lineStroke;
+                        lineItem.height = mapHeight;
+                    }
+                    else
+                    {
+                        lineItem.width = mapWidth;
+                        lineItem.height = lineStroke;
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach (var lineItem in lineContainer.GetChildren())
+            {
+                if (lineItem.gameObjectName.Contains("Col_"))
+                {
+                    lineItem.width = lineStroke;
+                    lineItem.height = mapHeight;
+                }
+                else
+                {
+                    lineItem.width = mapWidth;
+                    lineItem.height = lineStroke;
+                }
+            }
+
+            for (int i = oldNumCols; i < newNumCols; i++)//画竖线
+            {
+                GComponent line = _lineCompPool.GetObject();
+                lineContainer.AddChild(line);
+                line.width = lineStroke;
+                line.height = mapHeight;
+                line.SetXY(i * _cellSize, 0);
+                line.gameObjectName = "Col_" + i;
+            }
+
+            for (int i = oldNumRows; i < newNumRows; i++)//画横线
+            {
+                GComponent line = _lineCompPool.GetObject();
+                lineContainer.AddChild(line);
+                line.width = mapWidth;
+                line.height = lineStroke;
+                line.SetXY(0, i * _cellSize);
+                line.gameObjectName = "Row_" + i;
+            }
+        }
     }
     
 
@@ -176,7 +291,7 @@ public class MapComp : UIComp
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize), Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize));//所在格子位置
+        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
         if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
         {
             MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
@@ -205,7 +320,7 @@ public class MapComp : UIComp
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize), Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize));//所在格子位置
+        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
         float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
         float gridY = gridPos.y * _cellSize;//绘制颜色格子的坐标Y
 
@@ -257,10 +372,8 @@ public class MapComp : UIComp
     private void OnImportMapJson(EventCallBack evt)
     {
         MapJsonInfo mapInfo = (MapJsonInfo)evt.Data[0];
-        bool needRemoveLine = mapInfo.mapWidth != MapMgr.inst.mapWidth || mapInfo.mapHeight != MapMgr.inst.mapHeight || _cellSize != MapMgr.inst.cellSize;
         _cellSize = mapInfo.cellSize;
-        Init(needRemoveLine);
-        if (!needRemoveLine) RemoveAllGrid();
+        Init();
         /** 设置可行走节点**/
         for (int i = 0; i < mapInfo.walkList.Count; i++)
         {
@@ -308,8 +421,45 @@ public class MapComp : UIComp
     {
         //移动镜头
         ScrollPane scrollPane = view.scrollPane;
-        scrollPane.SetPosX(center.x - scrollPane.viewWidth / 2, true);
-        scrollPane.SetPosY(center.y - scrollPane.viewHeight / 2, true);
+        scrollPane.SetPosX(center.x * curScale - scrollPane.viewWidth / 2, true);
+        scrollPane.SetPosY(center.y * curScale - scrollPane.viewHeight / 2, true);
+    }
+
+    private float curScale = 1;
+    private float scaleDelta = 0.03f;
+    private void _onMouseWheel(EventContext context)
+    {
+        InputEvent inputEvt = (InputEvent)context.data;
+        if (inputEvt.mouseWheelDelta > 0)
+        {
+            if (Mathf.Floor(grp_setSize.width) <= view.viewWidth && Mathf.Floor(grp_setSize.height) <= view.viewHeight) return; ;//已全部可见
+            curScale -= scaleDelta;
+        }
+        else
+        {
+            if (Mathf.Floor(grp_setSize.width) >= MapMgr.inst.mapWidth && Mathf.Floor(grp_setSize.height) >= MapMgr.inst.mapHeight) return;//已达到原大小
+            curScale += scaleDelta;
+        }
+
+        UpdateContainerSizeXY();
+    }
+
+    private void UpdateContainerSizeXY()
+    {
+        grp_container.SetScale(curScale, curScale);
+        grp_setSize.SetSize(curScale * MapMgr.inst.mapWidth, curScale * MapMgr.inst.mapHeight);
+    }
+
+    private void OnToOriginalScale(EventCallBack evt)
+    {
+        curScale = 1;
+        grp_container.SetScale(curScale, curScale);
+        grp_setSize.SetSize(curScale * MapMgr.inst.mapWidth, curScale * MapMgr.inst.mapHeight);
+    }
+
+    private void OnClearAllData(EventCallBack evt)
+    {
+        Init();
     }
 
     private void onScreenShoot(EventCallBack evt)

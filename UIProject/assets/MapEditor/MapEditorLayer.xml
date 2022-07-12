@@ -56,9 +56,6 @@
       <item/>
     </list>
     <text id="n18_d7z4" name="n18" xy="1058,322" size="104,29" fontSize="20" text="地图列表："/>
-    <component id="n21_9szr" name="btn_screenShot" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1186,713" size="161,36">
-      <Button title="预览绘画区域"/>
-    </component>
     <component id="n22_t19y" name="btn_runDemo" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1187,768" size="115,36">
       <Button title="测试运行"/>
     </component>
@@ -67,8 +64,14 @@
     <component id="n27_bfx2" name="btn_resizeMap" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1412,581" size="107,36">
       <Button title="确定"/>
     </component>
-    <component id="n28_bfx2" name="btn_toCenter" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1314,521" size="144,36">
+    <component id="n28_bfx2" name="btn_toCenter" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1353,711" size="144,36">
       <Button title="地图中心点"/>
+    </component>
+    <component id="n29_bfx2" name="btn_originalScale" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1187,711" size="144,36">
+      <Button title="原比例缩放"/>
+    </component>
+    <component id="n30_bfx2" name="btn_clearAll" src="pzzla" fileName="components/Button1.xml" pkg="g2zhtj9b" xy="1190,226" size="165,36">
+      <Button title="清除全部数据"/>
     </component>
   </displayList>
 </component>
