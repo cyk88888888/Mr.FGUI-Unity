@@ -15,6 +15,7 @@ public class MapComp : UIComp
     {
         get { return "MapComp"; }
     }
+    private GComponent grp_setSize;
     private GComponent grp_container;
     private GComponent lineContainer;
     private GComponent gridContainer;
@@ -30,6 +31,7 @@ public class MapComp : UIComp
 
     protected override void OnFirstEnter()
     {
+        grp_setSize = view.GetChild("grp_setSize").asCom;
         grp_container = view.GetChild("grp_container").asCom;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
@@ -46,14 +48,13 @@ public class MapComp : UIComp
             (GComponent obj) => { obj.RemoveFromParent(); }
         );
 
-
         view.onRightDown.Add(_onRightDown);
         view.onRightMove.Add(_onRightMove);
         view.onRightUp.Add(_onRightUp);
         view.onClick.Add(_onClick);
+        view.displayObject.onMouseWheel.Add(_onMouseWheel);
         _cellSize = MapMgr.inst.cellSize;
         Init();
-
     }
 
     protected override void OnEnter()
@@ -68,18 +69,19 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.RunDemo, OnRunDemo);
         OnEmitter(GameEvent.CloseDemo, OnCloseDemo);
         OnEmitter(GameEvent.ToCenter, OnToCenter);
+        OnEmitter(GameEvent.ToOriginalScale, OnToOriginalScale); 
     }
 
-    private void Init(bool needCreate = true)
+    private void Init()
     {
-        if (!needCreate) return;
         int mapWidth = MapMgr.inst.mapWidth;
         int mapHeight = MapMgr.inst.mapHeight;
         float numCols = Mathf.Floor(mapWidth / _cellSize);
         float numRows = Mathf.Floor(mapHeight / _cellSize);
         Debug.Log("行数：" + numRows + "，列数：" + numCols);
+        OnToOriginalScale(null);
+        center.SetXY((MapMgr.inst.mapWidth - center.width) / 2, (MapMgr.inst.mapHeight - center.height) / 2);
         bg.SetSize(mapWidth, mapHeight);
-        grp_container.SetSize(mapWidth, mapHeight);
         //bg.url = MapMgr.inst.mapId;//设置背景图todo....
         RemoveAllLine();
         RemoveAllGrid();
@@ -176,7 +178,7 @@ public class MapComp : UIComp
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize), Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize));//所在格子位置
+        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
         if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
         {
             MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
@@ -205,7 +207,7 @@ public class MapComp : UIComp
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / _cellSize), Mathf.Floor((inputPos.y + view.scrollPane.posY) / _cellSize));//所在格子位置
+        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
         float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
         float gridY = gridPos.y * _cellSize;//绘制颜色格子的坐标Y
 
@@ -257,10 +259,8 @@ public class MapComp : UIComp
     private void OnImportMapJson(EventCallBack evt)
     {
         MapJsonInfo mapInfo = (MapJsonInfo)evt.Data[0];
-        bool needRemoveLine = mapInfo.mapWidth != MapMgr.inst.mapWidth || mapInfo.mapHeight != MapMgr.inst.mapHeight || _cellSize != MapMgr.inst.cellSize;
         _cellSize = mapInfo.cellSize;
-        Init(needRemoveLine);
-        if (!needRemoveLine) RemoveAllGrid();
+        Init();
         /** 设置可行走节点**/
         for (int i = 0; i < mapInfo.walkList.Count; i++)
         {
@@ -308,10 +308,42 @@ public class MapComp : UIComp
     {
         //移动镜头
         ScrollPane scrollPane = view.scrollPane;
-        scrollPane.SetPosX(center.x - scrollPane.viewWidth / 2, true);
-        scrollPane.SetPosY(center.y - scrollPane.viewHeight / 2, true);
+        scrollPane.SetPosX(center.x * curScale - scrollPane.viewWidth / 2, true);
+        scrollPane.SetPosY(center.y * curScale - scrollPane.viewHeight / 2, true);
     }
 
+    private float curScale = 1;
+    private float scaleDelta = 0.03f;
+    private void _onMouseWheel(EventContext context)
+    {
+        InputEvent inputEvt = (InputEvent)context.data;
+        if (inputEvt.mouseWheelDelta > 0)
+        {
+            if (Mathf.Floor(grp_setSize.width) <= view.viewWidth && Mathf.Floor(grp_setSize.height) <= view.viewHeight) return; ;//已全部可见
+            curScale -= scaleDelta;
+        }
+        else
+        {
+            if (Mathf.Floor(grp_setSize.width) >= MapMgr.inst.mapWidth && Mathf.Floor(grp_setSize.height) >= MapMgr.inst.mapHeight) return;//已达到原大小
+            curScale += scaleDelta;
+        }
+
+        UpdateContainerSizeXY();
+    }
+
+    private void UpdateContainerSizeXY()
+    {
+        grp_container.SetScale(curScale, curScale);
+        grp_setSize.SetSize(curScale * MapMgr.inst.mapWidth, curScale * MapMgr.inst.mapHeight);
+    }
+
+    private void OnToOriginalScale(EventCallBack evt)
+    {
+        curScale = 1;
+        grp_container.SetScale(curScale, curScale);
+        grp_setSize.SetSize(curScale * MapMgr.inst.mapWidth, curScale * MapMgr.inst.mapHeight);
+    }
+        
     private void onScreenShoot(EventCallBack evt)
     {
         MapMgr.inst.ShowMapPreviewDlg(grp_container);

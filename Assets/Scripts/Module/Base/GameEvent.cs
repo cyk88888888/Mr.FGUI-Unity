@@ -25,4 +25,5 @@ public class GameEvent
     public static string RunDemo = next;//运行demo
     public static string CloseDemo = next;//关闭demo
     public static string ToCenter = next;//到地图中心点
+    public static string ToOriginalScale = next;//回归原大小缩放
 }

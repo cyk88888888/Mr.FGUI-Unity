@@ -15,22 +15,7 @@ public class MapEditorLayer : UILayer
         get { return "MapEditorLayer"; }
     }
 
-    private GButton btn_walk;
-    private GButton btn_block;
-    private GButton btn_blockVert;
-    private GButton btn_water;
-    private GButton btn_clearWalk;
-    private GButton btn_clearBolck;
-    private GButton btn_clearBolckVert;
-    private GButton btn_clearWater;
-    private GButton btn_resizeGrid;
-    private GButton btn_resizeMap;
-    private GButton btn_toCenter;
-    private GButton btn_exportJson;
-    private GButton btn_screenShot;
-    private GButton btn_runDemo;
     private GList list_map;
-    private GButton btn_importJson;
     private GTextInput txt_cellSize;
     private GTextInput txt_mapWidth;
     private GTextInput txt_mapHeight;
@@ -46,49 +31,52 @@ public class MapEditorLayer : UILayer
         txt_mapHeight = view.GetChild("txt_mapHeight").asTextInput;
         txt_mapHeight.text = MapMgr.inst.mapHeight.ToString();
 
-        btn_walk = view.GetChild("btn_walk").asButton;
+        GButton btn_walk = view.GetChild("btn_walk").asButton;
         btn_walk.onClick.Add(_tap_btn_walk);
 
-        btn_block = view.GetChild("btn_block").asButton;
+        GButton btn_block = view.GetChild("btn_block").asButton;
         btn_block.onClick.Add(_tap_btn_block);
 
-        btn_blockVert = view.GetChild("btn_blockVert").asButton;
+        GButton btn_blockVert = view.GetChild("btn_blockVert").asButton;
         btn_blockVert.onClick.Add(_tap_btn_blockVert);
 
-        btn_water = view.GetChild("btn_water").asButton;
+        GButton btn_water = view.GetChild("btn_water").asButton;
         btn_water.onClick.Add(_tap_btn_water);
 
-        btn_clearWalk = view.GetChild("btn_clearWalk").asButton;
+        GButton btn_clearWalk = view.GetChild("btn_clearWalk").asButton;
         btn_clearWalk.onClick.Add(_tap_btn_clearWalk);
 
-        btn_clearBolck = view.GetChild("btn_clearBolck").asButton;
+        GButton btn_clearBolck = view.GetChild("btn_clearBolck").asButton;
         btn_clearBolck.onClick.Add(_tap_btn_clearBolck);
 
-        btn_clearBolckVert = view.GetChild("btn_clearBolckVert").asButton;
+        GButton btn_clearBolckVert = view.GetChild("btn_clearBolckVert").asButton;
         btn_clearBolckVert.onClick.Add(_tap_btn_clearBolckVert);
 
-        btn_clearWater = view.GetChild("btn_clearWater").asButton;
+        GButton btn_clearWater = view.GetChild("btn_clearWater").asButton;
         btn_clearWater.onClick.Add(_tap_btn_clearWater);
 
-        btn_resizeGrid = view.GetChild("btn_resizeGrid").asButton;
+        GButton btn_resizeGrid = view.GetChild("btn_resizeGrid").asButton;
         btn_resizeGrid.onClick.Add(_tap_btn_resizeGrid);
 
-        btn_resizeMap = view.GetChild("btn_resizeMap").asButton;
+        GButton btn_resizeMap = view.GetChild("btn_resizeMap").asButton;
         btn_resizeMap.onClick.Add(_tap_btn_resizeMap);
 
-        btn_toCenter = view.GetChild("btn_toCenter").asButton;
+        GButton btn_toCenter = view.GetChild("btn_toCenter").asButton;
         btn_toCenter.onClick.Add(_tap_btn_toCenter);
 
-        btn_exportJson = view.GetChild("btn_exportJson").asButton;
+        GButton btn_originalScale = view.GetChild("btn_originalScale").asButton;
+        btn_originalScale.onClick.Add(_tap_btn_originalScale);
+
+        GButton btn_exportJson = view.GetChild("btn_exportJson").asButton;
         btn_exportJson.onClick.Add(_tap_btn_exportJson);
 
-        btn_importJson = view.GetChild("btn_importJson").asButton;
+        GButton btn_importJson = view.GetChild("btn_importJson").asButton;
         btn_importJson.onClick.Add(_tap_btn_importJson);
 
-        btn_screenShot = view.GetChild("btn_screenShot").asButton;
-        btn_screenShot.onClick.Add(_tap_btn_screenShot);
+        //GButton btn_screenShot = view.GetChild("btn_screenShot").asButton;
+        //btn_screenShot.onClick.Add(_tap_btn_screenShot);
 
-        btn_runDemo = view.GetChild("btn_runDemo").asButton;
+        GButton btn_runDemo = view.GetChild("btn_runDemo").asButton;
         btn_runDemo.onClick.Add(_tap_btn_runDemo);
 
         list_map = view.GetChild("list_map").asList;
@@ -152,6 +140,10 @@ public class MapEditorLayer : UILayer
         Emit(GameEvent.ToCenter);
     }
     
+    private void _tap_btn_originalScale()
+    {
+        Emit(GameEvent.ToOriginalScale);
+    }
 
     private void OnImportMapJson(EventCallBack evt)
     {
