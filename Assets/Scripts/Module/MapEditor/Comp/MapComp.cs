@@ -66,7 +66,7 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.ClearGridType, OnClearGridType);//清除指定格子类型 
         OnEmitter(GameEvent.ImportMapJson, OnImportMapJson);//清除所有线条和格子
         OnEmitter(GameEvent.ResizeGrid, OnResizeGrid);
-        OnEmitter(GameEvent.ResizeMap, OnResizeMap); 
+        OnEmitter(GameEvent.ResizeMap, OnResizeMap);
         OnEmitter(GameEvent.ChangeMap, onChangeMap);
         OnEmitter(GameEvent.ScreenShoot, onScreenShoot);//截图绘画区域
         OnEmitter(GameEvent.RunDemo, OnRunDemo);
@@ -185,7 +185,8 @@ public class MapComp : UIComp
                 graph_remind.alpha = 1;
                 graph_remind.visible = true;
                 graph_remind.SetSize(mapWidth * curScale, mapHeight * curScale);
-                graph_remind.TweenFade(0.4f, 0.3f).SetRepeat(3).OnComplete(()=>{
+                graph_remind.TweenFade(0.4f, 0.3f).SetRepeat(3).OnComplete(() =>
+                {
                     graph_remind.visible = false;
                     graph_remind.SetSize(0, 0);
                 });
@@ -212,7 +213,7 @@ public class MapComp : UIComp
             for (int i = _children.Length - 1; i >= 0; i--)
             {
                 GComponent lineItem = (GComponent)_children[i];
-                if(lineItem.x >= mapWidth || lineItem.y >= mapHeight)
+                if (lineItem.x >= mapWidth || lineItem.y >= mapHeight)
                 {
                     _lineCompPool.ReleaseObject(lineItem);
                 }
@@ -268,7 +269,7 @@ public class MapComp : UIComp
             }
         }
     }
-    
+
 
     //更改格子类型样式
     private void OnChangeGridType(EventCallBack evt)
@@ -323,7 +324,7 @@ public class MapComp : UIComp
         Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
         float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
         float gridY = gridPos.y * _cellSize;//绘制颜色格子的坐标Y
-
+        if (gridX >= MapMgr.inst.mapWidth || gridY >= MapMgr.inst.mapHeight) return;
         GetGrid(_gridType, gridPos, gridX, gridY);
     }
 
@@ -382,7 +383,7 @@ public class MapComp : UIComp
             {
                 if (lineList[j] == 1)
                 {
-                    Vector2 gridPos = new Vector2(j, i);//所在格子位置
+                    Vector2 gridPos = new(j, i);//所在格子位置
                     float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
                     float gridY = gridPos.y * _cellSize;//绘制颜色格子的坐标Y
                     GetGrid(GridType.Walk, gridPos, gridX, gridY);
@@ -402,7 +403,7 @@ public class MapComp : UIComp
             else if (gridType == GridType.Water) blockList = mapInfo.waterList;
             foreach (var item in blockList)
             {
-                Vector2 gridPos = new Vector2(item[0], item[1]);//所在格子位置
+                Vector2 gridPos = new(item[0], item[1]);//所在格子位置
                 float gridX = gridPos.x * _cellSize;//绘制颜色格子的坐标X
                 float gridY = gridPos.y * _cellSize;//绘制颜色格子的坐标Y
                 GetGrid(gridType, gridPos, gridX, gridY);
@@ -421,16 +422,18 @@ public class MapComp : UIComp
     {
         //移动镜头
         ScrollPane scrollPane = view.scrollPane;
-        scrollPane.SetPosX(center.x * curScale - scrollPane.viewWidth / 2, true);
-        scrollPane.SetPosY(center.y * curScale - scrollPane.viewHeight / 2, true);
+        scrollPane.SetPosX(center.x * curScale - scrollPane.viewWidth / 2 + center.width / 2, true);
+        scrollPane.SetPosY(center.y * curScale - scrollPane.viewHeight / 2 + center.height / 2, true);
     }
 
     private float curScale = 1;
     private float scaleDelta = 0.03f;
     private void _onMouseWheel(EventContext context)
     {
-        InputEvent inputEvt = (InputEvent)context.data;
-        if (inputEvt.mouseWheelDelta > 0)
+        InputEvent inputEvt = context.inputEvent;
+        ScrollPane scrollPane = view.scrollPane;
+        bool isReduce = inputEvt.mouseWheelDelta > 0;
+        if (inputEvt.mouseWheelDelta > 0)//缩小
         {
             if (Mathf.Floor(grp_setSize.width) <= view.viewWidth && Mathf.Floor(grp_setSize.height) <= view.viewHeight) return; ;//已全部可见
             curScale -= scaleDelta;
@@ -440,8 +443,14 @@ public class MapComp : UIComp
             if (Mathf.Floor(grp_setSize.width) >= MapMgr.inst.mapWidth && Mathf.Floor(grp_setSize.height) >= MapMgr.inst.mapHeight) return;//已达到原大小
             curScale += scaleDelta;
         }
-
+        float toViewX = curScale * MapMgr.inst.mapWidth - grp_setSize.width;
+        float toViewY = curScale * MapMgr.inst.mapHeight - grp_setSize.height;
+        Debug.Log(toViewX + "," + toViewY);
+        Debug.Log((scrollPane.scrollingPosX + toViewX) + "," + (scrollPane.scrollingPosY + toViewY));
         UpdateContainerSizeXY();
+
+        scrollPane.SetPosX(scrollPane.scrollingPosX + toViewX, false);
+        scrollPane.SetPosY(scrollPane.scrollingPosY + toViewY, false);
     }
 
     private void UpdateContainerSizeXY()
