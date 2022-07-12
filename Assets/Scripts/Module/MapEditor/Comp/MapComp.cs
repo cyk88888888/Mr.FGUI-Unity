@@ -449,8 +449,8 @@ public class MapComp : UIComp
         Debug.Log("inputEvt.xy: " + inputEvt.x + "," + inputEvt.y);
         UpdateContainerSizeXY();
 
-        scrollPane.SetPosX(inputEvt.x * curScale, false);
-        scrollPane.SetPosY(inputEvt.y * curScale, false);
+        //scrollPane.SetPosX(inputEvt.x * curScale, false);
+        //scrollPane.SetPosY(inputEvt.y * curScale, false);
 
         //Debug.Log("resultView: " + scrollPane.scrollingPosX + "," + scrollPane.scrollingPosY);
     }
