@@ -15,7 +15,6 @@ public class MapEditorLayer : UILayer
         get { return "MapEditorLayer"; }
     }
 
-    private string _curCellSize;
     private GButton btn_walk;
     private GButton btn_block;
     private GButton btn_blockVert;
@@ -25,22 +24,27 @@ public class MapEditorLayer : UILayer
     private GButton btn_clearBolckVert;
     private GButton btn_clearWater;
     private GButton btn_resizeGrid;
+    private GButton btn_resizeMap;
+    private GButton btn_toCenter;
     private GButton btn_exportJson;
     private GButton btn_screenShot;
     private GButton btn_runDemo;
     private GList list_map;
     private GButton btn_importJson;
     private GTextInput txt_cellSize;
-    private GTextField txt_mapSize;
-
+    private GTextInput txt_mapWidth;
+    private GTextInput txt_mapHeight;
     private List<MapSelectInfo> _mapData;
     protected override void OnEnter()
     {
         txt_cellSize = view.GetChild("txt_cellSize").asTextInput;
-        txt_cellSize.text = _curCellSize = MapMgr.inst.cellSize.ToString();
+        txt_cellSize.text = MapMgr.inst.cellSize.ToString();
 
-        txt_mapSize = view.GetChild("txt_mapSize").asTextField;
-        txt_mapSize.text = MapMgr.inst.mapWidth + "," + MapMgr.inst.mapHeight;
+        txt_mapWidth = view.GetChild("txt_mapWidth").asTextInput;
+        txt_mapWidth.text = MapMgr.inst.mapWidth.ToString();
+
+        txt_mapHeight = view.GetChild("txt_mapHeight").asTextInput;
+        txt_mapHeight.text = MapMgr.inst.mapHeight.ToString();
 
         btn_walk = view.GetChild("btn_walk").asButton;
         btn_walk.onClick.Add(_tap_btn_walk);
@@ -69,6 +73,12 @@ public class MapEditorLayer : UILayer
         btn_resizeGrid = view.GetChild("btn_resizeGrid").asButton;
         btn_resizeGrid.onClick.Add(_tap_btn_resizeGrid);
 
+        btn_resizeMap = view.GetChild("btn_resizeMap").asButton;
+        btn_resizeMap.onClick.Add(_tap_btn_resizeMap);
+
+        btn_toCenter = view.GetChild("btn_toCenter").asButton;
+        btn_toCenter.onClick.Add(_tap_btn_toCenter);
+
         btn_exportJson = view.GetChild("btn_exportJson").asButton;
         btn_exportJson.onClick.Add(_tap_btn_exportJson);
 
@@ -80,7 +90,6 @@ public class MapEditorLayer : UILayer
 
         btn_runDemo = view.GetChild("btn_runDemo").asButton;
         btn_runDemo.onClick.Add(_tap_btn_runDemo);
-
 
         list_map = view.GetChild("list_map").asList;
         list_map.onClickItem.Add(OnClickMapItem);
@@ -130,9 +139,20 @@ public class MapEditorLayer : UILayer
     }
     private void _tap_btn_resizeGrid()
     {
-        _curCellSize = txt_cellSize.text;
         Emit(GameEvent.ResizeGrid, new object[] { txt_cellSize.text });
     }
+
+    private void _tap_btn_resizeMap()
+    {
+        Emit(GameEvent.ResizeMap, new object[] { txt_mapWidth.text, txt_mapHeight.text });
+    }
+
+    private void _tap_btn_toCenter()
+    {
+        Emit(GameEvent.ToCenter);
+    }
+    
+
     private void OnImportMapJson(EventCallBack evt)
     {
         txt_cellSize.text = MapMgr.inst.cellSize.ToString();

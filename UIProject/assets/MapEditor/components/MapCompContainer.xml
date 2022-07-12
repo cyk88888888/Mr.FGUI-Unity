@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="640,600" scroll="both">
   <displayList>
-    <graph id="n5_g4oc" name="bg" xy="0,0" size="640,600" type="rect">
-      <relation target="" sidePair="width-width,height-height"/>
-    </graph>
+    <graph id="n5_g4oc" name="bg" xy="0,0" size="640,600" type="rect"/>
     <graph id="n8_f731" name="center" xy="270,250" size="100,100" type="rect" fillColor="#ff0000ff">
       <relation target="" sidePair="center-center,middle-middle"/>
     </graph>

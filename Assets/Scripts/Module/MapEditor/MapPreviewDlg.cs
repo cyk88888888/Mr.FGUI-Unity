@@ -34,7 +34,7 @@ public class MapPreviewDlg : UIDlg
         //RenderTexture renderTexture = (RenderTexture)__data;
         Texture2D renderTexture = (Texture2D)__data;
         _renderTextureSize = new(renderTexture.width, renderTexture.height);
-        curScale = GRoot.inst.height / renderTexture.height;
+        curScale = Mathf.Min(GRoot.inst.width/ renderTexture.width, GRoot.inst.height / renderTexture.height);
         _image = new Image();
         holder.SetNativeObject(_image);
         _image.texture = new NTexture(renderTexture);

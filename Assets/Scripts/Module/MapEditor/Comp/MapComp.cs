@@ -19,6 +19,8 @@ public class MapComp : UIComp
     private GComponent lineContainer;
     private GComponent gridContainer;
     private GLoader pet;
+    private GGraph bg;
+    private GGraph center;
     private int _cellSize;
     private GridType _gridType = GridType.None;//当前格子类型
     private ObjectPool<GComponent> _lineCompPool;
@@ -31,7 +33,9 @@ public class MapComp : UIComp
         grp_container = view.GetChild("grp_container").asCom;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
+        bg = grp_container.GetChild("bg").asGraph;
         pet = grp_container.GetChild("pet").asLoader;
+        center = grp_container.GetChild("center").asGraph;
         _lineCompPool = new(
             () => { return UIPackage.CreateObject("MapEditor", "LineComp").asCom; },
             (GComponent obj) => { obj.RemoveFromParent(); }
@@ -58,10 +62,12 @@ public class MapComp : UIComp
         OnEmitter(GameEvent.ClearGridType, OnClearGridType);//清除指定格子类型 
         OnEmitter(GameEvent.ImportMapJson, OnImportMapJson);//清除所有线条和格子
         OnEmitter(GameEvent.ResizeGrid, OnResizeGrid);
+        OnEmitter(GameEvent.ResizeMap, OnResizeMap); 
         OnEmitter(GameEvent.ChangeMap, onChangeMap);
         OnEmitter(GameEvent.ScreenShoot, onScreenShoot);//截图绘画区域
         OnEmitter(GameEvent.RunDemo, OnRunDemo);
         OnEmitter(GameEvent.CloseDemo, OnCloseDemo);
+        OnEmitter(GameEvent.ToCenter, OnToCenter);
     }
 
     private void Init(bool needCreate = true)
@@ -72,7 +78,6 @@ public class MapComp : UIComp
         float numCols = Mathf.Floor(mapWidth / _cellSize);
         float numRows = Mathf.Floor(mapHeight / _cellSize);
         Debug.Log("行数：" + numRows + "，列数：" + numCols);
-        GGraph bg = grp_container.GetChild("bg").asGraph;
         bg.SetSize(mapWidth, mapHeight);
         grp_container.SetSize(mapWidth, mapHeight);
         //bg.url = MapMgr.inst.mapId;//设置背景图todo....
@@ -133,6 +138,22 @@ public class MapComp : UIComp
         MapMgr.inst.cellSize = cellSize;
         Init();
     }
+
+    //重置地图大小
+    private void OnResizeMap(EventCallBack evt)
+    {
+        int mapWidth = int.Parse((string)evt.Data[0]);
+        int mapHeight = int.Parse((string)evt.Data[1]);
+        if (mapWidth == MapMgr.inst.mapWidth && mapHeight == MapMgr.inst.mapHeight)
+        {
+            MsgMgr.ShowMsg("地图大小未变！！！");
+            return;
+        }
+        MapMgr.inst.mapWidth = mapWidth;
+        MapMgr.inst.mapHeight = mapHeight;
+        Init();
+    }
+    
 
     //更改格子类型样式
     private void OnChangeGridType(EventCallBack evt)
@@ -281,6 +302,14 @@ public class MapComp : UIComp
         MapSelectInfo mapInfo = (MapSelectInfo)evt.Data[0];
         MapMgr.inst.mapId = mapInfo.mapId;
         Init();
+    }
+
+    private void OnToCenter(EventCallBack evt)
+    {
+        //移动镜头
+        ScrollPane scrollPane = view.scrollPane;
+        scrollPane.SetPosX(center.x - scrollPane.viewWidth / 2, true);
+        scrollPane.SetPosY(center.y - scrollPane.viewHeight / 2, true);
     }
 
     private void onScreenShoot(EventCallBack evt)
