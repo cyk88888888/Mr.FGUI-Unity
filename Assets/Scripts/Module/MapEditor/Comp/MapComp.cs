@@ -298,7 +298,7 @@ public class MapComp : UIComp
     private void OnRunDemo(EventCallBack evt)
     {
         MapMgr.inst.gridTypeDic.TryGetValue(GridType.Walk, out Dictionary<string, GComponent> _tempwalkGridDic);
-        if(_tempwalkGridDic == null || _tempwalkGridDic.Count == 0)
+        if (_tempwalkGridDic == null || _tempwalkGridDic.Count == 0)
         {
             MsgMgr.ShowMsg("没有找到可行走的格子！！！");
             return;
@@ -312,7 +312,7 @@ public class MapComp : UIComp
             break;
         }
         pet.visible = true;
-        SetPetPosAndRollCamera(firstWalkGridVec.x * _cellSize, firstWalkGridVec.y * _cellSize + _cellSize);
+        SetPetPosAndRollCamera(firstWalkGridVec.x * _cellSize, firstWalkGridVec.y * _cellSize + _cellSize, true);
         Timers.inst.AddUpdate(OnUpdate);
     }
 
@@ -334,12 +334,12 @@ public class MapComp : UIComp
         //角色坐标加上方向
         float toX = pet.x + dir_x;
         float toY = pet.y + dir_y;
-      
+
         SetPetPosAndRollCamera(toX, toY);
     }
 
     /** 设置角色位置 && 移动镜头**/
-    private void SetPetPosAndRollCamera(float toX,float toY)
+    private void SetPetPosAndRollCamera(float toX, float toY, bool needAni = false)
     {
         //判断边界&&设置角色位置
         if (toX < 0) toX = 0;
@@ -350,8 +350,8 @@ public class MapComp : UIComp
 
         //移动镜头
         ScrollPane scrollPane = view.scrollPane;
-        scrollPane.SetPosX(pet.x - scrollPane.viewWidth / 2, false);
-        scrollPane.SetPosY(pet.y - scrollPane.viewHeight / 2, false);
+        scrollPane.SetPosX(pet.x - scrollPane.viewWidth / 2, needAni);
+        scrollPane.SetPosY(pet.y - scrollPane.viewHeight / 2, needAni);
     }
 }
 
