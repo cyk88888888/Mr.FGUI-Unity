@@ -37,7 +37,6 @@ public class MapComp : UIComp
         graph_remind = grp_container.GetChild("graph_remind").asGraph;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
-
         bg = grp_container.GetChild("bg").asGraph;
         pet = grp_container.GetChild("pet").asLoader;
         center = grp_container.GetChild("center").asGraph;
@@ -288,20 +287,22 @@ public class MapComp : UIComp
             return;
         }
     }
+
+    private string _oldGridKey;
     private void _onRightMove(EventContext evt)
     {
         if (_gridType == GridType.None) return;
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
-        Vector2 gridPos = new Vector2(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
-        if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
-        {
-            MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
-        }
-        Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[_gridType];
+        Vector2 gridPos = new(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
+        //if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
+        //{
+        //    MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
+        //}
+        //Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[_gridType];
         string gridKey = gridPos.x + "_" + gridPos.y;
-        if (curGridTypeDic.TryGetValue(gridKey, out GComponent gridComp)) return;//当前格子已有
-
+        if (_oldGridKey == gridKey) return;//当前格子已有
+        _oldGridKey = gridKey;
         AddOrRmGrid(evt);
     }
     private void _onRightUp(EventContext evt) { }
@@ -373,6 +374,7 @@ public class MapComp : UIComp
 
     private void OnImportMapJson(EventCallBack evt)
     {
+        JuHuaDlg juahua = (JuHuaDlg)UILayer.Show("JuHuaDlg");
         MapJsonInfo mapInfo = (MapJsonInfo)evt.Data[0];
         _cellSize = mapInfo.cellSize;
         Init();
@@ -410,6 +412,9 @@ public class MapComp : UIComp
                 GetGrid(gridType, gridPos, gridX, gridY);
             }
         }
+        //bg.RemoveFromParent();
+        //grp_container.AddChildAt(bg, 0);
+        juahua.Close();
     }
 
     private void onChangeMap(EventCallBack evt)
@@ -444,16 +449,16 @@ public class MapComp : UIComp
             if (Mathf.Floor(grp_setSize.width) >= MapMgr.inst.mapWidth && Mathf.Floor(grp_setSize.height) >= MapMgr.inst.mapHeight) return;//已达到原大小
             curScale += scaleDelta;
         }
-        float toViewX = curScale * MapMgr.inst.mapWidth - grp_setSize.width;
-        float toViewY = curScale * MapMgr.inst.mapHeight - grp_setSize.height;
+        //float toViewX = curScale * MapMgr.inst.mapWidth - grp_setSize.width;
+        //float toViewY = curScale * MapMgr.inst.mapHeight - grp_setSize.height;
         //Debug.Log(toViewX + "," + toViewY);
-        Debug.Log("inputEvt.xy: " + inputEvt.x + "," + inputEvt.y);
+        //Debug.Log("inputEvt.xy: " + inputEvt.x + "," + inputEvt.y);
         UpdateContainerSizeXY();
 
-        //scrollPane.SetPosX(scrollPane.scrollingPosX * curScale, false);
-        //scrollPane.SetPosY(scrollPane.scrollingPosY * curScale, false);
+        scrollPane.SetPosX(scrollPane.scrollingPosX * curScale, false);
+        scrollPane.SetPosY(scrollPane.scrollingPosY * curScale, false);
 
-        Debug.Log("resultView: " + scrollPane.scrollingPosX + "," + scrollPane.scrollingPosY);
+        //Debug.Log("resultView: " + scrollPane.scrollingPosX + "," + scrollPane.scrollingPosY);
     }
 
     private void UpdateContainerSizeXY()
@@ -464,7 +469,7 @@ public class MapComp : UIComp
 
     private void _onTouchMove(EventContext evt)
     {
-        Debug.Log("resultView: " + view.scrollPane.scrollingPosX + "," + view.scrollPane.scrollingPosY);
+        //Debug.Log("resultView: " + view.scrollPane.scrollingPosX + "," + view.scrollPane.scrollingPosY);
     }
 
     private void OnToOriginalScale(EventCallBack evt)
