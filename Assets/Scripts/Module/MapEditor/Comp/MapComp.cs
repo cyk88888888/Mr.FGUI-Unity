@@ -34,7 +34,7 @@ public class MapComp : UIComp
     {
         grp_setSize = view.GetChild("grp_setSize").asCom;
         grp_container = view.GetChild("grp_container").asCom;
-        graph_remind = view.GetChild("graph_remind").asGraph;
+        graph_remind = grp_container.GetChild("graph_remind").asGraph;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
 
@@ -185,7 +185,7 @@ public class MapComp : UIComp
                 GTween.Kill(graph_remind);
                 graph_remind.alpha = 1;
                 graph_remind.visible = true;
-                graph_remind.SetSize(mapWidth * curScale, mapHeight * curScale);
+                graph_remind.SetSize(mapWidth, mapHeight);
                 graph_remind.TweenFade(0.4f, 0.3f).SetRepeat(3).OnComplete(() =>
                 {
                     graph_remind.visible = false;
