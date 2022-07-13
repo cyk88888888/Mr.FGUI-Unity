@@ -37,7 +37,6 @@ public class MapComp : UIComp
         graph_remind = grp_container.GetChild("graph_remind").asGraph;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
-
         bg = grp_container.GetChild("bg").asGraph;
         pet = grp_container.GetChild("pet").asLoader;
         center = grp_container.GetChild("center").asGraph;
