@@ -131,7 +131,7 @@ public class MapMgr
                     else
                     {
                         walkGridDic.TryGetValue(j + "_" + i, out GGraph gridItem);
-                        linewalkList.Add(1);
+                        linewalkList.Add(gridItem != null ? 1 : 0);
                     }
                 }
             }
