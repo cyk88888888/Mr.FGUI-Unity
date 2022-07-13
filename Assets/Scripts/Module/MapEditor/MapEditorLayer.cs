@@ -154,6 +154,8 @@ public class MapEditorLayer : UILayer
 
     private void OnImportMapJson(EventCallBack evt)
     {
+        txt_mapWidth.text = MapMgr.inst.mapWidth.ToString();
+        txt_mapHeight.text = MapMgr.inst.mapHeight.ToString();
         txt_cellSize.text = MapMgr.inst.cellSize.ToString();
     }
 

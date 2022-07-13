@@ -59,6 +59,27 @@ public class MapMgr
         return url;
     }
 
+    public string getColorNameByType(GridType type)
+    {
+        string url = "";
+        switch (type)
+        {
+            case GridType.Walk:
+                url = "green";
+                break;
+            case GridType.Block:
+                url = "black";
+                break;
+            case GridType.BlockVerts:
+                url = "redCircle";
+                break;
+            case GridType.Water:
+                url = "blue";
+                break;
+        }
+        return url;
+    }
+
     /** Ñ¡ÔñÎÄ¼þ¼Ð**/
     public void OpenDirectoryBrower()
     {
