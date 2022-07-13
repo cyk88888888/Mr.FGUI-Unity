@@ -344,8 +344,6 @@ public class MapComp : UIComp
         Color color = MapMgr.inst.getColorByType(gridType);
         gridComp = _gridCompPool.GetObject();
         gridComp.DrawRect(_cellSize, _cellSize, 2, color, color);
-        //GLoader loader = gridComp.GetChild("icon").asLoader;
-        //loader.url = MapMgr.inst.getGridUrlByType(gridType);
         gridComp.gameObjectName = gridKey;
         gridComp.SetSize(_cellSize, _cellSize);
         gridComp.SetXY(gridX + 1, gridY + 1);
