@@ -26,7 +26,7 @@ public class MapComp : UIComp
     private int _cellSize;
     private GridType _gridType = GridType.None;//当前格子类型
     private ObjectPool<GComponent> _lineCompPool;
-    private ObjectPool<GComponent> _gridCompPool;
+    private ObjectPool<GGraph> _gridCompPool;
     private int lineStroke = 2;//线条粗度
     private float speed = 3;//人物移动速度
 
@@ -37,7 +37,6 @@ public class MapComp : UIComp
         graph_remind = grp_container.GetChild("graph_remind").asGraph;
         lineContainer = grp_container.GetChild("lineContainer").asCom;
         gridContainer = grp_container.GetChild("gridContainer").asCom;
-
         bg = grp_container.GetChild("bg").asGraph;
         pet = grp_container.GetChild("pet").asLoader;
         center = grp_container.GetChild("center").asGraph;
@@ -47,8 +46,8 @@ public class MapComp : UIComp
         );
 
         _gridCompPool = new(
-            () => { return UIPackage.CreateObject("MapEditor", "GridComp").asCom; },
-            (GComponent obj) => { obj.RemoveFromParent(); }
+            () => { return new GGraph(); },// return UIPackage.CreateObject("MapEditor", "GridComp").asCom; },
+            (GGraph obj) => { obj.RemoveFromParent(); }
         );
 
         view.onRightDown.Add(_onRightDown);
@@ -126,9 +125,9 @@ public class MapComp : UIComp
     {
         foreach (var item in gridContainer.GetChildren())
         {
-             _gridCompPool.ReleaseObject((GComponent)item);
+             _gridCompPool.ReleaseObject((GGraph)item);
         }
-        MapMgr.inst.gridTypeDic = new Dictionary<GridType, Dictionary<string, GComponent>>();
+        MapMgr.inst.gridTypeDic = new Dictionary<GridType, Dictionary<string, GGraph>>();
     }
 
     //重置格子大小
@@ -296,11 +295,6 @@ public class MapComp : UIComp
         InputEvent inputEvt = (InputEvent)evt.data;
         Vector2 inputPos = inputEvt.position;
         Vector2 gridPos = new(Mathf.Floor((inputPos.x + view.scrollPane.posX) / (_cellSize * curScale)), Mathf.Floor((inputPos.y + view.scrollPane.posY) / (_cellSize * curScale)));//所在格子位置
-        //if (!MapMgr.inst.gridTypeDic.TryGetValue(_gridType, out Dictionary<string, GComponent> dic))
-        //{
-        //    MapMgr.inst.gridTypeDic[_gridType] = new Dictionary<string, GComponent>();
-        //}
-        //Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[_gridType];
         string gridKey = gridPos.x + "_" + gridPos.y;
         if (_oldGridKey == gridKey) return;//当前格子已有
         _oldGridKey = gridKey;
@@ -334,27 +328,27 @@ public class MapComp : UIComp
     /** 设置地图格子数据 && 添加格子到容器**/
     private void GetGrid(GridType gridType, Vector2 gridPos, float gridX, float gridY)
     {
-        if (!MapMgr.inst.gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> dic))
+        if (!MapMgr.inst.gridTypeDic.TryGetValue(gridType, out Dictionary<string, GGraph> dic))
         {
-            MapMgr.inst.gridTypeDic[gridType] = new Dictionary<string, GComponent>();
+            MapMgr.inst.gridTypeDic[gridType] = new Dictionary<string, GGraph>();
         }
-        Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[gridType];
+        Dictionary<string, GGraph> curGridTypeDic = MapMgr.inst.gridTypeDic[gridType];
         string gridKey = gridPos.x + "_" + gridPos.y;
-        GComponent gridComp;
+        GGraph gridComp;
         if (curGridTypeDic.TryGetValue(gridKey, out gridComp))
         {
             _gridCompPool.ReleaseObject(gridComp);
             curGridTypeDic.Remove(gridKey);
             return;
         }
-
+        Color color = MapMgr.inst.getColorByType(gridType);
         gridComp = _gridCompPool.GetObject();
-        GLoader loader = gridComp.GetChild("icon").asLoader;
-        loader.url = MapMgr.inst.getGridUrlByType(gridType);
-        gridComp.gameObjectName = gridKey + "_" + MapMgr.inst.getColorNameByType(gridType) + "_" + (curGridTypeDic.Count + 1);
+        gridComp.DrawRect(_cellSize, _cellSize, 2, color, color);
+        //GLoader loader = gridComp.GetChild("icon").asLoader;
+        //loader.url = MapMgr.inst.getGridUrlByType(gridType);
+        gridComp.gameObjectName = gridKey;
         gridComp.SetSize(_cellSize, _cellSize);
         gridComp.SetXY(gridX + 1, gridY + 1);
-        gridComp.fairyBatching = true;
         gridContainer.AddChild(gridComp);
         curGridTypeDic.Add(gridKey, gridComp);
     }
@@ -362,11 +356,11 @@ public class MapComp : UIComp
     private void OnClearGridType(EventCallBack evt)
     {
         GridType gridType = (GridType)evt.Data[0];
-        if (!MapMgr.inst.gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> dic))
+        if (!MapMgr.inst.gridTypeDic.TryGetValue(gridType, out Dictionary<string, GGraph> dic))
         {
             return;
         }
-        Dictionary<string, GComponent> curGridTypeDic = MapMgr.inst.gridTypeDic[gridType];
+        Dictionary<string, GGraph> curGridTypeDic = MapMgr.inst.gridTypeDic[gridType];
         foreach (var item in curGridTypeDic)
         {
             _gridCompPool.ReleaseObject(item.Value);
@@ -498,7 +492,7 @@ public class MapComp : UIComp
     private Dictionary<string, GComponent> _tempwalkGridDic;//当前可行走的所有格子
     private void OnRunDemo(EventCallBack evt)
     {
-        MapMgr.inst.gridTypeDic.TryGetValue(GridType.Walk, out Dictionary<string, GComponent> _tempwalkGridDic);
+        MapMgr.inst.gridTypeDic.TryGetValue(GridType.Walk, out Dictionary<string, GGraph> _tempwalkGridDic);
         if (_tempwalkGridDic == null || _tempwalkGridDic.Count == 0)
         {
             MsgMgr.ShowMsg("没有找到可行走的格子！！！");

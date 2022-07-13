@@ -27,7 +27,7 @@ public class MapMgr
     public int mapId = 1;//当前地图id
     public int cellSize = 40;//格子大小（默认40）
     public const string ExtensionJson = ".json";//保存文件的后缀名
-    public Dictionary<GridType, Dictionary<string, GComponent>> gridTypeDic;//当前地图数据
+    public Dictionary<GridType, Dictionary<string, GGraph>> gridTypeDic;//当前地图数据
     public JoystickComp joystick;//当前摇杆
     public List<MapSelectInfo> mapDataList = new()//所有地图信息列表
     {
@@ -59,25 +59,25 @@ public class MapMgr
         return url;
     }
 
-    public string getColorNameByType(GridType type)
+    public Color getColorByType(GridType type)
     {
-        string url = "";
+        Color color = Color.white;
         switch (type)
         {
             case GridType.Walk:
-                url = "green";
+                color = Color.green;
                 break;
             case GridType.Block:
-                url = "black";
+                color = Color.black;
                 break;
             case GridType.BlockVerts:
-                url = "redCircle";
+                color = Color.gray;
                 break;
             case GridType.Water:
-                url = "blue";
+                color = Color.blue;
                 break;
         }
-        return url;
+        return color;
     }
 
     /** 选择文件夹**/
@@ -123,15 +123,15 @@ public class MapMgr
                 mapInfo.walkList.Add(linewalkList);
                 for (int j = 0; j < numCols; j++)
                 {
-                    gridTypeDic.TryGetValue(GridType.Walk, out Dictionary<string, GComponent> walkGridDic);
+                    gridTypeDic.TryGetValue(GridType.Walk, out Dictionary<string, GGraph> walkGridDic);
                     if (walkGridDic == null)
                     {
-                        linewalkList.Add(0);
+                        linewalkList.Add(1);
                     }
                     else
                     {
-                        walkGridDic.TryGetValue(j + "_" + i, out GComponent gridItem);
-                        linewalkList.Add(gridItem == null ? 0 : 1);
+                        walkGridDic.TryGetValue(j + "_" + i, out GGraph gridItem);
+                        linewalkList.Add(1);
                     }
                 }
             }
@@ -142,7 +142,7 @@ public class MapMgr
             AddBlockByType(GridType.Water);
             void AddBlockByType(GridType gridType)
             {
-                gridTypeDic.TryGetValue(gridType, out Dictionary<string, GComponent> blockGridDic);
+                gridTypeDic.TryGetValue(gridType, out Dictionary<string, GGraph> blockGridDic);
                 if (blockGridDic != null)
                 {
                     foreach (var item in blockGridDic)
